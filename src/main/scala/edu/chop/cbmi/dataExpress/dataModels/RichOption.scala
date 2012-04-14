@@ -18,27 +18,34 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
---------------------------------------------------------------------------------------------------------------
-Considerably more information is available at the DataExpress website:
-http://dataexpress.research.chop.edu/
+package edu.chop.cbmi.dataExpress.dataModels
 
-Compiling from source
-1. Download the source to a local project directory, here assume it is ~/dataexpress
+/**
+ * Created by IntelliJ IDEA.
+ * User: masinoa
+ * Date: 11/9/11
+ * Time: 9:03 AM
+ * To change this template use File | Settings | File Templates.
+ */
 
-2. Ensure Apache Maven is installed see http://maven.apache.org/
+import scala.reflect.Manifest
 
-3. To compile current source code: 
--From the command line
-$cd ~/dataexpress
-$mvn clean compile
+class RichOption[T] private (private val data:Option[T]){
 
-4. To test current source code: 
--From the command line
-$cd ~/dataexpress
-$mvn test-compile
--Then run scalatest using any of the methods provided at http://www.scalatest.org/user_guide/running_your_tests
+  def as[G](implicit m : Manifest[G]) : Option[G] = data match{
+    case Some(d) => Some(d.asInstanceOf[G])
+    case None => None
+  }
 
-5. To package current source code with dependencies
--From the command line
-$cd ~/dataexpress
-$mvn -Ppackage-with-dependencies package
+  def asu[G](implicit m : Manifest[G]) : G = data match{
+    case Some(d) => d.asInstanceOf[G]
+    case None => throw new Exception("Cannot convert None type to " + m.toString())
+  }
+
+}
+
+object RichOption {
+
+  implicit def optionToRichOption[T](opt : Option[T]) = new RichOption(opt)
+
+}

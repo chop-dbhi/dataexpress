@@ -18,27 +18,46 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
---------------------------------------------------------------------------------------------------------------
-Considerably more information is available at the DataExpress website:
-http://dataexpress.research.chop.edu/
+package edu.chop.cbmi.dataExpress.dsl.statements
 
-Compiling from source
-1. Download the source to a local project directory, here assume it is ~/dataexpress
+import edu.chop.cbmi.dataExpress.dsl.stores.{SqlDb, Store}
+import edu.chop.cbmi.dataExpress.dsl.exceptions.UnsupportedStoreType
+import edu.chop.cbmi.dataExpress.dataModels.{DataRow, DataTable}
+import edu.chop.cbmi.dataExpress.dsl.From
 
-2. Ensure Apache Maven is installed see http://maven.apache.org/
+/**
+ * Created by IntelliJ IDEA.
+ * User: masinoa
+ * Date: 1/13/12
+ * Time: 12:28 PM
+ * To change this template use File | Settings | File Templates.
+ */
 
-3. To compile current source code: 
--From the command line
-$cd ~/dataexpress
-$mvn clean compile
+abstract class GetFrom{
+  def from(source : Store) : DataTable[_]
+}
 
-4. To test current source code: 
--From the command line
-$cd ~/dataexpress
-$mvn test-compile
--Then run scalatest using any of the methods provided at http://www.scalatest.org/user_guide/running_your_tests
+class GetFromQuery(query : String) extends GetFrom{
 
-5. To package current source code with dependencies
--From the command line
-$cd ~/dataexpress
-$mvn -Ppackage-with-dependencies package
+  private var _bind_vars : Seq[Option[Any]] = Seq.empty[Option[Any]]
+
+  def from(source:Store) = source match{
+    case s:SqlDb => DataTable(s.backend, query, _bind_vars)
+    case _ => throw UnsupportedStoreType(source, "GetFromQuery.from")
+  }
+
+  def using_bind_vars(bind_var : Any*) = {
+    _bind_vars = bind_var.toSeq map {Some(_)}
+    this
+  }
+}
+
+class GetFromTable(table_name : String) extends GetFrom{
+  def from(source : Store) = From(source).get_table(table_name).data_table
+}
+
+
+class GetSelect {
+  def query(q : String) : GetFromQuery = new GetFromQuery(q)
+  def table(table_name : String) : GetFromTable = new GetFromTable(table_name)
+}

@@ -18,27 +18,19 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
---------------------------------------------------------------------------------------------------------------
-Considerably more information is available at the DataExpress website:
-http://dataexpress.research.chop.edu/
+package edu.chop.cbmi.dataExpress.dataWriters.sql
 
-Compiling from source
-1. Download the source to a local project directory, here assume it is ~/dataexpress
+import edu.chop.cbmi.dataExpress.dataWriters.OperationStatus
+import edu.chop.cbmi.dataExpress.dataModels.DataRow
 
-2. Ensure Apache Maven is installed see http://maven.apache.org/
+/**
+ * Created by IntelliJ IDEA.
+ * User: masinoa
+ * Date: 12/21/11
+ * Time: 12:20 PM
+ * To change this template use File | Settings | File Templates.
+ */
 
-3. To compile current source code: 
--From the command line
-$cd ~/dataexpress
-$mvn clean compile
-
-4. To test current source code: 
--From the command line
-$cd ~/dataexpress
-$mvn test-compile
--Then run scalatest using any of the methods provided at http://www.scalatest.org/user_guide/running_your_tests
-
-5. To package current source code with dependencies
--From the command line
-$cd ~/dataexpress
-$mvn -Ppackage-with-dependencies package
+case class SqlOperationStatus(private val succeed : Boolean, returned_keys : DataRow[_] = DataRow.empty) extends OperationStatus {
+  def operation_succeeded_? = succeed
+}

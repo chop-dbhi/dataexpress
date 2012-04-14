@@ -18,27 +18,25 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
---------------------------------------------------------------------------------------------------------------
-Considerably more information is available at the DataExpress website:
-http://dataexpress.research.chop.edu/
+package edu.chop.cbmi.dataExpress.dsl.stores
 
-Compiling from source
-1. Download the source to a local project directory, here assume it is ~/dataexpress
+import edu.chop.cbmi.dataExpress.dsl.ETL
 
-2. Ensure Apache Maven is installed see http://maven.apache.org/
+/**
+ * Created by IntelliJ IDEA.
+ * User: masinoa
+ * Date: 1/14/12
+ * Time: 3:57 PM
+ * To change this template use File | Settings | File Templates.
+ */
 
-3. To compile current source code: 
--From the command line
-$cd ~/dataexpress
-$mvn clean compile
+class RegisterAsPre(){
+  def store(s:Store) = new RegisterAs(s)
+}
 
-4. To test current source code: 
--From the command line
-$cd ~/dataexpress
-$mvn test-compile
--Then run scalatest using any of the methods provided at http://www.scalatest.org/user_guide/running_your_tests
-
-5. To package current source code with dependencies
--From the command line
-$cd ~/dataexpress
-$mvn -Ppackage-with-dependencies package
+class RegisterAs(val store : Store){
+  def as(name : String)  = {
+    store.set_unique_id(name)
+    ETL.registerStore(store)
+  }
+}

@@ -18,27 +18,31 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
---------------------------------------------------------------------------------------------------------------
-Considerably more information is available at the DataExpress website:
-http://dataexpress.research.chop.edu/
+package edu.chop.cbmi.dataExpress.dataModels.sql
 
-Compiling from source
-1. Download the source to a local project directory, here assume it is ~/dataexpress
+import edu.chop.cbmi.dataExpress.dataModels.DataType
 
-2. Ensure Apache Maven is installed see http://maven.apache.org/
+/**
+ * Created by IntelliJ IDEA.
+ * User: masinoa
+ * Date: 11/9/11
+ * Time: 12:19 PM
+ * To change this template use File | Settings | File Templates.
+ */
 
-3. To compile current source code: 
--From the command line
-$cd ~/dataexpress
-$mvn clean compile
+case class TinyIntegerDataType() extends DataType{}
+case class SmallIntegerDataType() extends DataType{}
+case class IntegerDataType() extends DataType {}
+case class FloatDataType(precision: Int) extends DataType {}
+case class DecimalDataType(precision: Int, scale: Int) extends DataType {}
 
-4. To test current source code: 
--From the command line
-$cd ~/dataexpress
-$mvn test-compile
--Then run scalatest using any of the methods provided at http://www.scalatest.org/user_guide/running_your_tests
+case class DateDataType() extends DataType {}
+case class DateTimeDataType(withZone: Boolean) extends DataType {}
+case class TimeDataType(withZone: Boolean) extends DataType {}
 
-5. To package current source code with dependencies
--From the command line
-$cd ~/dataexpress
-$mvn -Ppackage-with-dependencies package
+case class CharacterDataType(length: Int, fixedWidth:Boolean) extends DataType {}
+//case class BitDataType(val length:Int, val fixedWidth:Boolean) extends DataType {}
+case class BooleanDataType() extends DataType {}
+case class BitDataType() extends DataType {}
+case class TextDataType() extends DataType {}
+case class BigBinaryDataType() extends DataType {}

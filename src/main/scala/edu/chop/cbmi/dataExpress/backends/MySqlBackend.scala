@@ -18,27 +18,31 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
---------------------------------------------------------------------------------------------------------------
-Considerably more information is available at the DataExpress website:
-http://dataexpress.research.chop.edu/
+package edu.chop.cbmi.dataExpress.backends
 
-Compiling from source
-1. Download the source to a local project directory, here assume it is ~/dataexpress
+import java.util.Properties
+/**
+ * Created by IntelliJ IDEA.
+ * User: davidsonl2
+ * Date: 8/19/11
+ * Time: 9:17 AM
+ * To change this template use File | Settings | File Templates.
+ */
 
-2. Ensure Apache Maven is installed see http://maven.apache.org/
 
-3. To compile current source code: 
--From the command line
-$cd ~/dataexpress
-$mvn clean compile
+class MySqlBackend(override val connectionProperties : Properties, _sqlDialect : SqlDialect = null,
+                           _driverClassName : String = null)
+  extends SqlBackend(connectionProperties, if(_sqlDialect==null)MySqlDialect else _sqlDialect,
+    if(_driverClassName==null)"com.mysql.jdbc.Driver" else _driverClassName) {
 
-4. To test current source code: 
--From the command line
-$cd ~/dataexpress
-$mvn test-compile
--Then run scalatest using any of the methods provided at http://www.scalatest.org/user_guide/running_your_tests
+  /*this is over ridden because MySQL does not support multiple result sets. Thus it is necessary
+    to manage result sets to ensure that any open result sets are closed before performing a query.
+    The default SqlBackend implementation will manage these when this flag is set to false
+  */
+  override val SUPPORTS_MULT_RS = false
 
-5. To package current source code with dependencies
--From the command line
-$cd ~/dataexpress
-$mvn -Ppackage-with-dependencies package
+  //In order to allow streaming results, mySQL REQUIRES the fetch size to be -2^31 or Integer.MIN_VALUE, all other values are ignored
+  override def executeQuery(sqlStatement: String, bindvars: Seq[Option[_]] = Seq.empty[Option[_]], fetchSize:Int=20): java.sql.ResultSet = {
+    super.executeQuery(sqlStatement, bindvars, Integer.MIN_VALUE)
+  }
+}

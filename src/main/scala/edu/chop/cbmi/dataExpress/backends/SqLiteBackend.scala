@@ -18,27 +18,18 @@ SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSE
 WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
 USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
---------------------------------------------------------------------------------------------------------------
-Considerably more information is available at the DataExpress website:
-http://dataexpress.research.chop.edu/
+package edu.chop.cbmi.dataExpress.backends
+import edu.chop.cbmi.dataExpress.dataModels.DataRow
+import java.util.Properties
 
-Compiling from source
-1. Download the source to a local project directory, here assume it is ~/dataexpress
 
-2. Ensure Apache Maven is installed see http://maven.apache.org/
+class SqLiteBackend(override val connectionProperties : Properties, _sqlDialect : SqlDialect = null, _driverClassName : String = null)
+  extends SqlBackend(connectionProperties, if(_sqlDialect==null)SqLiteDialect else _sqlDialect,
+    if(_driverClassName==null)"org.sqlite.JDBC" else _driverClassName) {
 
-3. To compile current source code: 
--From the command line
-$cd ~/dataexpress
-$mvn clean compile
-
-4. To test current source code: 
--From the command line
-$cd ~/dataexpress
-$mvn test-compile
--Then run scalatest using any of the methods provided at http://www.scalatest.org/user_guide/running_your_tests
-
-5. To package current source code with dependencies
--From the command line
-$cd ~/dataexpress
-$mvn -Ppackage-with-dependencies package
+  //SQLite does not support returning keys, so we will use an ordinary execute for this operation
+  override def executeReturningKeys(sqlStatement:String, bindVars: Seq[Option[_]]): DataRow[_] = {
+    super.execute(sqlStatement, bindVars)
+    DataRow.empty
+  }
+}
