@@ -22,23 +22,50 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Considerably more information is available at the DataExpress website:
 http://dataexpress.research.chop.edu/
 
-Compiling from source
+Compiling from source: The source code includes both a Maven pom.xml file and an SBT build.sbt configuration allowing
+either Maven or SBT to be used for building. Why both? User choice naturally. However, SBT is the preferred choice as
+it provides better support for scala test integration. 
+
+All  commands assume you are working in the dataexpress root directory, here ~/dataexpress) 
+//Using SBT (assumes SBT 0.11.2)
+1. Download the source to a local project directory, here assume it is ~/dataexpress
+
+2. Ensure SBT is installed see http://www.scala-sbt.org/
+
+3. To compile current source code:
+$sbt compile
+
+4. To test current source code:
+$sbt test
+
+5. To package WITHOUT dependencies
+$sbt package
+
+6. To package WITH dependencies (does not include Scala library, to do so in ~/dataexpress/build.sbt set assembleArtifact in packageScala := true
+$sbt assembly
+
+7. To create scaladocs
+$sbt doc
+
+8. To start a Scala console with DataExpress on the class path
+$sbt console
+-Note this will also automatically perform the following imports
+import edu.chop.cbmi.dataExpress.dsl.ETL._
+import edu.chop.cbmi.dataExpress.dsl.ETL
+import edu.chop.cbmi.dataExpress.dsl.stores.SqlDb
+import edu.chop.cbmi.dataExpress.dataModels.RichOption._
+
+//Using MAVEN
 1. Download the source to a local project directory, here assume it is ~/dataexpress
 
 2. Ensure Apache Maven is installed see http://maven.apache.org/
 
 3. To compile current source code: 
--From the command line
-$cd ~/dataexpress
 $mvn clean compile
 
 4. To test current source code: 
--From the command line
-$cd ~/dataexpress
 $mvn test-compile
 -Then run scalatest using any of the methods provided at http://www.scalatest.org/user_guide/running_your_tests
 
 5. To package current source code with dependencies
--From the command line
-$cd ~/dataexpress
 $mvn -Ppackage-with-dependencies package

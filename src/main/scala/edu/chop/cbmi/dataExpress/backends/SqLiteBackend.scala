@@ -32,4 +32,6 @@ class SqLiteBackend(override val connectionProperties : Properties, _sqlDialect 
     super.execute(sqlStatement, bindVars)
     DataRow.empty
   }
+  
+  override val SUPPORTS_MULT_RS = false
 }

@@ -1,6 +1,8 @@
 *.properties
 log.sql
 target/
+project/project/
+project/target/
 build/
 dist/
 out/
