@@ -6,6 +6,7 @@ project/target/
 build/
 dist/
 out/
+.cache
 backup/
 .idea/
 .DS_Store
@@ -13,6 +14,8 @@ backup/
 *.ipr
 *.iws
 *.project
+.settings/
+.classpath
 *.texlipse
 *.aux
 *.log

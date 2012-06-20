@@ -22,9 +22,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 Considerably more information is available at the DataExpress website:
 http://dataexpress.research.chop.edu/
 
-Compiling from source: The source code includes both a Maven pom.xml file and an SBT build.sbt configuration allowing
-either Maven or SBT to be used for building. Why both? User choice naturally. However, SBT is the preferred choice as
-it provides better support for scala test integration. 
+Compiling from source: The source code includes both a Maven pom.xml file and an SBT build.sbt configuration allowing either Maven or SBT to be used for building. Why both? User choice naturally. However, SBT is the preferred choice as it provides better support for scala test integration.
 
 All  commands assume you are working in the dataexpress root directory, here ~/dataexpress) 
 //Using SBT (assumes SBT 0.11.2)

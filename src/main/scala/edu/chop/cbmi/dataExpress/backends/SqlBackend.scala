@@ -21,13 +21,12 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package edu.chop.cbmi.dataExpress.backends
 
 import edu.chop.cbmi.dataExpress.dataModels.DataType
-
 import edu.chop.cbmi.dataExpress.dataModels.{DataTable, DataRow}
 import java.util.Properties
 import java.io.FileInputStream
-
 import edu.chop.cbmi.dataExpress.logging.Log
 import java.sql.{ResultSet, PreparedStatement, Statement, Driver}
+import java.util.ServiceLoader
 
 /**
  * Created by IntelliJ IDEA.
@@ -37,25 +36,50 @@ import java.sql.{ResultSet, PreparedStatement, Statement, Driver}
  * To change this template use File | Settings | File Templates.
  */
 
+trait SqlBackendProvider {
+  def getProviderFor(db_vendor : String, connectionProperties : Properties, sqlDialect : SqlDialect, driverClassName : String) : Option[SqlBackend]
+}
 
 object SqlBackendFactory{
+	
+  val sqlBackendProviderLoader = ServiceLoader.load[SqlBackendProvider](classOf[SqlBackendProvider])
+  
+  private val included_backends = List("postgresql", "mysql", "sqlite")
 
-  def apply(connection_properties: Properties, sqlDialect : SqlDialect = null,
-            driver_class_name : String = null) : SqlBackend = {
-    try {
-        val db_type: String = connection_properties.getProperty("jdbcUri").split(":")(1)
-        db_type match {
-          case "postgresql" => new PostgresBackend(connection_properties, sqlDialect, driver_class_name)
-          case "mysql"      => new MySqlBackend(connection_properties, sqlDialect, driver_class_name)
-          //case "oracle"     => new OracleBackend(connection_properties, sqlDialect, driver_class_name)
-          //case "sqlserver"  => new SqlServerBackend(connection_properties, sqlDialect, driver_class_name)
-          case "sqlite" 	=> new SqLiteBackend(connection_properties, sqlDialect, driver_class_name)
-          case _ => throw new RuntimeException("Unsupported database type: " + db_type)
+  private def load_included_bakcend(db_type: String, connection_properties: Properties, sqlDialect: SqlDialect = null,
+    driver_class_name: String = null) = db_type match {
+    case "postgresql" => new PostgresBackend(connection_properties, sqlDialect, driver_class_name)
+    case "mysql" => new MySqlBackend(connection_properties, sqlDialect, driver_class_name)
+    //case "oracle"     => new OracleBackend(connection_properties, sqlDialect, driver_class_name)
+    //case "sqlserver"  => new SqlServerBackend(connection_properties, sqlDialect, driver_class_name)
+    case "sqlite" => new SqLiteBackend(connection_properties, sqlDialect, driver_class_name)
+    case _ => throw new RuntimeException("Unsupported database type: " + db_type)
+  }
+
+  def apply(connection_properties: Properties, sqlDialect: SqlDialect = null,
+    driver_class_name: String = null): SqlBackend = {
+    // try {
+    val db_type: String = connection_properties.getProperty("jdbcUri").split(":")(1)
+    if (included_backends contains db_type) load_included_bakcend(db_type, connection_properties, sqlDialect, driver_class_name)
+    else{
+      val providers = sqlBackendProviderLoader.iterator()
+      var provider : SqlBackend = null
+      var keep_searching = true
+      while(providers.hasNext() && keep_searching){
+        providers.next().getProviderFor(db_type, connection_properties, sqlDialect, driver_class_name) match{
+          case Some(p) => {
+            provider = p
+            keep_searching = false
+          }
+          case _ => keep_searching = true
         }
-      } catch {
-        case _ => throw new RuntimeException("Required property 'jdbcUri' not in properties file")
       }
+      provider
     }
+    //     } catch {
+    //       case _ => throw new RuntimeException("Required property 'jdbcUri' not in properties file")
+    //     }
+  }
 
   def apply(connection_properties_file: String, sqlDialect : SqlDialect, driver_class_name : String) : SqlBackend = {
     val prop_stream = new FileInputStream(connection_properties_file)
