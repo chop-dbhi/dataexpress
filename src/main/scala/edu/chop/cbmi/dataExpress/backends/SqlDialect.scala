@@ -36,11 +36,11 @@ trait SqlDialect {
 
   def quoteIdentifier(id: String) : String
 
-  def createTable(name: String, columns: List[(String,DataType)], schemaName:String) : String
+  def createTable(name: String, columns: List[(String,DataType)], schemaName:Option[String]) : String
 
-  def dropTable(name: String, cascade:Boolean=false, schemaName:String =  null ) : String
+  def dropTable(name: String, cascade:Boolean=false, schemaName:Option[String] =  None ) : String
 
-  def truncate(table: String, schemaName:String =  null) : String
+  def truncate(table: String, schemaName:Option[String] =  None) : String
 
   def commit()  : String
 
@@ -51,12 +51,12 @@ trait SqlDialect {
 
   def startTransaction() : String
 
-  def insertRecord(tableName: String, columnNames:List[String], schemaName:String = null) : String
+  def insertRecord(tableName: String, columnNames:List[String], schemaName:Option[String] = None) : String
 
   def updateRecords(tableName: String, columnNames:List[String],
-                    filter:List[(String, Any)], schemaName:String  = null) : String
+                    filter:List[(String, Any)], schemaName:Option[String]  = None) : String
 
-   def toSqlString(dataType: DataType) : String
+  def toSqlString(dataType: DataType) : String
 
   def mapDataTypes(column_names : Seq[String], meta : ResultSetMetaData) =  {
     column_names map((name:String)=>column_names.indexOf(name)) map((j:Int) => {
@@ -105,10 +105,10 @@ trait SqlDialect {
         case java.sql.Types.BIT                               => BitDataType()
         case _                                                =>  {
           throw new RuntimeException("Can't map JDBC type to a known DataExpress type " +
-              meta.getColumnType(i) + " for column " + meta.getColumnName(i))
+            meta.getColumnType(i) + " for column " + meta.getColumnName(i))
         }
       }
     })
-}
+  }
 
 }

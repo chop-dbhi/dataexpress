@@ -48,9 +48,9 @@ case object PostgresSqlDialect extends SqlDialect {
     "%s%s%s".format(identifierQuote, id, identifierQuote)
   }
 
-  def createTable(name: String, columns: List[(String, DataType)], schemaName: String) = {
+  def createTable(name: String, columns: List[(String, DataType)], schemaName: Option[String]) = {
     var quotedSchemaPrefix: String = null
-    if (schemaName == null) quotedSchemaPrefix = "" else quotedSchemaPrefix = quoteIdentifier(schemaName) + "."
+    if (schemaName.isEmpty) quotedSchemaPrefix = "" else quotedSchemaPrefix = quoteIdentifier(schemaName.get) + "."
 
     val createBlock = columns.map {
       (t: Tuple2[String, DataType]) => "%s %s".format(quoteIdentifier(t._1), toSqlString(t._2))
@@ -59,17 +59,17 @@ case object PostgresSqlDialect extends SqlDialect {
     createString
   }
 
-  def dropTable(name: String, cascade: Boolean = false, schemaName: String = null) = {
+  def dropTable(name: String, cascade: Boolean = false, schemaName: Option[String] = None) = {
     var quotedSchemaPrefix: String = null
-    if (schemaName == null) quotedSchemaPrefix = "" else quotedSchemaPrefix = quoteIdentifier(schemaName) + "."
+    if (schemaName.isEmpty) quotedSchemaPrefix = "" else quotedSchemaPrefix = quoteIdentifier(schemaName.get) + "."
 
     val fmtString = if (cascade) "%s %s%s " + tableCascade else "%s %s%s"
     fmtString.format(tableDrop, quotedSchemaPrefix, quoteIdentifier(name))
   }
 
-  def truncate(table: String, schemaName: String = null) = {
+  def truncate(table: String, schemaName: Option[String] = None) = {
     var quotedSchemaPrefix: String = null
-    if (schemaName == null) quotedSchemaPrefix = "" else quotedSchemaPrefix = quoteIdentifier(schemaName) + "."
+    if (schemaName.isEmpty) quotedSchemaPrefix = "" else quotedSchemaPrefix = quoteIdentifier(schemaName.get) + "."
 
     "%s %s%s".format(tableTruncate, quotedSchemaPrefix, quoteIdentifier(table))
   }
@@ -82,11 +82,11 @@ case object PostgresSqlDialect extends SqlDialect {
 
   def startTransaction() = transactionStart
 
-  def insertRecord(tableName: String, columnNames: List[String], schemaName: String = null) = {
+  def insertRecord(tableName: String, columnNames: List[String], schemaName: Option[String] = None) = {
     val valuesList = "%s".format(List.fill(columnNames.size)("?").mkString(","))
 
     var quotedSchemaPrefix: String = null
-    if (schemaName == null) quotedSchemaPrefix = "" else quotedSchemaPrefix = quoteIdentifier(schemaName) + "."
+    if (schemaName.isEmpty) quotedSchemaPrefix = "" else quotedSchemaPrefix = quoteIdentifier(schemaName.get) + "."
 
     val sqlString = "%s %s%s (%s) %s (%s)".format(insertStatement,
       quotedSchemaPrefix,
@@ -100,9 +100,9 @@ case object PostgresSqlDialect extends SqlDialect {
   }
 
   //TODO: Create a "WHERE" clause object so we can do more than equality here
-  def updateRecords(tableName: String, columnNames: List[String], filter: List[(String, Any)], schemaName: String = null) = {
+  def updateRecords(tableName: String, columnNames: List[String], filter: List[(String, Any)], schemaName: Option[String] = None) = {
     var quotedSchemaPrefix: String = null
-    if (schemaName == null) quotedSchemaPrefix = "" else quotedSchemaPrefix = quoteIdentifier(schemaName) + "."
+    if (schemaName.isEmpty) quotedSchemaPrefix = "" else quotedSchemaPrefix = quoteIdentifier(schemaName.get) + "."
 
     val setString = columnNames.map {
       i => "%s = ?".format(quoteIdentifier(i))

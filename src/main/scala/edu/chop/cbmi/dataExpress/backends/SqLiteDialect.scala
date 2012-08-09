@@ -169,7 +169,7 @@ case object SqLiteDialect extends SqlDialect {
     
   }
 
-  def createTable(name: String, columns: List[(String, DataType)], schemaName: String) = {
+  def createTable(name: String, columns: List[(String, DataType)], schemaName: Option[String]) = {
     val createBlock = columns.map {
       (t: Tuple2[String, DataType]) => "%s %s".format(quoteIdentifier(t._1), toSqlString(t._2))
     }
@@ -177,12 +177,12 @@ case object SqLiteDialect extends SqlDialect {
     createString
   }
 
-  def dropTable(name: String, cascade: Boolean = false, schemaName: String = null) = {
+  def dropTable(name: String, cascade: Boolean = false, schemaName: Option[String] = None) = {
     val fmtString = if (cascade) "%s %s " + tableCascade else "%s %s"
     fmtString.format(tableDrop, quoteIdentifier(name))
   }
 
-  def truncate(table: String, schemaName: String = null) = {
+  def truncate(table: String, schemaName: Option[String] = None) = {
     "%s %s".format(tableTruncate, quoteIdentifier(table))
   }
 
@@ -194,7 +194,7 @@ case object SqLiteDialect extends SqlDialect {
 
   def startTransaction() = transactionStart
 
-  def insertRecord(tableName: String, columnNames: List[String], schemaName: String = null) = {
+  def insertRecord(tableName: String, columnNames: List[String], schemaName: Option[String] = None) = {
     val valuesList = "%s".format(List.fill(columnNames.size)("?").mkString(","))
 
     val sqlString = "%s %s (%s) %s (%s)".format(insertStatement,
@@ -208,7 +208,7 @@ case object SqLiteDialect extends SqlDialect {
   }
 
   //TODO: Create a "WHERE" clause object so we can do more than equality here
-  def updateRecords(tableName: String, columnNames: List[String], filter: List[(String, Any)], schemaName: String = null) = {
+  def updateRecords(tableName: String, columnNames: List[String], filter: List[(String, Any)], schemaName: Option[String] = None) = {
     val setString = columnNames.map {
       i => "%s = ?".format(quoteIdentifier(i))
     }.mkString(", ")

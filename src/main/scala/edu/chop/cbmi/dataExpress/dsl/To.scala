@@ -47,7 +47,7 @@ case class ToFromRow(target : Store, row : DataRow[_]) extends To(target) {
   def append(table_name : String) = {
     _target match {
       case (s: SqlDb) => {
-        val schema = s.schema.getOrElse(null)
+        val schema = s.schema
         val catalog = s.catalog.getOrElse(null)
         val writer = DataWriter(s.backend, schema, catalog)
         writer.insert_row(table_name, row)
@@ -65,7 +65,7 @@ case class ToFromTable(target : Store, source_table : TransformableDataTable) ex
   def create(table_name : String) = {
     _target match {
           case (s:SqlDb) => {
-            val schema = s.schema.getOrElse(null)
+            val schema = s.schema
             val catalog = s.catalog.getOrElse(null)
             val data_types = source_table._final_data_types match{
               case Some(l:List[DataType]) => l

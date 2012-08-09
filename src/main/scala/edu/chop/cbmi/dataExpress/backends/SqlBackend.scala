@@ -243,18 +243,18 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
     execute(sql)
   }*/
 
-  //TODO: schema name should be an Option type with a default of none so that we don't have to pass un-Scala-like nulls
-  def createTable(tableName: String, columnNames : List[String], dataTypes: List[DataType], schemaName:String) : Boolean = {
+  def createTable(tableName: String, columnNames : List[String], dataTypes: List[DataType], schemaName:Option[String] = None) :
+  Boolean = {
     //Initially, this seems wasteful to get tables each time, but there's no way
     //to know if a table has been created immediately before this and a real risk
     //of a stale cache, also need to account for case-sensitive RDBMS
-    val rs = connection.getMetaData.getTables(null, schemaName, "%", null)
+    val rs = connection.getMetaData.getTables(null, schemaName.getOrElse(null), "%", null)
     while(rs.next) {
-          val tableFromMeta = rs.getString(3)
-          if (tableFromMeta.toUpperCase == tableName.toUpperCase){
-            //automatically cascades constraints, this is usually what you want with ETL
-            dropTable(tableName, true, schemaName)
-          }
+      val tableFromMeta = rs.getString(3)
+      if (tableFromMeta.toUpperCase == tableName.toUpperCase){
+        //automatically cascades constraints, this is usually what you want with ETL
+        dropTable(tableName, true, schemaName)
+      }
 
     }
     val typeMap = columnNames.zip(dataTypes).toList
@@ -266,7 +266,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    *  <code>Truncate</code>s a SQL table
    *  @param tableName the name of the table to truncate
    */
-  def truncateTable(tableName: String, schemaName:String = null) : Boolean = execute(sqlDialect.truncate(tableName, schemaName))
+  def truncateTable(tableName: String, schemaName:Option[String] = None) : Boolean = execute(sqlDialect.truncate(tableName, schemaName))
 
   /**
    * Drops a database table, optionally cascading constraints
@@ -274,20 +274,20 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * @param tableName the name of the table to drop
    * @cascade when <code>true</code> indicates that constraints should be cascadedd
    */
-  def dropTable(tableName: String, cascade:Boolean=false, schemaName:String = null) : Boolean = execute(sqlDialect.dropTable(tableName, cascade, schemaName))
-
+  def dropTable(tableName: String, cascade:Boolean=false, schemaName:Option[String] = None) : Boolean =
+    execute(sqlDialect.dropTable(tableName, cascade, schemaName))
   /*------ Insertion Methods ------*/
 
-  def insertRow(tableName: String, row: DataRow[_], schemaName:String = null): DataRow[_] =
+  def insertRow(tableName: String, row: DataRow[_], schemaName:Option[String] = None): DataRow[_] =
     executeReturningKeys(sqlDialect.insertRecord(tableName, row.column_names.toList, schemaName), row)
 
-  def batchInsert(tableName:String, table:DataTable[_], schemaName:String = null):Int = {
+  def batchInsert(tableName:String, table:DataTable[_], schemaName:Option[String] = None):Int = {
     val sqlStatement = sqlDialect.insertRecord(tableName, table.column_names.toList, schemaName)
     val statement = statementCache.getStatement(sqlStatement)
     executeBatch(statement, table.iterator, 50, {dr:DataRow[_] => dr})
   }
 
-  def updateRow(tableName: String, updated_row: DataRow[_], filter: List[(String, Any)], schemaName: String = null) = {
+  def updateRow(tableName: String, updated_row: DataRow[_], filter: List[(String, Any)], schemaName: Option[String] = None) = {
     val sqlStatement = sqlDialect.updateRecords(tableName, updated_row.column_names.toList, filter, schemaName)
     val bind_vars = DataRow.map_to_option(updated_row.map((v:Option[_])=>{
       v match {
@@ -336,7 +336,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
     successfulStatementCount
   }
 
-  private def prepStatement(sqlStatement: PreparedStatement, bindVars: Seq[Option[_]]) = {
+  protected def prepStatement(sqlStatement: PreparedStatement, bindVars: Seq[Option[_]]) = {
     if (bindVars.length > 0) {
       val vars = bindVars.zipWithIndex
       for (v <- vars) {
@@ -346,8 +346,6 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
           case Some(i: java.sql.Time)         => sqlStatement.setTime((v._2 + 1), i)
           //TODO: Test the java.util.Date for precision here to avoid trying to set to a higher precision
           case Some(i: java.util.Date)        => sqlStatement.setDate((v._2 + 1), new java.sql.Date(i.getTime))
-          //Milleseconds get dropped with this one.
-          //case Some(i: oracle.sql.TIMESTAMP)  =>  sqlStatement.setObject((v._2 + 1), i.dateValue())
           case None => sqlStatement.setNull(v._2 + 1, java.sql.Types.NULL)  //TODO: do something better here
           case _    => sqlStatement.setObject((v._2 + 1), v._1.get)
         }

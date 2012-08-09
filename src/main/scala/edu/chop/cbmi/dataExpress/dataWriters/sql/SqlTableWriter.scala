@@ -40,11 +40,11 @@ object SqlTableWriter{
   val OVERWRITE_OPTION_APPEND = 2
 }
 
-case class SqlTableWriter(val backend : SqlBackend, val schema : String = null, val catalog : String = null)
+case class SqlTableWriter(val backend : SqlBackend, val schema : Option[String] = None, val catalog : String = null)
   extends DataWriter{
 
   private def column_names(table_name : String) = {
-    val rs = backend.connection.getMetaData.getColumns(catalog, schema, table_name, null)
+    val rs = backend.connection.getMetaData.getColumns(catalog, schema.getOrElse(null), table_name, null)
     var names =  scala.collection.mutable.HashMap.empty[Int,String]
     if(rs.next){
       do{
@@ -96,7 +96,7 @@ case class SqlTableWriter(val backend : SqlBackend, val schema : String = null, 
   }
 
   override def insert_table[T,G<:DataType](table_name: String, data_types: Seq[G] = Seq.empty[DataType], table: DataTable[T],
-                               overwrite_option: Int = SqlTableWriter.OVERWRITE_OPTION_APPEND) = {
+                                           overwrite_option: Int = SqlTableWriter.OVERWRITE_OPTION_APPEND) = {
     if(data_types.isEmpty)throw new Exception("data_types list is empty in insert table")
     else {
       overwrite_option match {

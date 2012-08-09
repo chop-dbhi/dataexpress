@@ -58,7 +58,7 @@ trait DataWriter {
 /**Factory method for creating instances of [[edu.chop.cbmi.dataExpress.dataWriters.DataWriter]]*/
 object DataWriter{
 
- def apply(sqlBackend : SqlBackend, schema : String = null, catalog : String = null)
-    = SqlTableWriter(sqlBackend, schema, catalog)
+  def apply(sqlBackend : SqlBackend, schema : Option[String] = None, catalog : String = null)
+  = SqlTableWriter(sqlBackend, schema, catalog)
 
 }
