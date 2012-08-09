@@ -305,9 +305,6 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
     var currentBatch = 0
     var successfulStatementCount = 0
 
-    val sqlLog    = Log(false, true)
-    val errorLog  = Log(true, false)
-
     while (values.hasNext) {
       val bindVars = callback(values.next())
       prepStatement(statement, bindVars)
@@ -322,9 +319,10 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
         }
         catch {
           case e: java.sql.BatchUpdateException => {
-            sqlLog.bindVarsSqlInsertWrite(bindVars)
-            errorLog.batchUpdateExceptionWrite(e)
-          }//throw e.getNextException
+
+            throw e.getNextException
+
+          }
         }
 
       }
@@ -334,9 +332,6 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
       val status = statement.executeBatch.toList
       successfulStatementCount += status.filter(i => i != Statement.EXECUTE_FAILED).length
     }
-
-    sqlLog.close()
-    errorLog.close()
 
     successfulStatementCount
   }
