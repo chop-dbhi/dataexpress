@@ -155,8 +155,25 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.6</version>
                 <configuration>
-                    <skipTests>false</skipTests>
+                    <skipTests>true</skipTests>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.scalatest</groupId>
+                <artifactId>maven-scalatest-plugin</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                            <xmlreports>.</xmlreports>
+                            <filereports>WDF TestSuite.txt</filereports>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
             <plugin>
                         <artifactId>maven-assembly-plugin</artifactId>
