@@ -1,4 +1,6 @@
-resolvers += Resolver.url("artifactory",
-  new URL("http://scalasbt.artifactoryonline.com/scalasbt/sbt-plugin-releases/"))(Resolver.ivyStylePatterns)
+resolvers += Resolver.url("artifactory",                                                        
+new URL("http://scalasbt.artifactoryonline.com/scalasbt/sbt-plugin-releases/"))(Resolver.ivyStylePatterns)
 
-addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.7.4")
+
+
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.8.4")
