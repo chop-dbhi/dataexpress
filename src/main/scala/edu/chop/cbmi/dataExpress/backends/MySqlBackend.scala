@@ -19,7 +19,7 @@ WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWIS
 USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package edu.chop.cbmi.dataExpress.backends
-
+import edu.chop.cbmi.dataExpress.dataModels.DataRow
 import java.util.Properties
 /**
  * Created by IntelliJ IDEA.
@@ -45,4 +45,5 @@ class MySqlBackend(override val connectionProperties : Properties, _sqlDialect :
   override def executeQuery(sqlStatement: String, bindvars: Seq[Option[_]] = Seq.empty[Option[_]], fetchSize:Int=20): java.sql.ResultSet = {
     super.executeQuery(sqlStatement, bindvars, Integer.MIN_VALUE)
   }
+  
 }

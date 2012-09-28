@@ -59,7 +59,7 @@ case class SqlTableWriter(val backend : SqlBackend, val schema : Option[String] 
    * @return SqlOperationsStatus contains status and primary key of newly inserted row
    */
   override def insert_row[T](table_name:String, row: DataRow[T]) =
-    SqlOperationStatus(true, backend.insertRow(table_name, row, schema))
+    SqlOperationStatus(true, backend.insertReturningKeys(table_name, row, schema))
 
   /**
    * @param table A DataTable whose column names match columns in the target table, not all columns are required
@@ -76,7 +76,7 @@ case class SqlTableWriter(val backend : SqlBackend, val schema : Option[String] 
    * @param f A function that takes a column_name : String and returns the value for that column
    */
   override  def insert_row[T](table_name:String, f : (String)=>Option[T]) =
-    SqlOperationStatus(true, backend.insertRow(table_name, DataRow(apply_f_for_cols(table_name,f): _*), schema))
+    SqlOperationStatus(true, backend.insertReturningKeys(table_name, DataRow(apply_f_for_cols(table_name,f): _*), schema))
 
   override def update_row[T](table_name : String, updated_row : DataRow[T], filter : (String,_)*) =
     SqlOperationStatus(backend.updateRow(table_name, updated_row, filter.toList, schema))

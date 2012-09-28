@@ -143,7 +143,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
   }
   /*------ Query Execution functions -----*/
 
-  private def checkResultSetThenExecute(code: => Option[ResultSet]) = {
+ protected def checkResultSetThenExecute(code: => Option[ResultSet]) = {
     if(SUPPORTS_MULT_RS)code
     else{
       openResultSet match {
@@ -278,9 +278,12 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
     execute(sqlDialect.dropTable(tableName, cascade, schemaName))
   /*------ Insertion Methods ------*/
 
-  def insertRow(tableName: String, row: DataRow[_], schemaName:Option[String] = None): DataRow[_] =
+  def insertReturningKeys(tableName: String, row: DataRow[_], schemaName:Option[String] = None): DataRow[_] =
     executeReturningKeys(sqlDialect.insertRecord(tableName, row.column_names.toList, schemaName), row)
-
+ 
+  def insertRow(tableName: String, row: DataRow[_], schemaName:Option[String] = None): Boolean = 
+    execute(sqlDialect.insertRecord(tableName, row.column_names.toList, schemaName), row)
+    
   def batchInsert(tableName:String, table:DataTable[_], schemaName:Option[String] = None):Int = {
     val sqlStatement = sqlDialect.insertRecord(tableName, table.column_names.toList, schemaName)
     val statement = statementCache.getStatement(sqlStatement)
