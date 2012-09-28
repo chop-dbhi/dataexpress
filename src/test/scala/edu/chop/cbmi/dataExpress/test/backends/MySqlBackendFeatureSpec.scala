@@ -27,9 +27,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
 
   def fixture =
     new {
-        //val prop_path = TestProps.property("mysql_db_prop_file")
-        //val prop_path = "mysql_test.properties"
-	  	val inputStream = this.getClass().getResourceAsStream("mysql_test.properties") //new java.io.FileInputStream(prop_path)
+	  	val inputStream = this.getClass().getResourceAsStream("mysql_test.properties")
         val props = new Properties()
         props.load(inputStream)
         inputStream.close()

@@ -29,8 +29,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
   def fixture =
     new {
-        val prop_path = TestProps.property("postgres_db_prop_file")
-        val inputStream:java.io.FileInputStream = new java.io.FileInputStream(prop_path)
+	  	val inputStream = this.getClass().getResourceAsStream("postgres_test.properties")
         val props = new Properties()
         props.load(inputStream)
         inputStream.close()
