@@ -221,7 +221,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
      val columnNumber = keyResultSet.getMetaData.getColumnCount
      if (keyResultSet.next) {
        val data = (1 to columnNumber).map{x => keyResultSet.getObject(x)}.toList
-       val columns = (1 to columnNumber).map{i => keyResultSet.getMetaData.getColumnName(i)}.toList
+       val columns = (1 to columnNumber).map{i => keyResultSet.getMetaData.getColumnLabel(i)}.toList
        DataRow(columns)(DataRow.map_to_option(data))
      }else DataRow.empty
 
