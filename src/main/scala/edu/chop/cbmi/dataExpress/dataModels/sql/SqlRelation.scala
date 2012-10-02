@@ -80,7 +80,7 @@ case class SqlQueryPackage(val dataStore : SqlBackend, val query : String, val b
     _columnNames match{
       case Some(cn) => cn
       case _ =>{
-        val cn = (1 to columnCount) map {(i:Int)=>meta.getColumnName(i)}
+        val cn = (1 to columnCount) map {(i:Int)=>meta.getColumnLabel(i)}
         _columnNames = Some(cn)
         cn
       }
