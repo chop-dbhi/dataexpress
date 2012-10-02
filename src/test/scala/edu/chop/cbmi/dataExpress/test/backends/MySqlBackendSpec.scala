@@ -19,8 +19,7 @@ class MySqlBackendSpec extends Spec with ShouldMatchers with GivenWhenThen  {
 
   def fixture =
     new {
-        val prop_path = TestProps.property("mysql_db_prop_file")
-        val inputStream:java.io.FileInputStream = new java.io.FileInputStream(prop_path)
+	  	val inputStream = this.getClass().getResourceAsStream("mysql_test.properties")
         val props = new Properties()
         props.load(inputStream)
         inputStream.close()
