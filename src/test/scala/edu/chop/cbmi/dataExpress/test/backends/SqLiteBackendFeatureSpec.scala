@@ -21,12 +21,13 @@ import edu.chop.cbmi.dataExpress.dataModels._
 import edu.chop.cbmi.dataExpress.dataModels.sql._
 import edu.chop.cbmi.dataExpress.dataModels.sql.IntegerDataType
 
+
 @RunWith(classOf[JUnitRunner])
 class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
 
   def fixture =
     new {
-	  	val inputStream = this.getClass().getResourceAsStream("mysql_test.properties")
+	  	val inputStream = this.getClass().getResourceAsStream("sqlite_test.properties")
         val props = new Properties()
         props.load(inputStream)
         inputStream.close()
@@ -53,7 +54,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
   }
 
 
-  scenario("The user can create a table with four columns") {
+  ignore("The user can create a table with four columns") {
     val f = fixture
     val tableName = "cars_deba_a"
     val columnFixedWidth: Boolean = false
@@ -124,14 +125,11 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("The user can truncate a table and commit") {
-     val f = fixture
-
-     val tableName:String                            =     "cars_deba_a"
-
-     val countStatement:String                       =     "select count(1) as 'count' from "  + dbSchema.get +  "."  + tableName
-
-     val backend                                     =     new MySqlBackend(f.props)
+  ignore("The user can truncate a table and commit") {
+    val f = fixture
+    val tableName: String = "cars_deba_a"
+    val countStatement: String = "select count(1) as 'count' from " + tableName
+    val backend = new SqLiteBackend(f.props)
 
      given("an active connection and a populated table")
      assert(backend.connect().isInstanceOf[java.sql.Connection] )
@@ -140,10 +138,10 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
      when("the user issues truncate and then commit instructions for that table")
      try
-       backend.truncateTable(tableName, schemaName = dbSchema)
+       backend.truncateTable(tableName)
      catch {
      case e:java.sql.SQLException =>
-             fail("backend.truncateTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
+             fail("backend.truncateTable(" + "\"" + tableName  + "\"" + ")produced java.sql.SQLException" )
      }
 
      try
@@ -165,10 +163,10 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
   //TODO: This test needs to be re-written with an auto-incrementing sequence in the table to fully test insert returning keys
-  scenario("The inserted row can be committed") {
+  ignore("The inserted row can be committed") {
     val f             = fixture
 
-    val backend       = new MySqlBackend(f.props)
+    val backend       = new SqLiteBackend(f.props)
 
     val tableName     = "cars_deba_a"
 
@@ -176,7 +174,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     val valuesHolders:List[String]    = for (i <- (0 to (columnNames.length - 1)).toList) yield "?"
 
-    val sqlStatement                  = "insert into " + dbSchema.get + "." + tableName                                 +
+    val sqlStatement                  = "insert into " + tableName  +
                                       "("                                                                           +
                                       columnNames.map(i => i + ",").mkString.dropRight(1)                           +
                                       ")"                                                                           +
@@ -222,7 +220,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     then("the inserted row should be in the database")
     
-    val rs = backend.executeQuery("select count(*) from %s.%s where %s = ?".format(dbSchema.get, tableName, columnNames(0)), List(Option(carId)))
+    val rs = backend.executeQuery("select count(*) from %s where %s = ?".format(tableName, columnNames(0)), List(Option(carId)))
     rs.next
     rs.getInt(1) should equal(1)
     
@@ -231,35 +229,28 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("The user can obtain a record from executing a select query") {
-    //Prerequisites:  scenario 1:  Passed
+  ignore("The user can obtain a record from executing a select query") {
+    //Prerequisites:  ignore 1:  Passed
 
-    val f                     = fixture
-
-    val backend               = new MySqlBackend(f.props)
-
-    val tableName             = "cars_deba_a"
-
-    val sqlStatement          = "select * from " + dbSchema.get + "." + tableName + " where carid  = ?"
-
-    val valuesList:List[String]                   = List("K0000001")
-
-    val columnNames:List[String]                  = List("carid")
-
-    val bindVars:DataRow[String]                  = DataRow((columnNames(0),valuesList(0)))
-
-    var hasResults:Boolean                        = false
+    val f = fixture
+    val backend = new SqLiteBackend(f.props)
+    val tableName = "cars_deba_a"
+    val sqlStatement = "select * from " + tableName + " where carid  = ?"
+    val valuesList: List[String] = List("K0000001")
+    val columnNames: List[String] = List("carid")
+    val bindVars: DataRow[String] = DataRow((columnNames(0), valuesList(0)))
+    var hasResults: Boolean = false
 
     given("an active connection")
-    assert(backend.connect().isInstanceOf[java.sql.Connection] )
+    assert(backend.connect().isInstanceOf[java.sql.Connection])
     backend.connection.setAutoCommit(false)
 
     when("a query that should generate results is executed")
-    val resultSet = backend.executeQuery(sqlStatement,bindVars)
+    val resultSet = backend.executeQuery(sqlStatement, bindVars)
 
     then("one or more results should be returned")
-    hasResults                                    = resultSet.next()
-    hasResults should be (true)
+    hasResults = resultSet.next()
+    hasResults should be(true)
 
     backend.close()
   }
@@ -268,22 +259,16 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("The user can determine whether a select query has returned a record") {
+  ignore("The user can determine whether a select query has returned a record") {
 
-    //Prerequisites:  scenario 1:  Passed
+    //Prerequisites:  ignore 1:  Passed
 
     val f             =   fixture
-
-    val backend       =   new MySqlBackend(f.props)
-
+    val backend       =   new SqLiteBackend(f.props)
     val tableName     =   "cars_deba_a"
-
-    val sqlStatement  =   "select * from " + dbSchema.get + "." + tableName + " where carid  = ?"
-
+    val sqlStatement  =   "select * from " + tableName + " where carid  = ?"
     val columnNames                               = List("carid")
-
     val valuesList                                = List("K0000001")
-
     val bindVars:DataRow[String]                  = DataRow((columnNames(0),valuesList(0)))
 
     given("an active connection")
@@ -294,10 +279,10 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     //resultSetReturned                             = backend.execute(sqlStatement,bindVars)
     //resultSetReturned seems to only be true only if it is an update count or if execute does not return anything at all
     try {
-          val results =  backend.executeQuery(sqlStatement,bindVars)
-          then("the query should have returned a non empty result set")
-          val nonEmptyResultSet:Boolean                 =   results.next()
-          nonEmptyResultSet should be (true)
+      val results = backend.executeQuery(sqlStatement, bindVars)
+      then("the query should have returned a non empty result set")
+      val nonEmptyResultSet: Boolean = results.next()
+      nonEmptyResultSet should be(true)
     }
     catch {
     case  e:java.sql.SQLException =>
@@ -316,47 +301,33 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("The user can commit an open transaction") {
+  ignore("The user can commit an open transaction") {
 
     val f                             = fixture
-
-    var backend                       = new MySqlBackend(f.props)
-
+    var backend                       = new SqLiteBackend(f.props)
     val tableName                     = "cars_deba_a"
-
     val columnNames:List[String]      = List("carid","carnumber","carmake","carmodel")
-
     val valuesHolders:List[String]    = for (i <- (0 to (columnNames.length - 1)).toList ) yield "?"
-
-    var sqlStatement                  = "insert into " + dbSchema.get + "." + tableName                     +
+    var sqlStatement                  = "insert into " + tableName                     +
                                       "("                                                               +
                                       columnNames.map(i => i + ",").mkString.dropRight(1)               +
                                       ")"                                                               +
                                       " values (" + valuesHolders.map(i => i + ",").mkString.dropRight(1)  + ")"
-
-    val carId:String              = "K0000002"
-
-    val carNumber:Int                       = 1234567899
-
-    val carMake                     = "MiniCoopeRa"
-
-    val carModel                      = "Two"
-
-    val valuesList                    = List(carId,carNumber,carMake,carModel)
-
-    val bindVars:DataRow[Any]         = DataRow(("carid",carId),("carnumber",carNumber),("carmake",carMake),("carmodel",carModel))
-
-    var committed:Boolean             = false
-
-    var connectionClosed:Boolean      = false
-
-    var dataPersistent:Boolean        = false
+    val carId: String = "K0000002"
+    val carNumber: Int = 1234567899
+    val carMake = "MiniCoopeRa"
+    val carModel = "Two"
+    val valuesList = List(carId, carNumber, carMake, carModel)
+    val bindVars: DataRow[Any] = DataRow(("carid", carId), ("carnumber", carNumber), ("carmake", carMake), ("carmodel", carModel))
+    var committed: Boolean = false
+    var connectionClosed: Boolean = false
+    var dataPersistent: Boolean = false
 
     given("an active connection with an open transaction ")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
-    backend.execute("START TRANSACTION")          //This should be replaced with backend.startTransaction when available
-    val insertedRow                   = backend.executeReturningKeys(sqlStatement,bindVars)
+    backend.startTransaction()
+    val insertedRow = backend.executeReturningKeys(sqlStatement, bindVars)
 
     when("the user issues a commit instruction")
     try
@@ -370,95 +341,72 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.close()
     connectionClosed                    = backend.connection.isClosed
     connectionClosed  should be (true)
-    sqlStatement                        = "select * from " + dbSchema.get + "." + tableName       +
-                                          " where "                                           +
-                                          " carid  = ? "            +      " and "        +
-                                          " carnumber  = ? "                  +      " and "        +
-                                          " carmake  = ? "            +      " and "        +
-                                          " carmodel  = ? "
+    sqlStatement                        = """select * from %s  
+      										  where carid = ?
+                                                and carnumber = ?
+                                                and carmake = ?
+                                                and carmodel = ?""".format(tableName)
 
-    val newFixture                      = fixture
-    backend                             = new MySqlBackend(newFixture.props)
-    assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    dataPersistent                      = backend.execute(sqlStatement,bindVars)
-    dataPersistent should be (true)
-
+    val newFixture = fixture
+    backend = new SqLiteBackend(newFixture.props)
+    assert(backend.connect().isInstanceOf[java.sql.Connection])
+    dataPersistent = backend.execute(sqlStatement, bindVars)
+    dataPersistent should be(true)
     backend.close()
-
   }
 
 
-
-
-  scenario("The user can truncate a populated table") {
+  ignore("The user can truncate a populated table") {
     val f = fixture
-
-    val tableName:String                            =     "cars_deba_a"
-
-    val countStatement:String                       =     "select count(1) as 'count' from "  + dbSchema.get +  "."  + tableName
-
-    val backend                                     =     new MySqlBackend(f.props)
+    val tableName: String = "cars_deba_a"
+    val countStatement: String = "select count(1) as 'count' from " + tableName
+    val backend = new SqLiteBackend(f.props)
 
     given("an active connection and a populated table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
-    var countResult                                 =     backend.executeQuery(countStatement)
+    var countResult = backend.executeQuery(countStatement)
     countResult.next() should  be (true)
     countResult.getInt("count") should be > (0)
 
     when("the user issues a truncate table instruction for that table")
     try
-      backend.truncateTable(tableName, schemaName = dbSchema)
+      backend.truncateTable(tableName)
     catch {
     case e:java.sql.SQLException =>
-            fail("backend.truncateTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
+            fail("backend.truncateTable(" + "\"" + tableName + "\"" + ")produced java.sql.SQLException" )
     }
 
     then("the table should be truncated")
-    countResult                                     =     backend.executeQuery(countStatement)
+    countResult = backend.executeQuery(countStatement)
     assert(countResult.next())
-    countResult.getInt("count") should equal (0)
+    countResult.getInt("count") should equal(0)
 
     backend.close()
 
   }
 
 
-
-  //THIS SHOULD WORK
-  scenario("The user can roll back an open transaction") {
-
-    val f                             = fixture
-
-    val backend                       = new MySqlBackend(f.props)
-
-    val tableName                     = "cars_deba_a"
-
-    val columnNames:List[String]      = List("carid","carnumber","carmake","carmodel")
-
-    val valuesHolders:List[String]    = for (i <- (0 to (columnNames.length - 1)).toList ) yield "?"
-
-    var sqlStatement                  = "insert into " + dbSchema.get + "." + tableName                     +
+  ignore("The user can roll back an open transaction") {
+    val f = fixture
+    val backend = new SqLiteBackend(f.props)
+    val tableName = "cars_deba_a"
+    val columnNames: List[String] = List("carid", "carnumber", "carmake", "carmodel")
+    val valuesHolders: List[String] = for (i <- (0 to (columnNames.length - 1)).toList) yield "?"
+    var sqlStatement                  = "insert into " + tableName                     +
                                       "("                                                               +
                                       columnNames.map(i => i + ",").mkString.dropRight(1)               +
                                       ")"                                                               +
                                       " values (" + valuesHolders.map(i => i + ",").mkString.dropRight(1)  + ")"
 
-    val carId:String              = "K0000050"
-
-    val carNumber:Int                       = 1234567777
-
-    val carMake                     = "MiniCoopeRa"
-
-    val carModel                      = "Fifty"
-
-    val valuesList                    = List(carId,carNumber,carMake,carModel)
-
-    val bindVars:DataRow[Any]         = DataRow(("carid",carId),("carnumber",carNumber),("carmake",carMake),("carmodel",carModel))
-
-    var connectionClosed:Boolean      = false
-
-    var dataPersistent:Boolean        = false
+    val carId: String = "K0000050"
+    val carNumber: Int = 1234567777
+    val carMake = "MiniCoopeRa"
+    val carModel = "Fifty"
+    val valuesList = List(carId, carNumber, carMake, carModel)
+    val bindVars: DataRow[Any] = DataRow(("carid", carId), ("carnumber", carNumber), ("carmake", carMake), ("carmodel", carModel))
+    var connectionClosed: Boolean = false
+    var dataPersistent: Boolean = false
 
     given("an active connection with an open transaction ")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
@@ -473,40 +421,33 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
       backend.rollback()
     catch {
     case e:java.sql.SQLException =>
-            fail("backend.rollback(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
+            fail("backend.rollback(" + "\"" + tableName +  "\"" + ")produced java.sql.SQLException" )
     }
 
     then("the data should not be persisted")
     backend.close()
-    connectionClosed                  = backend.connection.isClosed
-    connectionClosed  should be (true)
-    sqlStatement                      = "select count(*) as 'count' from " + dbSchema.get + "." + tableName     +
-                                        " where "                                                         +
-                                        " carid  = ? "            +      " and "                      +
-                                        " carNumber  = ? "                  +      " and "                      +
-                                        " carmake  = ? "            +      " and "                      +
-                                        " carmodel  = ? "
-
-    val newFixture                            = fixture
-    val newBackend                            = new MySqlBackend(newFixture.props)
-    assert(newBackend.connect().isInstanceOf[java.sql.Connection] )
-    val persistentDataCount                   = newBackend.executeQuery(sqlStatement,bindVars)
-    assert(persistentDataCount.next() )
-    persistentDataCount.getInt("count") should equal (0)
+    connectionClosed = backend.connection.isClosed
+    connectionClosed should be(true)
+    sqlStatement                      = """select * from %s  
+      										  where carid = ?
+                                                and carnumber = ?
+                                                and carmake = ?
+                                                and carmodel = ?""".format(tableName)
+    val newFixture = fixture
+    val newBackend = new SqLiteBackend(newFixture.props)
+    assert(newBackend.connect().isInstanceOf[java.sql.Connection])
+    val persistentDataCount = newBackend.executeQuery(sqlStatement, bindVars)
+    assert(persistentDataCount.next())
+    persistentDataCount.getInt("count") should equal(0)
     newBackend.close()
 
   }
 
 
-
-
-
-
-  scenario("The user can open a transaction, insert a row, and end the transaction") {
+  ignore("The user can open a transaction, insert a row, and end the transaction") {
 
     val f                             = fixture
-
-    val backend                       = new MySqlBackend(f.props)
+    val backend                       = new SqLiteBackend(f.props)
 
     val tableName                     = "cars_deba_a"
 
@@ -514,7 +455,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     val valuesHolders:List[String]    = for (i <- (0 to (columnNames.length - 1)).toList ) yield "?"
 
-    var sqlStatement                  = "insert into " + dbSchema.get + "." + tableName                     +
+    var sqlStatement                  = "insert into " + tableName                    +
                                       "("                                                               +
                                       columnNames.map(i => i + ",").mkString.dropRight(1)               +
                                       ")"                                                               +
@@ -572,7 +513,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.close()
     connectionClosed                  = backend.connection.isClosed
     connectionClosed  should be (true)
-    sqlStatement                      = "select count(1) as 'count' from " + dbSchema.get + "." + tableName     +
+    sqlStatement                      = "select count(1) as 'count' from " + tableName    +
                                         " where "                                                         +
                                         " carid  = ? "            +      " and "                      +
                                         " carnumber  = ? "                  +      " and "                      +
@@ -580,7 +521,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
                                         " carmodel  = ? "
 
     val newFixture                            = fixture
-    val newBackend                            = new MySqlBackend(newFixture.props)
+    val newBackend                            = new SqLiteBackend(newFixture.props)
     assert(newBackend.connect().isInstanceOf[java.sql.Connection] )
     val persistentDataCount                   = newBackend.executeQuery(sqlStatement,bindVars)
     assert(persistentDataCount.next() )
@@ -590,7 +531,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
   }
 
 
-  scenario("The user can create a table with 32 columns") {
+  ignore("The user can create a table with 32 columns") {
     val f = fixture
 
     val tableName                             =     "cars_deba_b"
@@ -609,9 +550,9 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth)
                                                     )
 
-    val verifyTableStatement:String           =     "SELECT count(1) as 'count' FROM information_schema.tables WHERE table_name = " + "'" + tableName + "'" +  " and table_schema = " + "'" + dbSchema.get  + "'"
+    val verifyTableStatement: String = "SELECT COUNT(*) as 'count' FROM sqlite_master WHERE tbl_name = %s".format(tableName)
 
-    val backend                               =     new MySqlBackend(f.props)
+    val backend                               =     new SqLiteBackend(f.props)
 
     given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
@@ -619,7 +560,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     when("the user issues a valid create table instruction")
     try
-      backend.createTable(tableName,columnNames,dataTypes, schemaName = dbSchema)
+      backend.createTable(tableName,columnNames,dataTypes)
     catch {
       case e:java.sql.SQLException => {
         println(e.getCause + "\n" + e.getMessage + "\n" + e.getSQLState + "\n"  )
@@ -643,7 +584,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("The user can insert a row without constructing an insert statement") {
+  ignore("The user can insert a row without constructing an insert statement") {
     val f = fixture
 
     val tableName:String                      =     "cars_deba_a"
@@ -662,9 +603,9 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     val row:DataRow[Any]                      =     DataRow(("carid",carId),("carnumber",carNumber),("carmake",carMake),("carmodel",carModel))
 
-    val backend                               =     new MySqlBackend(f.props)
+    val backend                               =     new SqLiteBackend(f.props)
 
-    val verifyRecordStatement:String          =     "select count(1) as count from " + dbSchema.get + "." + tableName + " where "    +
+    val verifyRecordStatement:String          =     "select count(1) as count from " + tableName+ " where "    +
                                                     "carid = " + "'" + row.carid.get  + "'"
 
 
@@ -677,7 +618,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     assert(recordCountResult.next())
     var recordCount                               =     recordCountResult.getInt("count")
     recordCount should be (0)
-     backend.insertRow(tableName,row,dbSchema)
+     backend.insertRow(tableName,row)
 
 
     and("the row should be inserted")
@@ -698,7 +639,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("The user can insert a batch of rows and commit without having to construct the insert statements") {
+  ignore("The user can insert a batch of rows and commit without having to construct the insert statements") {
     val f = fixture
 
     val tableName:String                      =     "cars_deba_a"
@@ -720,11 +661,11 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     val table:DataTable[Any]                  =     DataTable(columnNames, rowOne,rowTwo,rowThree,rowFour,rowFive,rowSix,rowSeven,rowEight,rowNine,rowTen)
 
-    val backend                               =     new MySqlBackend(f.props)
+    val backend                               =     new SqLiteBackend(f.props)
 
     var successfulStatementCount:Int          =     0
 
-    val verifyRowsStatement:String            =     "select count(1) as count from " + dbSchema.get + "." + tableName + " where "     +
+    val verifyRowsStatement:String            =     "select count(1) as count from " + tableName+ " where "     +
                                                     "carid in "                                                                           +
                                                     " ("                                                                                      +
                                                     {for (i <- 0 to (rows.length - 1)) yield "'" + rows(i).toList.head.toString + "'"}.toString().dropRight(1).drop(7) +
@@ -734,14 +675,14 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
     try
-      backend.truncateTable(tableName, dbSchema)
+      backend.truncateTable(tableName)
     catch {
     case e:java.sql.SQLException =>
-            fail("backend.truncateTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
+            fail("backend.truncateTable(" + "\"" + tableName + "\"" + ")produced java.sql.SQLException" )
     }
 
     when("the user issues a batch insert command (with commit) to insert multiple rows into the table ")
-    successfulStatementCount                      =     backend.batchInsert(tableName, table, dbSchema )
+    successfulStatementCount                      =     backend.batchInsert(tableName, table)
     try
       backend.commit()
     catch {
@@ -768,7 +709,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("The user can drop a table") {
+  ignore("The user can drop a table") {
     val f = fixture
 
     val tableName:String                      =     "cars_deba_c"
@@ -779,9 +720,8 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
 
-    val verifyTableStatement:String           =     "SELECT count(1) as 'count' FROM information_schema.tables WHERE table_name = " + "'" + tableName + "'" +  " and table_schema = " + "'" + dbSchema.get  + "'"
-
-    val backend                               =     new MySqlBackend(f.props)
+    val verifyTableStatement: String = "SELECT COUNT(*) as 'count' FROM sqlite_master WHERE tbl_name = %s".format(tableName)
+    val backend                               =     new SqLiteBackend(f.props)
 
 
 
@@ -789,10 +729,10 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
     try
-      backend.createTable(tableName,columnNames,dataTypes, dbSchema)
+      backend.createTable(tableName,columnNames,dataTypes)
     catch {
     case e:java.sql.SQLException =>
-            fail("backend.createTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
+            fail("backend.createTable(" + "\"" + tableName + "," + "\"" + ")produced java.sql.SQLException" )
     }
     val tableVerifiedResult                    =     backend.executeQuery(verifyTableStatement)
     assert(tableVerifiedResult.next())
@@ -800,10 +740,10 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     when("the user issues a drop table command for that table")
     try
-      backend.dropTable(tableName, schemaName = dbSchema)
+      backend.dropTable(tableName)
     catch {
     case e:java.sql.SQLException =>
-            fail("backend.dropTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
+            fail("backend.dropTable(" + "\"" + tableName + "," + "\"" + ")produced java.sql.SQLException" )
     }
 
 
@@ -821,7 +761,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("The user can drop a table with cascade") {
+  ignore("The user can drop a table with cascade") {
 
     /*  Drop table cascade is only for portabilty and has no effects                            */
     /*  http://stackoverflow.com/questions/3476765/mysql-drop-all-tables-ignoring-foreign-keys  */
@@ -838,11 +778,10 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
 
-    val verifyTableStatement:String           =     "SELECT COUNT(1) as 'count' FROM information_schema.tables WHERE table_name = " + "'" + tableName + "'" +  " and table_schema = " + "'" + dbSchema.get  + "'"
+    val verifyTableStatement: String = "SELECT COUNT(*) as 'count' FROM sqlite_master WHERE tbl_name = %s".format(tableName)
 
 
-
-    val backend                               =     new MySqlBackend(f.props)
+    val backend                               =     new SqLiteBackend(f.props)
 
 
 
@@ -853,11 +792,11 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.connection.setAutoCommit(false)
 
     try
-      backend.createTable(tableName,columnNames,dataTypes, dbSchema)
+      backend.createTable(tableName,columnNames,dataTypes)
     catch {
     case  e:java.sql.SQLException =>
           println(e.getMessage)
-          fail("backend.createTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
+          fail("backend.createTable(" + "\"" + tableName + "," + "\"" + ")produced java.sql.SQLException" )
     }
 
     var tableVerifiedResult                   =     backend.executeQuery(verifyTableStatement)
@@ -866,11 +805,11 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     when("the user issues a drop table command with cascade for that table")
     try
-      backend.dropTable(tableName, cascade, schemaName = dbSchema)
+      backend.dropTable(tableName, cascade)
     catch {
     case e:java.sql.SQLException =>
             println(e.getMessage)
-            fail("backend.dropTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
+            fail("backend.dropTable(" + "\"" + tableName + "," + "\"" + ")produced java.sql.SQLException" )
     }
 
 
@@ -887,16 +826,16 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("The user can iterate over the results of a select query") {
+  ignore("The user can iterate over the results of a select query") {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
 
     val f                     = fixture
 
-    val backend               = new MySqlBackend(f.props)
+    val backend               = new SqLiteBackend(f.props)
 
     val tableName             = "cars_deba_a"
 
-    val sqlStatement          = "select * from " + dbSchema.get + "." + tableName
+    val sqlStatement          = "select * from " + tableName
 
     val bindVars:DataRow[String]                  = DataRow.empty
 
@@ -922,12 +861,12 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("The user can update a record in a table using a valid update statement") {
+  ignore("The user can update a record in a table using a valid update statement") {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
 
     val f                             = fixture
 
-    val backend                       = new MySqlBackend(f.props)
+    val backend                       = new SqLiteBackend(f.props)
 
     val tableName                     = "cars_deba_a"
 
@@ -942,7 +881,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     val carModel                      = "FourteenMillion"
 
-    var sqlStatement                  = "update " + dbSchema.get + "." + tableName                            +
+    var sqlStatement                  = "update " + tableName                           +
                                         " set "                                                           +
                                         columnNames.map(i => i + " = ?,").mkString.dropRight(1)           +
                                         " where carid = " + "'" + carId  + "'"
@@ -970,7 +909,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     columnNames                                   = List("carmodel")
     valuesList                                    = List(carModel)
     bindVars                                      = DataRow(("carmodel",carModel))
-    sqlStatement                                  = "select count(1) as count from " + dbSchema.get + "."  + tableName + " where "     +
+    sqlStatement                                  = "select count(1) as count from " + tableName + " where "     +
                                                     "carmodel = ?"
 
     val recordCountResult                         = backend.executeQuery(sqlStatement,bindVars)
@@ -983,18 +922,18 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
   }
 
 
-  scenario("The user can update a multiple records in a table using a valid update statement") {
+  ignore("The user can update a multiple records in a table using a valid update statement") {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
 
     val f                             = fixture
 
-    val backend                       = new MySqlBackend(f.props)
+    val backend                       = new SqLiteBackend(f.props)
 
     val tableName                     = "cars_deba_a"
 
     var columnNames:List[String]      = List("carmodel")
 
-    var sqlStatement                  = "update " + dbSchema.get + "." + tableName                            +
+    var sqlStatement                  = "update " + tableName                           +
                                         " set "                                                           +
                                         columnNames.map(i => i + " = ?,").mkString.dropRight(1)
 
@@ -1020,7 +959,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     }
 
     then("multiple record(s) should be updated")
-    sqlStatement                                  = "select count(1) as count from " + dbSchema.get + "." + tableName + " where "     +
+    sqlStatement                                  = "select count(1) as count from " + tableName+ " where "     +
                                                     "carmodel = ?"
 
     val recordCountResult                         = backend.executeQuery(sqlStatement,bindVars)
@@ -1041,12 +980,12 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("The user can update a multiple records in a table without constructing update statement") {
+  ignore("The user can update a multiple records in a table without constructing update statement") {
     //Prerequisites:  Need Multiple Row in table cars_deba_a   with carmake = 'MiniCoopeRb'
 
     val f                                         = fixture
 
-    val backend                                   = new MySqlBackend(f.props)
+    val backend                                   = new SqLiteBackend(f.props)
 
     val tableName                                 = "cars_deba_a"
 
@@ -1073,7 +1012,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     when("an update row instruction for multiple records is executed")
     try
-      backend.updateRow(tableName,updatesBindVars,filter,dbSchema)
+      backend.updateRow(tableName,updatesBindVars,filter)
     catch {
     case e:java.sql.SQLException =>
             println(e.getMessage())
@@ -1081,7 +1020,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     }
 
     then("multiple record(s) should be updated")
-    val sqlStatement                              = "select count(1) as count from " + dbSchema.get + "." + tableName + " where "     +
+    val sqlStatement                              = "select count(1) as count from " + tableName+ " where "     +
                                                     "carmake = ?"
 
 
@@ -1106,7 +1045,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("The user can insert a multiple rows using a loop without constructing an insert statement") {
+  ignore("The user can insert a multiple rows using a loop without constructing an insert statement") {
     //Prerequisites:  None of theses record should exist
     val f = fixture
 
@@ -1122,9 +1061,9 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     val carModels:List[String]                =     List("Zero","One","Ten","Ten","Ten")
 
-    val backend                               =     new MySqlBackend(f.props)
+    val backend                               =     new SqLiteBackend(f.props)
 
-    val verifyRecordsStatement:String         =     "select count(1) as count from " + dbSchema.get + "." + tableName + " where "          +
+    val verifyRecordsStatement:String         =     "select count(1) as count from " + tableName+ " where "          +
                                                     "carid in "                                                   +
                                                     "("                                                               +
                                                     carIds.map(i => "'" + i + "'" + ",").mkString.dropRight(1)             +
@@ -1142,7 +1081,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     {
 
       val row:DataRow[Any]                     =     DataRow(("carid",carIds(i)),("carnumber",carNumbers(i)),("carmake",carMakes(i)),("carmodel",carModels(i)))
-      assert(backend.insertReturningKeys(tableName,row, schemaName = dbSchema).isInstanceOf[DataRow[Any]]  )
+      assert(backend.insertReturningKeys(tableName,row).isInstanceOf[DataRow[Any]]  )
 
 
     }
@@ -1162,24 +1101,24 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("The user can delete multiple records in a table using a valid delete statement") {
+  ignore("The user can delete multiple records in a table using a valid delete statement") {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
 
     val f                             = fixture
 
-    val backend                       = new MySqlBackend(f.props)
+    val backend                       = new SqLiteBackend(f.props)
 
     val tableName                     = "cars_deba_a"
 
     val columnNames:List[String]      = List("carmodel")
 
     var sqlStatement                  = if    (columnNames.length > 1)  {
-                                          "delete from " + dbSchema.get + "." + tableName                                 +
+                                          "delete from " + tableName                                +
                                           " where "                                                                   +
                                           columnNames.map(i => i + " = ?").mkString(" and ")
                                         }
                                         else{
-                                          "delete from " + dbSchema.get + "." + tableName                                 +
+                                          "delete from " + tableName                                +
                                           " where "                                                                   +
                                           columnNames.map(i => i + " = ?").mkString
                                         }
@@ -1206,7 +1145,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     }
 
     then ("those records should be deleted")
-    sqlStatement                      =   "select count(1) as count from "   + dbSchema.get + "." + tableName             +
+    sqlStatement                      =   "select count(1) as count from "   + tableName            +
                                           " where carmodel = ?"
 
     try   {
@@ -1232,7 +1171,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("The user can drop all tables that begin with a certain string") {
+  ignore("The user can drop all tables that begin with a certain string") {
 
       /*http://stackoverflow.com/questions/3476765/mysql-drop-all-tables-ignoring-foreign-keys*/
 
@@ -1241,16 +1180,15 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
       val tf = fixture
 
       val searchString:String                   =         "cars_deba"
+      val objectStatement: String = """SELECT tbl_name from sqlite_master 
+                                        WHERE tabl_name like '""" + searchString + "%'" 
 
-      val objectStatement:String                =         "SELECT   table_name  from information_schema.tables "                                                            +
-                                                          "WHERE    table_name like '" + searchString + "%'" + " and table_schema = '" + dbSchema.get + "'"
+      val verifyObjectCountStatement:String     = """SELECT count(tbl_name) from sqlite_master 
+                                                      WHERE tabl_name like '""" + searchString + "%'" 
 
-      val verifyObjectCountStatement:String     =         "SELECT   count(1) as 'count' from information_schema.tables "                                                    +
-                                                          "WHERE    table_name like '" + searchString + "%'" + " and table_schema = '" + dbSchema.get + "'"
+      val sourceBackend                         =         new SqLiteBackend(sf.props)
 
-      val sourceBackend                         =         new MySqlBackend(sf.props)
-
-      val targetBackend                         =         new MySqlBackend(tf.props)
+      val targetBackend                         =         new SqLiteBackend(tf.props)
 
       val cascade:Boolean                       =         true
 
@@ -1268,14 +1206,14 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
             while(objectResult.next())  {
 
-              targetBackend.dropTable(objectResult.getString("table_name"), cascade, schemaName = dbSchema)
+              targetBackend.dropTable(objectResult.getString("table_name"), cascade)
 
             }
           }
           catch {
           case e:java.sql.SQLException =>
               println(e.getMessage)
-              fail("targetBackend.dropTable(" + "\"" + dbSchema.get + "," + objectResult.getString("table_name") + "\"" + ")produced java.sql.SQLException" )
+              fail("targetBackend.dropTable(" + "\"" + objectResult.getString("table_name") + "\"" + ")produced java.sql.SQLException" )
           }
      // }
       //catch {
@@ -1299,14 +1237,14 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-  scenario("Remove Test Data Setup")  {
+  ignore("Remove Test Data Setup")  {
     /**** Remove Test Data    ****/
     removeTestDataSetup
     /****                     ****/
 
   }
 
-  scenario("Close Test SetUp Connections")  {
+  ignore("Close Test SetUp Connections")  {
 
     setup.targetBackend.close
 

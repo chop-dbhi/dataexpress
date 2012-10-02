@@ -15,8 +15,7 @@ class SqLiteBackendSpec extends Spec with ShouldMatchers with GivenWhenThen  {
 
   def fixture =
     new {
-        val prop_path = TestProps.property("sqlite_db_prop_file")
-        val inputStream:java.io.FileInputStream = new java.io.FileInputStream(prop_path)
+	  	val inputStream = this.getClass().getResourceAsStream("sqlite_test.properties")
         val props = new Properties()
         props.load(inputStream)
         inputStream.close()
