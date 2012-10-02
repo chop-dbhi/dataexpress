@@ -105,7 +105,7 @@ trait SqlDialect {
         case java.sql.Types.BIT                               => BitDataType()
         case _                                                =>  {
           throw new RuntimeException("Can't map JDBC type to a known DataExpress type " +
-            meta.getColumnType(i) + " for column " + meta.getColumnName(i))
+            meta.getColumnType(i) + " for column " + meta.getColumnLabel(i))
         }
       }
     })
