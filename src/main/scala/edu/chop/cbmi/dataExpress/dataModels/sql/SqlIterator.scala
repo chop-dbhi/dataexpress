@@ -64,7 +64,8 @@ abstract case class SqlIterator[+T] private[sql](private val sql_query_package: 
   def next_item_in_column(i: Int) = meta.getColumnType(i) match {
     //Postgres Boolean values such as 't' were having issues
     //because they are mapped to java.sql.Types.BIT
-    case java.sql.Types.BIT => result_set.getInt(i)
+    //TODO: this code needs to be moved out of here
+    case java.sql.Types.BIT => result_set.getBoolean(i)
     case _ => result_set.getObject(i)
   }
 }

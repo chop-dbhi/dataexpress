@@ -23,7 +23,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>DataExpress</groupId>
     <artifactId>DataExpress</artifactId>
-    <version>0.9.0.1</version>
+    <version>0.9.0.2</version>
     <name>${project.artifactId}</name>
     <description>A Scala based ETL library</description>
     <inceptionYear>2010</inceptionYear>
