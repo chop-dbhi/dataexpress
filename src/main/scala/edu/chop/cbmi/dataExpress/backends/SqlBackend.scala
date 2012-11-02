@@ -347,6 +347,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
         v._1 match {
           case Some(i: java.sql.Timestamp)    => sqlStatement.setTimestamp((v._2 + 1), i)
           case Some(i: java.sql.Time)         => sqlStatement.setTime((v._2 + 1), i)
+          case Some(i: java.sql.Date)		  => sqlStatement.setDate((v._2 + 1), i)
           //TODO: Test the java.util.Date for precision here to avoid trying to set to a higher precision
           case Some(i: java.util.Date)        => sqlStatement.setDate((v._2 + 1), new java.sql.Date(i.getTime))
           case None => sqlStatement.setNull(v._2 + 1, java.sql.Types.NULL)  //TODO: do something better here

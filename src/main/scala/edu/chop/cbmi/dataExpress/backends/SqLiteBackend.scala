@@ -45,6 +45,7 @@ class SqLiteBackend(override val connectionProperties : Properties, _sqlDialect 
         v._1 match {
           case Some(i: java.sql.Timestamp)    => sqlStatement.setString((v._2 + 1), i.toString())
           case Some(i: java.sql.Time)         => sqlStatement.setString((v._2 + 1), i.toString())
+          case Some(i: java.sql.Date)		  => sqlStatement.setString((v._2 + 1), java.text.DateFormat.getDateInstance().format(i))
           //TODO: Test the java.util.Date for precision here to avoid trying to set to a higher precision
           case Some(i: java.util.Date)        => sqlStatement.setString((v._2 + 1), java.text.DateFormat.getDateTimeInstance().format(i))
           case None => sqlStatement.setNull(v._2 + 1, java.sql.Types.NULL)  //TODO: do something better here
