@@ -28,7 +28,7 @@ case object SqLiteDialect extends SqlDialect {
   val tableCreate = "CREATE TABLE"
   val tableTruncate = "DELETE FROM"
   val tableDrop = "DROP TABLE"
-  val tableCascade = "CASCADE"
+  val tableCascade = "" //Cascade is only supported if explicitly turned on
   val insertStatement = "INSERT INTO"
   val insertValues = "VALUES"
   val transactionStart = "BEGIN TRANSACTION"
