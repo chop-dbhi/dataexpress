@@ -23,3 +23,5 @@ tmp/
 temp/
 *.bk
 *.sh
+
+*.sqlite
