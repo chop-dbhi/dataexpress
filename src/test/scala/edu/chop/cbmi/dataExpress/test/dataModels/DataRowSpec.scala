@@ -20,7 +20,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package edu.chop.cbmi.dataExpress.test.dataModels
 
-import org.scalatest.{GivenWhenThen, Spec}
+import org.scalatest.{GivenWhenThen, FunSpec}
 import org.scalatest.matchers.ShouldMatchers
 import edu.chop.cbmi.dataExpress.dataModels.DataRow
 import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
@@ -33,7 +33,7 @@ import collection.mutable.ListBuffer
  * Time: 2:05 PM
  * To change this template use File | Settings | File Templates.
  */
-class DataRowSpec extends Spec with GivenWhenThen with ShouldMatchers {
+class DataRowSpec extends FunSpec with GivenWhenThen with ShouldMatchers {
 
   describe("A DataRow object") {
     it("should function as a Seq with dot notation and map like access to elements") {

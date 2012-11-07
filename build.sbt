@@ -34,7 +34,7 @@ libraryDependencies ++= Seq(
 
 libraryDependencies ++= {
   val deps = Seq(
-        "org.scalatest" % "scalatest_2.9.1" % "1.7.2",
+        "org.scalatest" %% "scalatest" % "2.0.M4",
         "junit" % "junit" % "4.8.1"
       )
   deps map {v => v % "test"}

@@ -9,9 +9,10 @@ import edu.chop.cbmi.dataExpress.test.util._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import edu.chop.cbmi.dataExpress.backends.SqLiteBackend
+import org.scalatest.FunSpec
 
 @RunWith(classOf[JUnitRunner])
-class SqLiteBackendSpec extends Spec with ShouldMatchers with GivenWhenThen  {
+class SqLiteBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  {
 
   def fixture =
     new {

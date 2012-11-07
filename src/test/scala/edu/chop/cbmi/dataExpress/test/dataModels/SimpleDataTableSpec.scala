@@ -20,7 +20,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package edu.chop.cbmi.dataExpress.test.dataModels
 
-import org.scalatest.{GivenWhenThen, Spec}
+import org.scalatest.{GivenWhenThen, FunSpec}
 import org.scalatest.matchers.ShouldMatchers
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._
 import edu.chop.cbmi.dataExpress.dataModels._
@@ -35,7 +35,7 @@ import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
  * To change this template use File | Settings | File Templates.
  */
 
-class SimpleDataTableSpec extends Spec with GivenWhenThen with ShouldMatchers {
+class SimpleDataTableSpec extends FunSpec with GivenWhenThen with ShouldMatchers {
 
   private case class testClass(d: Double)
 

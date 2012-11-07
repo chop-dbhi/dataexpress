@@ -20,7 +20,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package edu.chop.cbmi.dataExpress.test.dataModels
 
-import org.scalatest.{GivenWhenThen, Spec}
+import org.scalatest.{GivenWhenThen, FunSpec}
 import org.scalatest.matchers.ShouldMatchers
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._
 
@@ -32,7 +32,7 @@ import edu.chop.cbmi.dataExpress.dataModels.RichOption._
  * To change this template use File | Settings | File Templates.
  */
 
-class RichOptionSpec extends Spec with GivenWhenThen with ShouldMatchers {
+class RichOptionSpec extends FunSpec with GivenWhenThen with ShouldMatchers {
 
   private case class testClass(d: Double)
 

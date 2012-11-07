@@ -8,6 +8,7 @@ package edu.chop.cbmi.dataExpress.test.backends
  * To change this template use File | Settings | File Templates.
  */
 import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.FunSpec
 import org.scalatest.{GivenWhenThen, Spec}
 import java.util.Properties
 import edu.chop.cbmi.dataExpress.backends.MySqlBackend
@@ -15,7 +16,7 @@ import edu.chop.cbmi.dataExpress.test.util._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 @RunWith(classOf[JUnitRunner])
-class MySqlBackendSpec extends Spec with ShouldMatchers with GivenWhenThen  {
+class MySqlBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  {
 
   def fixture =
     new {

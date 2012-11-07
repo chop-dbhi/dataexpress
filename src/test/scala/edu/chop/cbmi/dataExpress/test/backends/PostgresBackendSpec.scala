@@ -15,8 +15,9 @@ import edu.chop.cbmi.dataExpress.backends.PostgresBackend
 import edu.chop.cbmi.dataExpress.test.util._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
+import org.scalatest.FunSpec
 @RunWith(classOf[JUnitRunner])
-class PostgresBackendSpec extends Spec with ShouldMatchers with GivenWhenThen  {
+class PostgresBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  {
 
   def fixture =
     new {
