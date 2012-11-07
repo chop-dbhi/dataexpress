@@ -365,7 +365,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
-
+    backend.commit()
     when("the user issues a start transaction instruction")
     backend.startTransaction()
     and("the user inserts a row")
@@ -375,17 +375,16 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     then("the data should be persisted")
     backend.close()
     backend.connection.isClosed should be (true)
-    sqlVerifyStatement                      = "select count(1) as 'count' from " + tableName    +
-                                        " where "                                                         +
-                                        " carid  = ? "            +      " and "                      +
-                                        " carnumber  = ? "                  +      " and "                      +
-                                        " carmake  = ? "            +      " and "                      +
-                                        " carmodel  = ? "
+    val sqlVerifyStatement = """select count(*) as count from %s  
+      										  where carid = ?
+                                                and carnumber = ?
+                                                and carmake = ?
+                                                and carmodel = ?""".format(tableName)
 
-    val newFixture                            = fixture
-    val newBackend                            = new SqLiteBackend(newFixture.props)
+    val newFixture = fixture
+    val newBackend = new SqLiteBackend(newFixture.props)
     assert(newBackend.connect().isInstanceOf[java.sql.Connection] )
-    val persistentDataCount                   = newBackend.executeQuery(sqlStatement,bindVars)
+    val persistentDataCount = newBackend.executeQuery(sqlVerifyStatement,bindVars)
     assert(persistentDataCount.next() )
     persistentDataCount.getInt("count") should equal (1)
     newBackend.close()
@@ -393,15 +392,11 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
   }
 
 
-  ignore("The user can create a table with 32 columns") {
+  scenario("The user can create a table with 32 columns") {
     val f = fixture
-
     val tableName                             =     "cars_deba_b"
-
     val columnFixedWidth:Boolean              =     false
-
     val columnNames:List[String]              =     List("carid","carnumber","carmake","carmodel")
-
     val dataTypes                             =     List( CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
@@ -412,28 +407,18 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth)
                                                     )
 
-    val verifyTableStatement: String = "SELECT COUNT(*) as 'count' FROM sqlite_master WHERE tbl_name = %s".format(tableName)
-
-    val backend                               =     new SqLiteBackend(f.props)
+    val verifyTableStatement: String = "SELECT COUNT(*) as 'count' FROM sqlite_master WHERE tbl_name = '%s'".format(tableName)
+    val backend = new SqLiteBackend(f.props)
 
     given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
     when("the user issues a valid create table instruction")
-    try
-      backend.createTable(tableName,columnNames,dataTypes)
-    catch {
-      case e:java.sql.SQLException => {
-        println(e.getCause + "\n" + e.getMessage + "\n" + e.getSQLState + "\n"  )
-        //fail("backend.createTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
-      }
-
-    }
-
+    backend.createTable(tableName,columnNames,dataTypes)
 
     then("the table should exist")
-    val tableExistResult                                      =     backend.executeQuery(verifyTableStatement)
+    val tableExistResult  =  backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
     tableExistResult.getInt("count") should equal (1)
 
@@ -442,51 +427,35 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
   }
 
 
-
-
-
-
-  ignore("The user can insert a row without constructing an insert statement") {
+ scenario("The user can insert a row without constructing an insert statement") {
     val f = fixture
-
-    val tableName:String                      =     "cars_deba_a"
-
-    val columnNames:List[String]              =     List("carid","carnumber","carmake","carmodel")
-
-    val carId:String                      =     "K0000003"
-
-    val carNumber:Int                               =     1234567888
-
-    val carMake:String                      =     "MiniCoopeRa"
-
-    val carModel:String                       =     "Three"
-
-    val valuesList:List[Any]                  =     List(carId,carNumber,carMake,carModel)
-
-    val row:DataRow[Any]                      =     DataRow(("carid",carId),("carnumber",carNumber),("carmake",carMake),("carmodel",carModel))
-
-    val backend                               =     new SqLiteBackend(f.props)
-
-    val verifyRecordStatement:String          =     "select count(1) as count from " + tableName+ " where "    +
-                                                    "carid = " + "'" + row.carid.get  + "'"
-
+    val tableName = "cars_deba_a"
+    val columnNames = List("carid","carnumber","carmake","carmodel")
+    val carId = "K0000003"
+    val carNumber  = 1234567888
+    val carMake = "MiniCoopeRa"
+    val carModel = "Three"
+    val valuesList = List(carId,carNumber,carMake,carModel)
+    val row = DataRow(("carid",carId),("carnumber",carNumber),("carmake",carMake),("carmodel",carModel))
+    val backend = new SqLiteBackend(f.props)
+    val verifyRecordStatement = "select count(*) as count from %s where carid = '%s'".format(tableName, row.carid.get)
 
     given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
     when("the user issues a valid insert command for an existing table and a unique record")
-    var recordCountResult                         =     backend.executeQuery(verifyRecordStatement)
+    var recordCountResult = backend.executeQuery(verifyRecordStatement)
     assert(recordCountResult.next())
-    var recordCount                               =     recordCountResult.getInt("count")
+    var recordCount = recordCountResult.getInt("count")
     recordCount should be (0)
      backend.insertRow(tableName,row)
 
 
     and("the row should be inserted")
-    recordCountResult                             =     backend.executeQuery(verifyRecordStatement)
+    recordCountResult = backend.executeQuery(verifyRecordStatement)
     assert(recordCountResult.next())
-    recordCount                                   =     recordCountResult.getInt("count")
+    recordCount = recordCountResult.getInt("count")
     recordCount  should be (1)
 
     backend.commit()
@@ -495,213 +464,122 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
-
-
-
-
-
-  ignore("The user can insert a batch of rows and commit without having to construct the insert statements") {
+  scenario("The user can insert a batch of rows and commit without having to construct the insert statements") {
     val f = fixture
+    val tableName = "cars_deba_a"
+    val columnNames = List("carid","carnumber","carmake","carmodel")
 
-    val tableName:String                      =     "cars_deba_a"
-
-    val columnNames:List[String]              =     List("carid","carnumber","carmake","carmodel")
-
-    val rowOne:List[Any]                      =     List("K0000201",1234901,"MiniCoopeRb","One")
-    val rowTwo:List[Any]                      =     List("K0000202",1234902,"MiniCoopeRb","Two")
-    val rowThree:List[Any]                    =     List("K0000203",1234903,"MiniCoopeRb","Three")
-    val rowFour:List[Any]                     =     List("K0000204",1234904,"MiniCoopeRb","Four")
-    val rowFive:List[Any]                     =     List("K0000205",1234905,"MiniCoopeRb","Five")
-    val rowSix:List[Any]                      =     List("K0000206",1234906,"MiniCoopeRb","Six")
-    val rowSeven:List[Any]                    =     List("K0000207",1234907,"MiniCoopeRb","Seven")
-    val rowEight:List[Any]                    =     List("K0000208",1234908,"MiniCoopeRb","Eight")
-    val rowNine:List[Any]                     =     List("K0000209",1234909,"MiniCoopeRb","Nine")
-    val rowTen:List[Any]                      =     List("K0000210",1234910,"MiniCoopeRb","Ten")
-
-    val rows                                  =     List(rowOne,rowTwo,rowThree,rowFour,rowFive,rowSix,rowSeven,rowEight,rowNine,rowTen)
-
-    val table:DataTable[Any]                  =     DataTable(columnNames, rowOne,rowTwo,rowThree,rowFour,rowFive,rowSix,rowSeven,rowEight,rowNine,rowTen)
-
-    val backend                               =     new SqLiteBackend(f.props)
-
-    var successfulStatementCount:Int          =     0
-
-    val verifyRowsStatement:String            =     "select count(1) as count from " + tableName+ " where "     +
-                                                    "carid in "                                                                           +
-                                                    " ("                                                                                      +
-                                                    {for (i <- 0 to (rows.length - 1)) yield "'" + rows(i).toList.head.toString + "'"}.toString().dropRight(1).drop(7) +
-                                                    ")"
+    val rows = Seq(Seq("K0000201",1234901,"MiniCoopeRb","One"), 
+    			    Seq("K0000202",1234902,"MiniCoopeRb","Two"),
+    			    Seq("K0000203",1234903,"MiniCoopeRb","Three"),
+    			    Seq("K0000204",1234904,"MiniCoopeRb","Four"),
+    			    Seq("K0000205",1234905,"MiniCoopeRb","Five"),
+    			    Seq("K0000206",1234906,"MiniCoopeRb","Six"),
+    			    Seq("K0000207",1234907,"MiniCoopeRb","Seven"),
+    			    Seq("K0000208",1234908,"MiniCoopeRb","Eight"),
+    			    Seq("K0000209",1234909,"MiniCoopeRb","Nine"),
+    			    Seq("K0000210",1234910,"MiniCoopeRb","Ten"))
+    val table = DataTable(columnNames, rows: _*)
+    val backend = new SqLiteBackend(f.props)
+    var successfulStatementCount = 0
+    val verifyRowsStatement = "select count(*) as count from %s where carid in (%s)".format(tableName, rows.map{r => "'%s'".format(r.head)}.mkString(", ") )
 
     given("an active connection and an empty table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
-    try
-      backend.truncateTable(tableName)
-    catch {
-    case e:java.sql.SQLException =>
-            fail("backend.truncateTable(" + "\"" + tableName + "\"" + ")produced java.sql.SQLException" )
-    }
-
+    backend.truncateTable(tableName)
+    
     when("the user issues a batch insert command (with commit) to insert multiple rows into the table ")
-    successfulStatementCount                      =     backend.batchInsert(tableName, table)
-    try
-      backend.commit()
-    catch {
-    case e:java.sql.SQLException =>
-            fail("backend.commit() produced java.sql.SQLException" )
-    }
-
+    successfulStatementCount = backend.batchInsert(tableName, table)
+    backend.commit()
+    
     then("the batch insert command should be successful")
     successfulStatementCount  should equal  (rows.length)
 
-
     and("the rows should be inserted")
-    val recordCountResult                         =     backend.executeQuery(verifyRowsStatement)
+    val recordCountResult = backend.executeQuery(verifyRowsStatement)
     assert(recordCountResult.next())
-    val recordCount                               =     recordCountResult.getInt("count")
-    recordCount  should be (10)
-
+    val recordCount = recordCountResult.getInt("count")
+    recordCount should be (10)
     backend.close()
-
-
-
   }
 
-
-
-
-  ignore("The user can drop a table") {
+  scenario("The user can drop a table") {
     val f = fixture
-
-    val tableName:String                      =     "cars_deba_c"
-
-    val columnFixedWidth:Boolean              =     false
-
-    val columnNames:List[String]              =     List("carid","carnumber","carmake","carmodel")
-
-    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
-
-    val verifyTableStatement: String = "SELECT COUNT(*) as 'count' FROM sqlite_master WHERE tbl_name = %s".format(tableName)
-    val backend                               =     new SqLiteBackend(f.props)
-
-
+    val tableName = "cars_deba_c"
+    val columnFixedWidth = false
+    val columnNames = List("carid","carnumber","carmake","carmodel")
+    val dataTypes  = List(CharacterDataType(20,columnFixedWidth),
+    					  IntegerDataType(),
+    					  CharacterDataType(20,columnFixedWidth),
+    					  CharacterDataType(20,columnFixedWidth))
+    val verifyTableStatement: String = "SELECT COUNT(*) as 'count' FROM sqlite_master WHERE tbl_name = '%s'".format(tableName)
+    val backend = new SqLiteBackend(f.props)
 
     given("an active connection and an existing table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
-    try
-      backend.createTable(tableName,columnNames,dataTypes)
-    catch {
-    case e:java.sql.SQLException =>
-            fail("backend.createTable(" + "\"" + tableName + "," + "\"" + ")produced java.sql.SQLException" )
-    }
-    val tableVerifiedResult                    =     backend.executeQuery(verifyTableStatement)
+    backend.createTable(tableName,columnNames,dataTypes)
+    val tableVerifiedResult = backend.executeQuery(verifyTableStatement)
     assert(tableVerifiedResult.next())
     tableVerifiedResult.getInt("count") should be (1)
 
     when("the user issues a drop table command for that table")
-    try
-      backend.dropTable(tableName)
-    catch {
-    case e:java.sql.SQLException =>
-            fail("backend.dropTable(" + "\"" + tableName + "," + "\"" + ")produced java.sql.SQLException" )
-    }
-
-
+    backend.dropTable(tableName)
+    
     then("the table should be dropped")
-    val tableExistResult                    =     backend.executeQuery(verifyTableStatement)
+    val tableExistResult  = backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
     tableExistResult.getInt("count") should be (0)
-
     backend.close()
 
   }
-
-
-
-
-
-
-  ignore("The user can drop a table with cascade") {
-
-    /*  Drop table cascade is only for portabilty and has no effects                            */
-    /*  http://stackoverflow.com/questions/3476765/mysql-drop-all-tables-ignoring-foreign-keys  */
-
+  
+  /* Currently not supported for sqlite because it requires user intervention to support cascade */
+  scenario("The user can drop a table with cascade") {
     val f = fixture
-
-    val tableName:String                      =     "cars_deba_c"
-
-    val viewName:String                       =     "cars_deba_c_v"
-
-    val columnFixedWidth:Boolean              =     false
-
-    val columnNames:List[String]              =     List("carid","carnumber","carmake","carmodel")
-
-    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
-
-    val verifyTableStatement: String = "SELECT COUNT(*) as 'count' FROM sqlite_master WHERE tbl_name = %s".format(tableName)
-
-
-    val backend                               =     new SqLiteBackend(f.props)
-
-
-
-    val cascade                               =     true
+    val tableName = "cars_deba_c"
+    val viewName = "cars_deba_c_v"
+    val columnFixedWidth = false
+    val columnNames = List("carid", "carnumber", "carmake", "carmodel")
+    val dataTypes = List(CharacterDataType(20, columnFixedWidth),
+    				     IntegerDataType(), 
+    				     CharacterDataType(20, columnFixedWidth), 
+    				     CharacterDataType(20, columnFixedWidth))
+    val verifyTableStatement = "SELECT COUNT(*) as 'count' FROM sqlite_master WHERE tbl_name = '%s'".format(tableName)
+    val backend = new SqLiteBackend(f.props)
+    val cascade = true
 
     given("an active connection, an existing table, and a view on the existing table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
-
-    try
-      backend.createTable(tableName,columnNames,dataTypes)
-    catch {
-    case  e:java.sql.SQLException =>
-          println(e.getMessage)
-          fail("backend.createTable(" + "\"" + tableName + "," + "\"" + ")produced java.sql.SQLException" )
-    }
-
-    var tableVerifiedResult                   =     backend.executeQuery(verifyTableStatement)
+    backend.createTable(tableName,columnNames,dataTypes)
+    
+    var tableVerifiedResult = backend.executeQuery(verifyTableStatement)
     assert(tableVerifiedResult.next())
-    tableVerifiedResult.getInt("count") should  equal  (1)
+    tableVerifiedResult.getInt("count") should equal(1)
 
     when("the user issues a drop table command with cascade for that table")
-    try
-      backend.dropTable(tableName, cascade)
-    catch {
-    case e:java.sql.SQLException =>
-            println(e.getMessage)
-            fail("backend.dropTable(" + "\"" + tableName + "," + "\"" + ")produced java.sql.SQLException" )
-    }
-
-
+    backend.dropTable(tableName, cascade)
+    
     then("the table  be dropped")
-    val tableExistResult                    =     backend.executeQuery(verifyTableStatement)
+    val tableExistResult = backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
-    tableExistResult.getInt("count")  should be (0)
+    tableExistResult.getInt("count") should be(0)
 
     backend.close()
 
   }
 
-
-
-
-
-  ignore("The user can iterate over the results of a select query") {
+  scenario("The user can iterate over the results of a select query") {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
+    val f = fixture
+    val backend = new SqLiteBackend(f.props)
+    val tableName = "cars_deba_a"
+    val sqlStatement = "select * from %s".format(tableName)
+    val bindVars: DataRow[String] = DataRow.empty
 
-    val f                     = fixture
-
-    val backend               = new SqLiteBackend(f.props)
-
-    val tableName             = "cars_deba_a"
-
-    val sqlStatement          = "select * from " + tableName
-
-    val bindVars:DataRow[String]                  = DataRow.empty
-
-    var resultsCount:Int                          = 0
+    var resultsCount: Int = 0
 
     given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
@@ -713,403 +591,172 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     then("the user should be able to iterate over the results")
     while (resultSet.next()) { resultsCount+=1 }
 
-
     and("multiple results should be returned")
     resultsCount should be > (1)
 
     backend.close()
   }
 
-
-
-
-  ignore("The user can update a record in a table using a valid update statement") {
+  scenario("The user can update a record in a table using a valid update statement") {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
 
-    val f                             = fixture
-
-    val backend                       = new SqLiteBackend(f.props)
-
-    val tableName                     = "cars_deba_a"
-
-    var columnNames:List[String]      = List("carid","carnumber","carmake","carmodel")
-
-
-    val carId:String              = "K0000210"
-
-    val carNumber:Int                       = 1234567899
-
-    val carMake                     = "MiniCoopeRa"
-
-    val carModel                      = "FourteenMillion"
-
-    var sqlStatement                  = "update " + tableName                           +
-                                        " set "                                                           +
-                                        columnNames.map(i => i + " = ?,").mkString.dropRight(1)           +
-                                        " where carid = " + "'" + carId  + "'"
-
-    var valuesList:List[Any]          = List(carId,carNumber,carMake,carModel,carId)
-
-    var bindVars:DataRow[Any]         = DataRow(("carid",carId),("carnumber",carNumber),("carmake",carMake),("carmodel",carModel))
-
-    var resultsCount:Int              = 0
+    val f = fixture
+    val backend = new SqLiteBackend(f.props)
+    val tableName = "cars_deba_a"
+    val columnNames = List("carid", "carnumber", "carmake", "carmodel")
+    val carId = "K0000210"
+    val carNumber = 1234567899
+    val carMake = "MiniCoopeRa"
+    val carModel = "FourteenMillion"
+    val sqlStatement = "update %s set %s where carid = '%s'".format(tableName,
+    															  columnNames.map("%s = ?".format(_)).mkString(", "),
+    															  carId) 
+    val valuesList = List(carId, carNumber, carMake, carModel, carId)
+    val bindVars = DataRow(("carid", carId), 
+                           ("carnumber", carNumber),
+                           ("carmake", carMake), 
+                           ("carmodel", carModel))
+    var resultsCount: Int = 0
 
     given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
-
     when("an update query is executed")
-    try
-      backend.execute(sqlStatement,bindVars)
-    catch {
-    case e:java.sql.SQLException =>
-            fail("backend.execute(" + "\"" + sqlStatement + "\"" + ")produced java.sql.SQLException" )
-    }
-
+    backend.execute(sqlStatement,bindVars)
 
     then("the record(s) should be updated")
-    columnNames                                   = List("carmodel")
-    valuesList                                    = List(carModel)
-    bindVars                                      = DataRow(("carmodel",carModel))
-    sqlStatement                                  = "select count(1) as count from " + tableName + " where "     +
-                                                    "carmodel = ?"
+    val sqlVerifyStatement = "select count(*) as count from %s where carmodel = ?".format(tableName)
 
-    val recordCountResult                         = backend.executeQuery(sqlStatement,bindVars)
+    val recordCountResult = backend.executeQuery(sqlVerifyStatement, Seq(Some(carModel)))
     assert(recordCountResult.next())
-    resultsCount                                  = recordCountResult.getInt("count")
-    resultsCount  should be (1)
-
-
+    recordCountResult.getInt("count") should be(1)
     backend.close()
   }
 
 
-  ignore("The user can update a multiple records in a table using a valid update statement") {
+  scenario("The user can update a multiple records in a table using a valid update statement") {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
 
-    val f                             = fixture
+    val f = fixture
+    val backend = new SqLiteBackend(f.props)
+    val tableName = "cars_deba_a"
+    val columnNames = List("carmodel")
+    val sqlStatement = "update %s set %s".format(tableName,
+    											 columnNames.map("%s = ?".format(_)).mkString(", ")) 
 
-    val backend                       = new SqLiteBackend(f.props)
-
-    val tableName                     = "cars_deba_a"
-
-    var columnNames:List[String]      = List("carmodel")
-
-    var sqlStatement                  = "update " + tableName                           +
-                                        " set "                                                           +
-                                        columnNames.map(i => i + " = ?,").mkString.dropRight(1)
-
-
-    val carModel                                  = "SeventeenMillion"
-
-    val valuesList:List[Any]                      = List(carModel)
-
-    val bindVars:DataRow[Any]                     = DataRow((columnNames(0),carModel))
-
-    var resultsCount:Int                          = 0
-
+    val carModel = "SeventeenMillion"
+    val valuesList = List(carModel)
+    val bindVars = DataRow((columnNames(0), carModel))
+    
     given("an active connection")
-    assert(backend.connect().isInstanceOf[java.sql.Connection] )
+    assert(backend.connect().isInstanceOf[java.sql.Connection])
     backend.connection.setAutoCommit(false)
 
     when("an update query for multiple records is executed")
-    try
-      backend.execute(sqlStatement,bindVars)
-    catch {
-    case e:java.sql.SQLException =>
-            fail("backend.execute(" + "\"" + sqlStatement + "\"" + ")produced java.sql.SQLException" )
-    }
-
+    backend.execute(sqlStatement, bindVars)
+    
     then("multiple record(s) should be updated")
-    sqlStatement                                  = "select count(1) as count from " + tableName+ " where "     +
-                                                    "carmodel = ?"
+    val sqlVerifyStatement = "select count(*) as count from %s where carmodel = ?".format(tableName)
 
-    val recordCountResult                         = backend.executeQuery(sqlStatement,bindVars)
+    val recordCountResult = backend.executeQuery(sqlVerifyStatement, bindVars)
     assert(recordCountResult.next())
-    resultsCount                                  = recordCountResult.getInt("count")
-    resultsCount  should be > (1)
+    recordCountResult.getInt("count") should be > (1)
     //It would be better to compare the number of rows updated to the count  i.e.:
     //http://www.coderanch.com/t/426288/JDBC/java/Row-count-update-statement
     //Statement st = connection.createStatement("update t_number set number = 2 where name='abcd");
     //int rowCount = st.executeUpdate();
     //However, this executeUpdate is not yet available on the backend
 
-
     backend.close()
   }
 
 
-
-
-
-  ignore("The user can update a multiple records in a table without constructing update statement") {
+  scenario("The user can update a multiple records in a table without constructing update statement") {
     //Prerequisites:  Need Multiple Row in table cars_deba_a   with carmake = 'MiniCoopeRb'
 
-    val f                                         = fixture
-
-    val backend                                   = new SqLiteBackend(f.props)
-
-    val tableName                                 = "cars_deba_a"
-
-    var columnNames:List[String]                  = List("carnumber","carmake","carmodel")
-
-    val carNumber:Int                                   = 192837465
-
-    val carMake                                 = "MiniCoopeRaStyle004"
-
-    val carModel                                  = "SeventeenMillion"
-
-    val valuesList:List[Any]                      = List(carNumber,carMake,carModel)
-
-    val filter:List[(String, Any)]                = List(("carmake","MiniCoopeRb"))
-
-    val updatesBindVars:DataRow[Any]              =
-      DataRow((columnNames(0),valuesList(0)),(columnNames(1),valuesList(1)),(columnNames(2),valuesList(2)))
-
-    var resultsCount:Int                          = 0
+    val f = fixture
+    val backend = new SqLiteBackend(f.props)
+    val tableName = "cars_deba_a"
+    var columnNames = List("carnumber", "carmake", "carmodel")
+    val carNumber = 192837465
+    val carMake = "MiniCoopeRaStyle004"
+    val carModel = "SeventeenMillion"
+    val valuesList = List(carNumber, carMake, carModel)
+    val filter = List(("carmake", "MiniCoopeRb"))
+    val updatesBindVars = DataRow((columnNames(0),valuesList(0)),
+    		  (columnNames(1),valuesList(1)),
+    		  (columnNames(2),valuesList(2)))
 
     given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
     when("an update row instruction for multiple records is executed")
-    try
-      backend.updateRow(tableName,updatesBindVars,filter)
-    catch {
-    case e:java.sql.SQLException =>
-            println(e.getMessage())
-            fail("backend.updateRow()produced java.sql.SQLException" )
-    }
-
+    backend.updateRow(tableName,updatesBindVars,filter)
+    
     then("multiple record(s) should be updated")
-    val sqlStatement                              = "select count(1) as count from " + tableName+ " where "     +
-                                                    "carmake = ?"
+    val sqlStatement = "select count(*) as count from %s where carmake = ?".format(tableName)
 
+    val bindVars = DataRow((columnNames(1), valuesList(1)))
 
-    val bindVars:DataRow[Any]                     =
-      DataRow((columnNames(1),valuesList(1)))
-
-    val recordCountResult                         = backend.executeQuery(sqlStatement,bindVars)
+    val recordCountResult = backend.executeQuery(sqlStatement, bindVars)
     assert(recordCountResult.next())
-    resultsCount                                  = recordCountResult.getInt("count")
-    resultsCount  should be > (1)
+    recordCountResult.getInt("count") should be > (1)
     //It would be better to compare the number of rows updated to the count  i.e.:
     //http://www.coderanch.com/t/426288/JDBC/java/Row-count-update-statement
     //Statement st = connection.createStatement("update t_number set number = 2 where name='abcd");
     //int rowCount = st.executeUpdate();
     //However, this executeUpdate is not yet available on the backend
-
-
     backend.close()
   }
 
 
-
-
-
-  ignore("The user can insert a multiple rows using a loop without constructing an insert statement") {
+  scenario("The user can insert a multiple rows using a loop without constructing an insert statement") {
     //Prerequisites:  None of theses record should exist
     val f = fixture
+    val tableName = "cars_deba_a"
+    val columnNames = List("carid", "carnumber", "carmake", "carmodel")
+    val carIds = List("K0000500", "K0000501", "K0000502", "K0000503", "K0000504")
+    val carNumbers = List(1234561000, 1234561001, 1234561002, 1234561003, 1234561004)
+    val carMakes = List("MiniCoopeRd", "MiniCoopeRd", "MiniCoopeRd", "MiniCoopeRd", "MiniCoopeRd")
+    val carModels = List("Zero", "One", "Ten", "Ten", "Ten")
+    val backend = new SqLiteBackend(f.props)
 
-    val tableName:String                      =     "cars_deba_a"
-
-    val columnNames:List[String]              =     List("carid","carnumber","carmake","carmodel")
-
-    val carIds:List[String]                   =     List("K0000500","K0000501","K0000502","K0000503","K0000504")
-
-    val carNumbers:List[Int]                  =     List(1234561000,1234561001,1234561002,1234561003,1234561004)
-
-    val carMakes:List[String]                 =     List("MiniCoopeRd","MiniCoopeRd","MiniCoopeRd","MiniCoopeRd","MiniCoopeRd")
-
-    val carModels:List[String]                =     List("Zero","One","Ten","Ten","Ten")
-
-    val backend                               =     new SqLiteBackend(f.props)
-
-    val verifyRecordsStatement:String         =     "select count(1) as count from " + tableName+ " where "          +
-                                                    "carid in "                                                   +
-                                                    "("                                                               +
-                                                    carIds.map(i => "'" + i + "'" + ",").mkString.dropRight(1)             +
-                                                    ")"
-
-    var recordCount:Int                       =     0
+    val verifyRecordsStatement = """select count(*) as count 
+      								from %s where carid in (%s)""".format(tableName, carIds.map("'%s'".format(_)).mkString(", "))
 
     given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
     when("the user issues valid insert row commands in a loop for an existing table")
-
-    for (i <- 0 to (carIds.length -1))
-    {
-
-      val row:DataRow[Any]                     =     DataRow(("carid",carIds(i)),("carnumber",carNumbers(i)),("carmake",carMakes(i)),("carmodel",carModels(i)))
-      assert(backend.insertReturningKeys(tableName,row).isInstanceOf[DataRow[Any]]  )
-
-
-    }
+    carIds.zipWithIndex.foreach{
+      case (carId,index) => backend.insertRow(tableName, DataRow(("carid", carId), 
+    		  									              ("carnumber", carNumbers(index)), 
+    		  									              ("carmake", carMakes(index)), 
+    		  									              ("carmodel", carModels(index))))
+    }	
 
 
     then("the rows should be inserted")
-    val recordCountResult                       =     backend.executeQuery(verifyRecordsStatement)
+    val recordCountResult = backend.executeQuery(verifyRecordsStatement)
     assert(recordCountResult.next())
-    recordCount                                 =     recordCountResult.getInt("count")
-    recordCount  should equal (carIds.length)
-
+    recordCountResult.getInt("count") should equal(carIds.length)
     backend.close()
 
   }
+  
 
 
-
-
-
-  ignore("The user can delete multiple records in a table using a valid delete statement") {
-    //Prerequisites:  Need Multiple Row in table cars_deba_a
-
-    val f                             = fixture
-
-    val backend                       = new SqLiteBackend(f.props)
-
-    val tableName                     = "cars_deba_a"
-
-    val columnNames:List[String]      = List("carmodel")
-
-    var sqlStatement                  = if    (columnNames.length > 1)  {
-                                          "delete from " + tableName                                +
-                                          " where "                                                                   +
-                                          columnNames.map(i => i + " = ?").mkString(" and ")
-                                        }
-                                        else{
-                                          "delete from " + tableName                                +
-                                          " where "                                                                   +
-                                          columnNames.map(i => i + " = ?").mkString
-                                        }
-
-    val carModel                                  = "Ten"
-
-    val valuesList:List[Any]                      = List(carModel)
-
-    val bindVars:DataRow[Any]                     = DataRow((columnNames(0),valuesList(0)))
-
-
-
-    given("an active connection")
-    assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
-
-    when("a delete query for multiple records is executed")
-    try
-      backend.execute(sqlStatement,bindVars)
-    catch {
-    case e:java.sql.SQLException =>
-            println(e.getMessage)
-            fail("backend.execute(" + "\"" + sqlStatement + "\"" + ")produced java.sql.SQLException" )
-    }
-
-    then ("those records should be deleted")
-    sqlStatement                      =   "select count(1) as count from "   + tableName            +
-                                          " where carmodel = ?"
-
-    try   {
-          val countResult = backend.executeQuery(sqlStatement,bindVars)
-          assert(countResult.next())
-          countResult.getInt("count") should equal  (0)
-    }
-    catch {
-    case  e:java.sql.SQLException =>
-            println(e.getMessage + "\n\n")
-            fail("backend.executeQuery(" + "\"" + sqlStatement + "\"" + ")produced java.sql.SQLException" )
-
-
-
-
-
-
-    }
-
-
-  }
-
-
-
-
-  ignore("The user can drop all tables that begin with a certain string") {
-
-      /*http://stackoverflow.com/questions/3476765/mysql-drop-all-tables-ignoring-foreign-keys*/
-
-      val sf = fixture
-
-      val tf = fixture
-
-      val searchString:String                   =         "cars_deba"
-      val objectStatement: String = """SELECT tbl_name from sqlite_master 
-                                        WHERE tabl_name like '""" + searchString + "%'" 
-
-      val verifyObjectCountStatement:String     = """SELECT count(tbl_name) from sqlite_master 
-                                                      WHERE tabl_name like '""" + searchString + "%'" 
-
-      val sourceBackend                         =         new SqLiteBackend(sf.props)
-
-      val targetBackend                         =         new SqLiteBackend(tf.props)
-
-      val cascade:Boolean                       =         true
-
-      given("an active connection")
-      assert(sourceBackend.connect().isInstanceOf[java.sql.Connection] )
-      assert(targetBackend.connect().isInstanceOf[java.sql.Connection] )
-      targetBackend.connection.setAutoCommit(false)
-
-      when("the user issues drop table commands for views and tables that begin with a certain string")
-     // try {
-
-      val  objectResult                         =         sourceBackend.executeQuery(objectStatement)
-
-          try {
-
-            while(objectResult.next())  {
-
-              targetBackend.dropTable(objectResult.getString("table_name"), cascade)
-
-            }
-          }
-          catch {
-          case e:java.sql.SQLException =>
-              println(e.getMessage)
-              fail("targetBackend.dropTable(" + "\"" + objectResult.getString("table_name") + "\"" + ")produced java.sql.SQLException" )
-          }
-     // }
-      //catch {
-      /*case e:java.sql.SQLException =>
-              println(e.getMessage)
-              fail("backend.executeQuery(" + objectStatement + ")produced java.sql.SQLException" )
-      }*/
-
-
-      then("then those tables and views should be dropped")
-      val objectExistResult                      =     targetBackend.executeQuery(verifyObjectCountStatement)
-      assert(objectExistResult.next())
-      objectExistResult.getInt("count")  should be (0)
-
-
-      sourceBackend.close()
-      targetBackend.close()
-
-  }
-
-
-
-
-  ignore("Remove Test Data Setup")  {
+  scenario("Remove Test Data Setup")  {
     /**** Remove Test Data    ****/
     removeTestDataSetup
     /****                     ****/
 
   }
 
-  ignore("Close Test SetUp Connections")  {
-
+  scenario("Close Test SetUp Connections")  {
     setup.targetBackend.close
-
   }
 
 
