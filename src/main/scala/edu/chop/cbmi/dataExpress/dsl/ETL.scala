@@ -65,7 +65,7 @@ object ETL {
     }catch{
       //TODO should there be rollback or option to rollback here?
       case e:Exception => {
-        println("Warning: Exception occured: %s".format(e.getMessage))
+        println("Warning: Exception occurred: %s".format(e.getMessage))
         false
       }
     }
