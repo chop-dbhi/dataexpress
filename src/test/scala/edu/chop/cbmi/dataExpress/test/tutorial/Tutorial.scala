@@ -11,41 +11,63 @@ import edu.chop.cbmi.dataExpress.dataModels._
 import edu.chop.cbmi.dataExpress.dataModels.sql._
 import edu.chop.cbmi.dataExpress.dsl._
 import edu.chop.cbmi.dataExpress.dsl.stores.SqlDb
+import edu.chop.cbmi.dataExpress.dsl.ETL._
+import edu.chop.cbmi.dataExpress.dsl.ETL
+import edu.chop.cbmi.dataExpress.dsl.stores.SqlDb
+import edu.chop.cbmi.dataExpress.dataModels.RichOption._
+import org.scalatest.FlatSpec
 
 /* This test is meant to allow easy updating for ensuring the quickstart tutorial
  * on the DataExpress website can be tested easily with any code changes
  */
 
 
-class TutorialFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
+class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatchers {
+  
+  "The setup" should "be able to take a clean database and create the necessary tables" in withBlankDatabase {db => 
+    dbSetup(db.backend)  
+  }
+  
+  "The user" should "be able to copy from a source to a target" in withBlankDatabase { target => 
+     withDatabase { source =>
+       register store source as "source"
+       register store target as "target"
+       val copySuccess = commit_on_success("target"){ 
+    	   copy table "presidents" from "source" to "target" create "presidents_copy"
+       }
+       copySuccess should equal (true) 
+     }  
+  }
+  
+  
   
   
   
   def withBlankDatabase(testCode: SqlDb => Any) {
-    val dbName = "jdbc:sqlite:/:memory:"
-    val dbProps = new Properties()
-    dbProps.setProperty("jdbcUri", dbName)
-    val backend = SqlBackendFactory(dbProps)
+    val (backend, dbName) = makeBackend
     val db = SqlDb(backend)
     try {
       testCode(db)
     }
-    finally db.close
+    finally removeDb(backend, dbName)
     
   }
   
   def withDatabase(testCode: SqlDb => Any) {
-    val dbName = "jdbc:sqlite:/:memory:" //UUID.randomUUID.toString
-    val dbProps = new Properties()
-    dbProps.setProperty("jdbcUri",dbName)
-    val backend = SqlBackendFactory(dbProps)
-    
+    val (backend, dbName) = makeBackend
     try {
       dbSetup(backend)
       val db = SqlDb(backend)
       testCode(db) // "loan" the fixture to the test
     }
-    finally removeDb(backend) // clean up the fixture
+    finally removeDb(backend, dbName) // clean up the fixture
+  }
+ 
+  def makeBackend() = {
+    val dbName = UUID.randomUUID.toString
+    val dbProps = new Properties()
+    dbProps.setProperty("jdbcUri", "jdbc:sqlite:%s".format(dbName))
+    (SqlBackendFactory(dbProps), dbName)
   }
   
   def dbSetup(db: SqlBackend) {
@@ -126,13 +148,11 @@ class TutorialFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatc
      db.commit()
   }
   
-  def removeDb(db:SqlBackend) = {
+  def removeDb(db:SqlBackend, dbName:String) = {
     try {
     	db.close()
     }
-    //if using files, remove the file
-    //finally (new File(dbName)).delete
+    finally (new File(dbName)).delete
   }
-
   
 }
