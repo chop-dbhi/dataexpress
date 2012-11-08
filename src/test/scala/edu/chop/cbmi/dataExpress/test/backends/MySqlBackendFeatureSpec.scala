@@ -8,8 +8,6 @@ package edu.chop.cbmi.dataExpress.test.backends
  * To change this template use File | Settings | File Templates.
  */
 
-import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
 import org.scalatest.FeatureSpec
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.GivenWhenThen
@@ -22,7 +20,7 @@ import edu.chop.cbmi.dataExpress.dataModels.sql._
 import edu.chop.cbmi.dataExpress.test.util.TestProps
 import edu.chop.cbmi.dataExpress.test.util.cars.dataSetup.backends.MySqlDataSetup
 
-@RunWith(classOf[JUnitRunner])
+
 class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
 
   def fixture =
@@ -65,11 +63,8 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
   val setup                             =       dataSetupFixture
 
   def setUpTestData: Boolean   = {
-
     setup.targetStatement.execute(setup.dataSetup.createTargetSchema)
-
     setup.targetBackend.commit
-
     true
   }
 
@@ -77,10 +72,8 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
   def removeTestDataSetup: Boolean = {
 
     setup.targetStatement.execute(setup.dataSetup.dropTargetSchema)
-
     setup.targetBackend.commit
-
-
+    setup.targetStatement.close()
     true
   }
 
@@ -94,77 +87,52 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
 
   scenario("The user can create a table with four columns") {
     val f = fixture
-
-    val tableName                             =     "cars_deba_a"
-
-    val columnFixedWidth:Boolean              =     false
-
-    val columnNames:List[String]              =     List("carid","carnumber","carmake","carmodel")
-
-    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
-
-    val verifyTableStatement:String           =     "SELECT COUNT(1) as 'count' FROM information_schema.tables WHERE table_name = " + "'" + tableName + "'" +  " and table_schema = " + "'" + dbSchema.get  + "'"
-
-    val backend                               =     new MySqlBackend(f.props)
-
-    val cascade:Boolean                       =     true
+    val tableName = "cars_deba_a"
+    val columnFixedWidth: Boolean = false
+    val columnNames: List[String] = List("carid", "carnumber", "carmake", "carmodel")
+    val dataTypes = List(CharacterDataType(20, columnFixedWidth), IntegerDataType(), CharacterDataType(20, columnFixedWidth), CharacterDataType(20, columnFixedWidth))
+    val verifyTableStatement: String = "SELECT COUNT(*) as 'count' FROM information_schema.tables WHERE table_name = " + "'" + tableName + "'" + " and table_schema = " + "'" + dbSchema.get + "'"
+    val backend = new MySqlBackend(f.props)
+    val cascade: Boolean = true
 
     given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
     when("the user issues a valid create table instruction for a table that does not exist")
-    try {
-      var tableExistResult                    =   backend.executeQuery(verifyTableStatement)
-      assert(tableExistResult.next())
 
-      if (tableExistResult.getInt("count") != 0)
-      {
-        try  {
-          backend.dropTable(tableName,cascade,dbSchema)
-        }
-        catch {
-        case e:java.sql.SQLException =>
-            println(e.getMessage + "\n")
-            fail( "backend.dropTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" +
-                  "when attempting to drop existing table" )
-        }
+    var tableExistResult = backend.executeQuery(verifyTableStatement)
+    assert(tableExistResult.next())
 
+    if (tableExistResult.getInt("count") != 0){
+    	    tableExistResult.close()
+    	    backend.dropTable(tableName, cascade, dbSchema)
+    } 
+    else {
       tableExistResult.close()
-
-      tableExistResult                      =     backend.executeQuery(verifyTableStatement)
-      assert(tableExistResult.next())
-
-          if (tableExistResult.getInt("count") != 0)
-          {
-
-            fail( "Unable to drop existing table " + dbSchema.get   +   "."   + tableName )
-          }
-
-
-      }
     }
-    catch {
-    case e:java.sql.SQLException =>
-            println(e.getMessage + "\n")
-            fail("backend.executeQuery(" + verifyTableStatement + ")produced java.sql.SQLException" )
-    }
+
+
+    tableExistResult = backend.executeQuery(verifyTableStatement)
+    assert(tableExistResult.next())
+
+    if (tableExistResult.getInt("count") != 0) fail("Unable to drop existing table " + dbSchema.get + "." + tableName)
+    tableExistResult.close()
+
+
 
     /* Table should be dropped now if it existed) */
 
-    try
-      backend.createTable(tableName,columnNames,dataTypes, schemaName = dbSchema)
-    catch {
-    case e:java.sql.SQLException =>
-            println(e.getMessage + "\n")
-            fail("backend.createTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
-    }
+
+    backend.createTable(tableName, columnNames,dataTypes, schemaName = dbSchema)
+
 
 
     then("the table should exist")
-    val tableExistResult                          =     backend.executeQuery(verifyTableStatement)
+    tableExistResult                          =     backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
     tableExistResult.getInt("count") should equal (1)
+    tableExistResult.close
     //For primary-key based things to work, we need to alter the table or mySQL will not return rows that are inserted
     backend.execute("alter table %s.%s add primary key(%s)".format(dbSchema.get, tableName, columnNames(0)))
     backend.close()
@@ -205,7 +173,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
      val countResult                                 =     backend.executeQuery(countStatement)
      assert(countResult.next())
      countResult.getInt("count") should equal (0)
-
+     countResult.close()
      backend.close()
 
    }
@@ -273,7 +241,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     val rs = backend.executeQuery("select count(*) from %s.%s where %s = ?".format(dbSchema.get, tableName, columnNames(0)), List(Option(carId)))
     rs.next
     rs.getInt(1) should equal(1)
-    
+    rs.close()
     backend.close()
   }
 
@@ -308,7 +276,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     then("one or more results should be returned")
     hasResults                                    = resultSet.next()
     hasResults should be (true)
-
+    resultSet.close()
     backend.close()
   }
 
@@ -346,6 +314,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
           then("the query should have returned a non empty result set")
           val nonEmptyResultSet:Boolean                 =   results.next()
           nonEmptyResultSet should be (true)
+          results.close()
     }
     catch {
     case  e:java.sql.SQLException =>
@@ -453,7 +422,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     var countResult                                 =     backend.executeQuery(countStatement)
     countResult.next() should  be (true)
     countResult.getInt("count") should be > (0)
-
+    countResult.close()
     when("the user issues a truncate table instruction for that table")
     try
       backend.truncateTable(tableName, schemaName = dbSchema)
@@ -466,15 +435,15 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     countResult                                     =     backend.executeQuery(countStatement)
     assert(countResult.next())
     countResult.getInt("count") should equal (0)
-
+    countResult.close()
     backend.close()
 
   }
 
 
 
-  //THIS SHOULD WORK
-  scenario("The user can roll back an open transaction") {
+  //This depends on the storage system used in mysql
+  ignore("The user can roll back an open transaction") {
 
     val f                             = fixture
 
@@ -633,6 +602,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     val persistentDataCount                   = newBackend.executeQuery(sqlStatement,bindVars)
     assert(persistentDataCount.next() )
     persistentDataCount.getInt("count") should equal (1)
+    persistentDataCount.close()
     newBackend.close()
 
   }
@@ -681,7 +651,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     val tableExistResult                                      =     backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
     tableExistResult.getInt("count") should equal (1)
-
+    tableExistResult.close()
 
     backend.close()
   }
@@ -721,11 +691,12 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     backend.connection.setAutoCommit(false)
 
     when("the user issues a valid insert command for an existing table and a unique record")
-    var recordCountResult                         =     backend.executeQuery(verifyRecordStatement)
+    var recordCountResult = backend.executeQuery(verifyRecordStatement)
     assert(recordCountResult.next())
-    var recordCount                               =     recordCountResult.getInt("count")
-    recordCount should be (0)
-     backend.insertRow(tableName,row,dbSchema)
+    var recordCount = recordCountResult.getInt("count")
+    recordCount should be(0)
+    recordCountResult.close()
+    backend.insertRow(tableName, row, dbSchema)
 
 
     and("the row should be inserted")
@@ -733,6 +704,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     assert(recordCountResult.next())
     recordCount                                   =     recordCountResult.getInt("count")
     recordCount  should be (1)
+    recordCountResult.close()
 
     backend.commit()
 
@@ -799,14 +771,14 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
 
     then("the batch insert command should be successful")
     successfulStatementCount  should equal  (rows.length)
-
+   
 
     and("the rows should be inserted")
     val recordCountResult                         =     backend.executeQuery(verifyRowsStatement)
     assert(recordCountResult.next())
     val recordCount                               =     recordCountResult.getInt("count")
     recordCount  should be (10)
-
+    recordCountResult.close()
     backend.close()
 
 
@@ -845,6 +817,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     val tableVerifiedResult                    =     backend.executeQuery(verifyTableStatement)
     assert(tableVerifiedResult.next())
     tableVerifiedResult.getInt("count") should be (1)
+    tableVerifiedResult.close()
 
     when("the user issues a drop table command for that table")
     try
@@ -859,6 +832,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     val tableExistResult                    =     backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
     tableExistResult.getInt("count") should be (0)
+    tableExistResult.close()
 
     backend.close()
 
@@ -900,33 +874,21 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    try
-      backend.createTable(tableName,columnNames,dataTypes, dbSchema)
-    catch {
-    case  e:java.sql.SQLException =>
-          println(e.getMessage)
-          fail("backend.createTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
-    }
+    backend.createTable(tableName, columnNames, dataTypes, dbSchema)
 
-    var tableVerifiedResult                   =     backend.executeQuery(verifyTableStatement)
+    var tableVerifiedResult = backend.executeQuery(verifyTableStatement)
     assert(tableVerifiedResult.next())
-    tableVerifiedResult.getInt("count") should  equal  (1)
+    tableVerifiedResult.getInt("count") should equal(1)
+    tableVerifiedResult.close()
 
     when("the user issues a drop table command with cascade for that table")
-    try
-      backend.dropTable(tableName, cascade, schemaName = dbSchema)
-    catch {
-    case e:java.sql.SQLException =>
-            println(e.getMessage)
-            fail("backend.dropTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
-    }
-
+    backend.dropTable(tableName, cascade, schemaName = dbSchema)
 
     then("the table  be dropped")
-    val tableExistResult                    =     backend.executeQuery(verifyTableStatement)
+    val tableExistResult = backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
-    tableExistResult.getInt("count")  should be (0)
-
+    tableExistResult.getInt("count") should be(0)
+    tableExistResult.close()
     backend.close()
 
   }
@@ -1025,8 +987,8 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     assert(recordCountResult.next())
     resultsCount                                  = recordCountResult.getInt("count")
     resultsCount  should be (1)
-
-
+    recordCountResult.close()
+    
     backend.close()
   }
 
@@ -1075,6 +1037,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     assert(recordCountResult.next())
     resultsCount                                  = recordCountResult.getInt("count")
     resultsCount  should be > (1)
+    recordCountResult.close()
     //It would be better to compare the number of rows updated to the count  i.e.:
     //http://www.coderanch.com/t/426288/JDBC/java/Row-count-update-statement
     //Statement st = connection.createStatement("update t_number set number = 2 where name='abcd");
@@ -1140,6 +1103,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     assert(recordCountResult.next())
     resultsCount                                  = recordCountResult.getInt("count")
     resultsCount  should be > (1)
+    recordCountResult.close()
     //It would be better to compare the number of rows updated to the count  i.e.:
     //http://www.coderanch.com/t/426288/JDBC/java/Row-count-update-statement
     //Statement st = connection.createStatement("update t_number set number = 2 where name='abcd");
@@ -1201,7 +1165,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     assert(recordCountResult.next())
     recordCount                                 =     recordCountResult.getInt("count")
     recordCount  should equal (carIds.length)
-
+    recordCountResult.close()
     backend.close()
 
   }
@@ -1337,7 +1301,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
       val objectExistResult                      =     targetBackend.executeQuery(verifyObjectCountStatement)
       assert(objectExistResult.next())
       objectExistResult.getInt("count")  should be (0)
-
+      objectExistResult.close()
 
       sourceBackend.close()
       targetBackend.close()
