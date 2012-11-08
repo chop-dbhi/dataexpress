@@ -96,6 +96,7 @@ object DataRow{
 /**
  * base class for other data representation classes organized as a 2-D table with column names.
  */
+//TODO: Issue 14 should extend Iterator instead of Iterable 
 abstract case class DataTable[+T](val column_names_generator: ColumnNameGenerator) extends Iterable[DataRow[T]] with Dynamic{
 
   lazy val column_names = column_names_generator.generate_column_names()
