@@ -2,11 +2,12 @@ package edu.chop.cbmi.dataExpress.test.util.presidents
 
 import edu.chop.cbmi.dataExpress.backends.SqlBackend
 import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.{Spec, GivenWhenThen, FeatureSpec, BeforeAndAfter}
+import org.scalatest.{Spec, GivenWhenThen, FunSpec, BeforeAndAfter}
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._
 import edu.chop.cbmi.dataExpress.dataModels.{DataTable, DataRow}
 import java.sql.Date
 import edu.chop.cbmi.dataExpress.test.util.TestProps
+import org.scalatest.FeatureSpec
 
 /**
  * Created by IntelliJ IDEA.
@@ -105,13 +106,13 @@ abstract class PresidentsFeatureSpecWithSourceTarget extends PresidentsFeatureSp
   lazy val target_backend = NewTestPropsBackend(backend_test_type)
 
   lazy val prop_file_source = backend_test_type match {
-    case (x: POSTGRES) => TestProps.property("postgres_db_prop_file")
-    case (y: MYSQL) => TestProps.property("mysql_db_prop_file")
+    case (x: POSTGRES) => TestProps.getDbPropFilePath("postgres")
+    case (y: MYSQL) => TestProps.getDbPropFilePath("mysql")
   }
 
   lazy val prop_file_target = backend_test_type match {
-    case (x: POSTGRES) => TestProps.property("postgres_db_prop_file")
-    case (y: MYSQL) => TestProps.property("mysql_db_prop_file")
+    case (x: POSTGRES) => TestProps.getDbPropFilePath("postgres")
+    case (y: MYSQL) => TestProps.getDbPropFilePath("mysql")
   }
 
   override def before_func() = {
@@ -158,7 +159,7 @@ abstract class PresidentsFeatureSpecWithSourceTarget extends PresidentsFeatureSp
   }
 }
 
-abstract class PresidentsSpec extends Spec with GivenWhenThen with ShouldMatchers with BeforeAndAfter with PresidentsTest {
+abstract class PresidentsSpec extends FunSpec with GivenWhenThen with ShouldMatchers with BeforeAndAfter with PresidentsTest {
 
   before {
     if (perform_before_steps) {
@@ -195,13 +196,13 @@ abstract class PresidentsSpecWithSourceTarget extends PresidentsSpec {
   lazy val target_backend = NewTestPropsBackend(backend_test_type)
 
   lazy val prop_file_source = backend_test_type match {
-    case (x: POSTGRES) => TestProps.property("postgres_db_prop_file")
-    case (y: MYSQL) => TestProps.property("mysql_db_prop_file")
+    case (x: POSTGRES) => TestProps.getDbPropFilePath("postgres")
+    case (y: MYSQL) => TestProps.getDbPropFilePath("mysql")
   }
 
   lazy val prop_file_target = backend_test_type match {
-    case (x: POSTGRES) => TestProps.property("postgres_db_prop_file")
-    case (y: MYSQL) => TestProps.property("mysql_db_prop_file")
+    case (x: POSTGRES) => TestProps.getDbPropFilePath("postgres")
+    case (y: MYSQL) => TestProps.getDbPropFilePath("mysql")
   }
 
   override def before_func() = {
