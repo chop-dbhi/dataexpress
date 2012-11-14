@@ -22,15 +22,12 @@ import edu.chop.cbmi.dataExpress.dataModels.sql._
 import edu.chop.cbmi.dataExpress.dataModels.sql.IntegerDataType
 
 
-@RunWith(classOf[JUnitRunner])
+
 class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
 
   def fixture =
     new {
-	  	val inputStream = this.getClass().getResourceAsStream("sqlite_test.properties")
-        val props = new Properties()
-        props.load(inputStream)
-        inputStream.close()
+	  val props = TestProps.getDbProps("sqlite")
     }
 
   val identifierQuote = "`"
@@ -523,6 +520,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val tableVerifiedResult = backend.executeQuery(verifyTableStatement)
     assert(tableVerifiedResult.next())
     tableVerifiedResult.getInt("count") should be (1)
+    tableVerifiedResult.close()
 
     when("the user issues a drop table command for that table")
     backend.dropTable(tableName)
@@ -536,7 +534,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
   }
   
   /* Currently not supported for sqlite because it requires user intervention to support cascade */
-  scenario("The user can drop a table with cascade") {
+  ignore("The user can drop a table with cascade") {
     val f = fixture
     val tableName = "cars_deba_c"
     val viewName = "cars_deba_c_v"
