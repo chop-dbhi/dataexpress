@@ -22,6 +22,9 @@ test in assembly := {}
 
 assembleArtifact in packageScala := false
 
+//Need this for now until we unwind some of the tests
+parallelExecution in Test := false
+
 //compile dependencies------------------------------
 
 libraryDependencies ++= Seq(
