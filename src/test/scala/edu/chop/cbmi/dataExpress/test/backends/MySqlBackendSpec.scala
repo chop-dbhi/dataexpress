@@ -13,17 +13,13 @@ import org.scalatest.{GivenWhenThen, Spec}
 import java.util.Properties
 import edu.chop.cbmi.dataExpress.backends.MySqlBackend
 import edu.chop.cbmi.dataExpress.test.util._
-import org.junit.runner.RunWith
-import org.scalatest.junit.JUnitRunner
-@RunWith(classOf[JUnitRunner])
+import org.scalatest.FunSuite
+
 class MySqlBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  {
 
   def fixture =
     new {
-	  	val inputStream = this.getClass().getResourceAsStream("mysql_test.properties")
-        val props = new Properties()
-        props.load(inputStream)
-        inputStream.close()
+	  val props = TestProps.getDbProps("mysql")
     }
   describe("MySql backend") {
     val f = fixture

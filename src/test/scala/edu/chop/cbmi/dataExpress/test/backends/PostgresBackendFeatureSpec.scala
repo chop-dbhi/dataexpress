@@ -24,15 +24,12 @@ import edu.chop.cbmi.dataExpress.dataModels.sql._
 import edu.chop.cbmi.dataExpress.test.util.TestProps
 import edu.chop.cbmi.dataExpress.test.util.cars.dataSetup.backends.PostgresDataSetup
 
-@RunWith(classOf[JUnitRunner])
+
 class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
 
   def fixture =
     new {
-	  	val inputStream = this.getClass().getResourceAsStream("postgres_test.properties")
-        val props = new Properties()
-        props.load(inputStream)
-        inputStream.close()
+	  val props = TestProps.getDbProps("postgres")
     }
 
   val dbSchema:Option[String]         = Option("qe10c01")

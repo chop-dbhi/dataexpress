@@ -16,15 +16,12 @@ import edu.chop.cbmi.dataExpress.test.util._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSpec
-@RunWith(classOf[JUnitRunner])
+
 class PostgresBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  {
 
   def fixture =
     new {
-	  	val inputStream = this.getClass().getResourceAsStream("postgres_test.properties")
-        val props = new Properties()
-        props.load(inputStream)
-        inputStream.close()
+	  val props = TestProps.getDbProps("postgres")
     }
   describe("Postgres backend") {
     val f = fixture
