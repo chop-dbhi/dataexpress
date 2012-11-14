@@ -13,18 +13,25 @@ import edu.chop.cbmi.dataExpress.backends.{SqlBackendFactory, PostgresBackend, S
  */
 
 object TestProps {
+  def getDbProps(dbName:String) = {
+    val filename = choosePropFile(dbName)
+	val inputStream = this.getClass().getResourceAsStream(filename)
+    val props = new Properties()
+    props.load(inputStream)
+    props
+  }
 
-  val standardPropsFile = "/props.properties"
-
-  def property(prop: String, path: String = standardPropsFile): String = {
-    val is: InputStream = getClass().getResourceAsStream(path);
-    val props = new Properties();
-    try {
-      props.load(is);
-      is.close
-      props.getProperty(prop);
-    } catch {
-      case ex: Exception => ""
+  def getDbPropFilePath(dbName:String) = { 
+   val filename = choosePropFile(dbName)
+   this.getClass().getResource(filename).getPath()
+ }
+  
+  private def choosePropFile(dbname: String) = {
+    dbname match {
+      case "mysql" => "mysql_test.properties"
+      case "postgres" => "postgres_test.properties"
+      case "sqlite" => "sqlite_test.properties"
+      case _ => "%s.properties".format(dbname)
     }
   }
 
@@ -33,9 +40,8 @@ object TestProps {
     sb
   }
 
-  def mySqlTestDB() = connectToDB(SqlBackendFactory(property("mysql_db_prop_file")))
-
-  def postGresTestDB() = connectToDB(SqlBackendFactory(property("postgres_db_prop_file")))
+  def mySqlTestDB() = connectToDB(SqlBackendFactory(getDbProps("mysql")))
+  def postGresTestDB() = connectToDB(SqlBackendFactory(getDbProps("postgres")))
 
 
 }
