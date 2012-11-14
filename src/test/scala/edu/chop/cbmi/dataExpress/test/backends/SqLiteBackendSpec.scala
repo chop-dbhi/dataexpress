@@ -11,15 +11,12 @@ import org.scalatest.junit.JUnitRunner
 import edu.chop.cbmi.dataExpress.backends.SqLiteBackend
 import org.scalatest.FunSpec
 
-@RunWith(classOf[JUnitRunner])
+
 class SqLiteBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  {
 
   def fixture =
     new {
-	  	val inputStream = this.getClass().getResourceAsStream("sqlite_test.properties")
-        val props = new Properties()
-        props.load(inputStream)
-        inputStream.close()
+	  val props = TestProps.getDbProps("sqlite")
     }
   describe("Sqlite backend") {
     val f = fixture
