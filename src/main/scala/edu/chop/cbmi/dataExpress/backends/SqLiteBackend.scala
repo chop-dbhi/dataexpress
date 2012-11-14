@@ -35,7 +35,7 @@ class SqLiteBackend(override val connectionProperties : Properties, _sqlDialect 
   }
   
 
-  override val SUPPORTS_MULT_RS = false
+//  override val SUPPORTS_MULT_RS = false
 
   override protected def prepStatement(sqlStatement: PreparedStatement, bindVars: Seq[Option[_]]) = {
     if (bindVars.length > 0) {
