@@ -25,7 +25,7 @@ object TestProps {
 
   def getDbPropFilePath(dbName:String) = { 
    val filename = choosePropFile(dbName)
-   getClass().getResource(filename).getPath
+   getClass().getResource(filename).getPath()
  }
   
   private def choosePropFile(dbname: String) = {
