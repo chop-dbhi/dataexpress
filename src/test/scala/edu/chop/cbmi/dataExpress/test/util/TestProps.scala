@@ -16,10 +16,11 @@ import edu.chop.cbmi.dataExpress.backends.{SqlBackendFactory, PostgresBackend, S
 object TestProps {
   def getDbProps(dbName:String):Properties = {
     val filename = choosePropFile(dbName)
-	val inputStream =(getClass.getResourceAsStream(filename))
+	val inputStream = getClass.getResourceAsStream(filename)
     //val inputStream = this.getClass().getResourceAsStream(filename)
 	val props = new Properties()
     props.load(inputStream)
+    inputStream.close()
     props
   }
 
