@@ -123,14 +123,15 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
 
     if (props.stringPropertyNames().contains("jdbcUri")) {
       jdbcUri = props.getProperty("jdbcUri")
-      props.remove("jdbcUri")
-      connection = dr.connect(jdbcUri, props)
+      val connectProps = props
+      connectProps.remove("jdbcUri")
+      connection = dr.connect(jdbcUri, connectProps)
       connection.setAutoCommit(false)
       statementCache = new SqlQueryCache(CACHESIZE, connection)
       connection
     }
     else {
-      throw new RuntimeException("Required Property 'jdbcUri' not present")
+      throw new RuntimeException("Required Property 'jdbcUri' not present. Properties are: %s".format(props.stringPropertyNames()))
     }
   }
 
