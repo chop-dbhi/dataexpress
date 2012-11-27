@@ -86,6 +86,9 @@ object SqlBackendFactory{
     val props = new Properties()
     props.load(prop_stream)
     prop_stream.close()
+    if (!props.stringPropertyNames().contains("jdbcUri")) {
+        throw new RuntimeException("""File %s does not contain required property "jdbcUri""".format(connection_properties_file))
+    }
     apply(props, sqlDialect, driver_class_name)
   }
 
