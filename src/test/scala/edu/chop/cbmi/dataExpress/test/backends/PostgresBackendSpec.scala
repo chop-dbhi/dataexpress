@@ -45,10 +45,9 @@ class PostgresBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen
 
 
     it("should throw an exception if one of the properties isn't provided") {
-        val backend             = new PostgresBackend(f.props)
-        val badProps            = new Properties()
-        badProps.putAll(f.props)
-        badProps.remove("user")
+        val badProps = f.props
+        badProps.remove("jdbcUri")
+    	val backend = new PostgresBackend(badProps) 
         evaluating {backend.connect()} should produce [RuntimeException]
         backend.close()
     }
