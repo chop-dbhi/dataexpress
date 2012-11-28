@@ -123,7 +123,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
 
     if (props.stringPropertyNames().contains("jdbcUri")) {
       jdbcUri = props.getProperty("jdbcUri")
-      val connectProps = props
+      val connectProps = new Properties(props)
       connectProps.remove("jdbcUri")
       connection = dr.connect(jdbcUri, connectProps)
       connection.setAutoCommit(false)
