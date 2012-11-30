@@ -25,8 +25,9 @@ import org.scalatest.FlatSpec
 class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatchers {
   
   "The setup" should "be able to take a clean database and create the necessary tables" in withBlankDatabase {db => 
-    dbSetup(db.backend)  
+    dbSetup(db.backend)
   }
+
   
   "The user" should "be able to copy from a source to a target" in withBlankDatabase { target => 
      withDatabase { source =>
@@ -39,11 +40,25 @@ class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatcher
      }  
   }
   
+  "The user" should "be able to get the presidents table from the source and print the contents" in withDatabase { source =>
+  	register store source as "source"
+  	val the_presidents = get table "presidents" from "source"
+  	the_presidents foreach {row => println(row.name.asu[String])}
+  }
+  
+  "The user" should "be able to get the first president in the table by using .head" in withDatabase { source =>
+  	register store source as "source"
+  	val the_presidents = get table "presidents" from "source"
+  	val lincoln = the_presidents.head
+  	lincoln.name.asu[String] should equal("Abraham Lincoln")
+  	
+  }
+
   
   
   
   
-  def withBlankDatabase(testCode: SqlDb => Any) {
+  def withBlankDatabase(testCode: SqlDb => Any)  {
     val (backend, dbName) = makeBackend
     val db = SqlDb(backend)
     try {
@@ -53,7 +68,7 @@ class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatcher
     
   }
   
-  def withDatabase(testCode: SqlDb => Any) {
+  def withDatabase(testCode: SqlDb => Any)  {
     val (backend, dbName) = makeBackend
     try {
       dbSetup(backend)
@@ -64,13 +79,13 @@ class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatcher
   }
  
   def makeBackend() = {
-    val dbName = UUID.randomUUID.toString
+    val dbName = "%s.sqlite".format(UUID.randomUUID.toString)
     val dbProps = new Properties()
     dbProps.setProperty("jdbcUri", "jdbc:sqlite:%s".format(dbName))
     (SqlBackendFactory(dbProps), dbName)
   }
   
-  def dbSetup(db: SqlBackend) {
+  def dbSetup(db: SqlBackend) = {
     db.connect()
     val columnNames = List("id", "name", "party", "dob", "dod", "term_start", "term_end")
     val tableName = "presidents"
@@ -84,7 +99,9 @@ class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatcher
                                   DateDataType(),
                                   DateDataType()))
                                   
-   val df = new java.text.SimpleDateFormat("yyyy-MM-dd")
+
+                                  
+    val df = new java.text.SimpleDateFormat("yyyy-MM-dd")
 
     val allData = List(
       List(16, "Abraham Lincoln", "Republican Party", df.parse("1809-02-12"), df.parse("1865-04-15"), df.parse("1861-03-04"), df.parse("1865-04-15")),
@@ -148,11 +165,16 @@ class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatcher
      db.commit()
   }
   
-  def removeDb(db:SqlBackend, dbName:String) = {
+  def removeDb(db:SqlBackend, dbName:String)  {
     try {
     	db.close()
+    	//This is required or strange, bad things happen
+    	ETL.cleanup()
     }
-    finally (new File(dbName)).delete
+    finally {
+    	val f = new File(dbName)
+      	val deleted = f.delete()
+    }
   }
   
 }
