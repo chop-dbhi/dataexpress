@@ -66,4 +66,22 @@ class SqlQueryCache(size: Int, connection:java.sql.Connection) {
   def getStatementReturningKeys(sql: String): java.sql.PreparedStatement = {
     prepStatement(sql, true)
   }
+  
+  def cleanUp() = {
+    List(statementMap, statementsWithKeysMap).map{closeAndClear(_)}
+	  
+  }
+  private def closeAndClear(map:scala.collection.mutable.LinkedHashMap[String,java.sql.PreparedStatement]) = {
+    statementMap.foreach{e => 
+      try{
+	    if (!e._2.isClosed()) {
+	      e._2.close() 
+	    }
+	  }
+      catch {
+        case ex:java.lang.AbstractMethodError => e._2.close()
+      }
+	    statementMap.remove(e._1)
+	  }
+  }
 }
