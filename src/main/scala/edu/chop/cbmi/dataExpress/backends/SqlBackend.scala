@@ -141,7 +141,11 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
 
   def close() = {
     if (connection != null) checkResultSetThenExecute {
+      statementCache.cleanUp
       connection.close()
+      if (!connection.isClosed()) {
+        throw new java.lang.RuntimeException("Failed to close database connection")
+      }
       None
     }
   }
