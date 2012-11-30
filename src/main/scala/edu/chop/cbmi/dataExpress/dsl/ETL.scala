@@ -34,7 +34,7 @@ import stores.{RegisterAsPre, Store}
  */
 
 object ETL {
-
+  //TODO: this is very dangerous because it leads to hidden threading issues where connections get re-used probably need to move to an automated cleanup setup
   private val registered_stores = scala.collection.mutable.Map.empty[Any,Store]
  // private val user_store_names = scala.collection.mutable.Map.empty[String, Any]
 
@@ -65,7 +65,7 @@ object ETL {
     }catch{
       //TODO should there be rollback or option to rollback here?
       case e:Exception => {
-        println("Warning: Exception occurred: %s".format(e.getMessage))
+        throw new java.lang.RuntimeException(e.getMessage())
         false
       }
     }
