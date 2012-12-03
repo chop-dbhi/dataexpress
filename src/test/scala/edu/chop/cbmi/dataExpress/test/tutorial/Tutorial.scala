@@ -53,6 +53,14 @@ class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatcher
   	lincoln.name.asu[String] should equal("Abraham Lincoln")
   	
   }
+  
+  "The user" should "be able to copy a query into a new table" in withDatabase { source => withBlankDatabase { target => 
+  	    register store source as "source"
+  	    register store target as "target"
+  	    copy query "select distinct(party) as name from presidents" from "source" to "target" create "political_party"
+  	    val pol_party = get table "political_party" from target
+  	}
+  }
 
   
   
@@ -168,10 +176,9 @@ class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatcher
   def removeDb(db:SqlBackend, dbName:String)  {
     try {
     	db.close()
-    	//This is required or strange, bad things happen
-    	ETL.cleanup()
     }
     finally {
+    	ETL.cleanup()
     	val f = new File(dbName)
       	val deleted = f.delete()
     }
