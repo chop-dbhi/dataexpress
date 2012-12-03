@@ -83,8 +83,12 @@ class ETLSpec extends FunSpec with GivenWhenThen with ShouldMatchers with Before
       ETL.registered_store_count should equal(1)
       ETL.registerStore(SqlDb(f.prop_file))
       ETL.registered_store_count should equal(1)
-      //TODO this should be tested against registering a second valid store
       ETL.cleanup()
+      
+      and("not persist stores after they have been cleaned up")
+      register store (SqlDb(f.prop_file)) as "source"
+      ETL.cleanup()
+      ETL.registered_store_count should equal(0)
     }
 
   }
