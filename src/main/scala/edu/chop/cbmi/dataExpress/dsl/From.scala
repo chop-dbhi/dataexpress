@@ -35,10 +35,7 @@ import edu.chop.cbmi.dataExpress.dataModels.{DataTable}
 
 case class From private[dsl](private val store : Store) {
 
-  //this is the proper store to use as it is managed by the ETL object
-  protected val _store = registerStore(store)
-
-  def get_table(table_name: String): FixedDimensionTransformableTable = _store match {
+  def get_table(table_name: String): FixedDimensionTransformableTable = store match {
     case (s: SqlDb) => {
       val query = s.schema match {
         case None => """SELECT * FROM %s""".format(s.backend.sqlDialect.quoteIdentifier(table_name))
@@ -50,9 +47,9 @@ case class From private[dsl](private val store : Store) {
     case _ => throw UnsupportedStoreType(store, "get_table")
   }
 
-  def query(q: String, bindvars : Seq[Option[Any]] = Seq.empty[Option[Any]]): FixedDimensionTransformableTable = _store match {
+  def query(q: String, bindvars : Seq[Option[Any]] = Seq.empty[Option[Any]]): FixedDimensionTransformableTable = store match {
     case (s:SqlDb) => new FixedDimensionTransformableTable(DataTable(s.backend, q, bindvars))
-    case _ => throw UnsupportedStoreType(_store, "query")
+    case _ => throw UnsupportedStoreType(store, "query")
   }
 
 }

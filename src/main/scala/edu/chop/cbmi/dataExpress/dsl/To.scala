@@ -36,16 +36,13 @@ import edu.chop.cbmi.dataExpress.dataModels.{DataTable, DataRow, DataType}
  */
 
 abstract class To(target : Store) {
-  protected val _target = registerStore(target)
-
   def append(table_name : String) : Unit
-
 }
 
 case class ToFromRow(target : Store, row : DataRow[_]) extends To(target) {
 
   def append(table_name : String) = {
-    _target match {
+    target match {
       case (s: SqlDb) => {
         val schema = s.schema
         val catalog = s.catalog.getOrElse(null)
@@ -63,7 +60,7 @@ case class ToFromRow(target : Store, row : DataRow[_]) extends To(target) {
 case class ToFromTable(target : Store, source_table : TransformableDataTable) extends To(target) {
 
   def create(table_name : String) = {
-    _target match {
+    target match {
           case (s:SqlDb) => {
             val schema = s.schema
             val catalog = s.catalog.getOrElse(null)
