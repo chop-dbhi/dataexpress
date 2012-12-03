@@ -34,7 +34,7 @@ import stores.{RegisterAsPre, Store}
  */
 
 object ETL {
-  //TODO: this is very dangerous because it leads to hidden threading issues where connections get re-used probably need to move to an automated cleanup setup
+
   private val registered_stores = scala.collection.mutable.Map.empty[Any,Store]
  // private val user_store_names = scala.collection.mutable.Map.empty[String, Any]
 
@@ -84,13 +84,20 @@ object ETL {
   def registerStore(f: Store): Store = {
     val key = f.unique_id
     val store = registered_stores.get(key) match {
-      case Some(s: Store) => s
+      case Some(s: Store) => {
+    	  if (!s.is_closed_?) {
+    	    println("Warning: You are creating a data store %s but %s is already a store with an open connection that will now be closed.".format(f.unique_id, f.unique_id))
+    	    s.close
+    	  }
+    	  registered_stores.put(key, f)
+    	  f
+      }
       case None => {
         registered_stores += key -> f
         f
       }
     }
-    if (store.is_closed_?) store.open
+    store.open
     store
   }
 
