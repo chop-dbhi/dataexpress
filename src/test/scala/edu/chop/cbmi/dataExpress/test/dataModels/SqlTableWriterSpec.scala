@@ -84,7 +84,7 @@ class SqlTableWriterSpec extends PresidentsSpecWithSourceTarget{
 
 
       val gw = DataTable(source_backend, """select * from %s where %s='1'""".format(
-        source_backend.sqlDialect.quoteIdentifier(PRESIDENTS),source_backend.sqlDialect.quoteIdentifier("id"))).head
+        source_backend.sqlDialect.quoteIdentifier(PRESIDENTS),source_backend.sqlDialect.quoteIdentifier("id"))).next
       gw.first_name.asu[String] should equal("Bob")
       gw.last_name.asu[String] should equal("Washington")
       gw.id.asu[Int] should equal(1)
@@ -101,7 +101,7 @@ class SqlTableWriterSpec extends PresidentsSpecWithSourceTarget{
       query_and_count(PRESIDENTS) should equal(10)
 
       val ja = DataTable(source_backend, """select * from %s where %s='2'""".format(
-        source_backend.sqlDialect.quoteIdentifier(PRESIDENTS),source_backend.sqlDialect.quoteIdentifier("id"))).head
+        source_backend.sqlDialect.quoteIdentifier(PRESIDENTS),source_backend.sqlDialect.quoteIdentifier("id"))).next
       ja.first_name.asu[String] should equal("Johnie")
       ja.last_name.asu[String] should equal("Adams")
       ja.num_terms.asu[Int] should equal(1)
