@@ -45,7 +45,7 @@ class InsertFeatureSpec extends PresidentsFeatureSpecWithSourceTarget{
 
           AssertionOps.assertion_functions += (() => query_and_count(PRESIDENTS, false) should equal(default_president_count + 1))
           AssertionOps.assertion_functions += (() => {
-            val monroe = DataTable(source_backend, bindable_statement, Seq(Some(default_president_count + 1))).head
+            val monroe = DataTable(source_backend, bindable_statement, Seq(Some(default_president_count + 1))).next
             monroe.first_name.asu[String] should equal("James")
             monroe.last_name.asu[String] should equal("Monroe")
             monroe.num_terms.asu[Int] should equal(2)
