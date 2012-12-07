@@ -71,10 +71,18 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
 
   def removeTestDataSetup: Boolean = {
-
-    setup.targetStatement.execute(setup.dataSetup.dropTargetSchema)
-
-    setup.targetBackend.commit
+    try {	
+    	setup.targetStatement.execute(setup.dataSetup.dropTargetSchema)
+    }
+    catch {
+    	case e:org.postgresql.util.PSQLException => {
+    	  setup.targetBackend.rollback
+    	  setup.targetStatement.execute(setup.dataSetup.dropTargetSchema)
+    	}
+    }
+    finally {
+    	setup.targetBackend.commit
+    }
 
 
     true
@@ -737,7 +745,6 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
     recordCount  should be (1)
 
     backend.commit()
-
     backend.close()
 
   }
@@ -1411,8 +1418,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
   scenario("Remove Test Data Setup")  {
     /**** Remove Test Data    ****/
-    removeTestDataSetup
-    /****                     ****/
+      removeTestDataSetup 
 
   }
 
