@@ -32,49 +32,51 @@ import scala.reflect.Manifest
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._
 import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
 import DataRow.map_to_option
+import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
 
 /**
  * A simple immutable [[edu.chop.cbmi.dataExpress.dataModels.DataTable]] that maintains all data elements in memory
  */
 case class SimpleDataTable[+T] private[dataModels](override val column_names_generator: ColumnNameGenerator)(private val data: Seq[Seq[T]])
-  extends DataTable[T](column_names_generator) with Seq[DataRow[T]] {
+  extends DataTable[T](column_names_generator) with Iterator[DataRow[T]] {
+  private var index = 0
   require(data.length > 0, println("data cannot be empty"))
   require(column_names.length == data(0).length, println("generate_column_names.length must equal data(0).length"))
   require((true /: data)((b: Boolean, l: Seq[_]) => b && l.length == data(0).length),
     println("All elements in data must be of equal length"))
-
-  /**
+  private val  iterator = SimpleDataIterator(column_names, data)
+  
+   /**
    * @param idx index of desired table row
    * @return DataRow[Option[T]] containing the elements of row idx wrapped in an Option
    */
-  override def apply(idx: Int) = DataRow(column_names)(map_to_option(data(idx)))
+   def apply(idx: Int) = DataRow(column_names)(map_to_option(data(idx)))
 
   /**
    * @return int the number of rows
    */
   override def length = data.length
 
-  /**
-   * @return An Iterator[DataRow[Option[T]] that iterates over the rows of this DataTable
-   */
-  override def iterator = SimpleDataIterator(column_names, data)
+  override def hasNext = iterator.hasNext
+  
+  override def next = iterator.next()
 
-  override def col(name: String) : Seq[Option[T]] = if(hasColumn(name)) {
+  override def col(name: String) : Iterator[Option[T]] = if(hasColumn(name)) {
     val idx = column_names.indexOf(name)
-    data.map((l: Seq[T]) => if (l(idx) == null) None else Some(l(idx)))
+    data.iterator.map((l: Seq[T]) => if (l(idx) == null) None else Some(l(idx)))
   } else throw ColumnDoesNotExist(name)
 
-  override def col_as[G](name: String)(implicit m: Manifest[G]) : Seq[Option[G]] = if(hasColumn(name)) {
+  override def col_as[G](name: String)(implicit m: Manifest[G]) : Iterator[Option[G]] = if(hasColumn(name)) {
     val idx = column_names.indexOf(name)
-    data.map((l: Seq[T]) => if (l(idx) == null) None else Some(l(idx)).as[G])
+    data.iterator.map((l: Seq[T]) => if (l(idx) == null) None else Some(l(idx)).as[G])
   } else throw ColumnDoesNotExist(name)
 
-  override def col_asu[G](name: String)(implicit m: Manifest[G]) : Seq[G] = if(hasColumn(name)) {
+  override def col_asu[G](name: String)(implicit m: Manifest[G]) : Iterator[G] = if(hasColumn(name)) {
     val idx = column_names.indexOf(name)
-    data.map((l: Seq[T]) => if (l(idx) == null) None.asu[G] else Some(l(idx)).asu[G])
+    data.iterator.map((l: Seq[T]) => if (l(idx) == null) None.asu[G] else Some(l(idx)).asu[G])
   } else throw ColumnDoesNotExist(name)
 
-  override def applyDynamic(name: String)(args: Any*): Seq[Option[T]] = {
+  override def applyDynamic(name: String)(args: Any*): Iterator[Option[T]] = {
     if (hasColumn(name)) this.col(name)
     else throw ColumnDoesNotExist(name)
   }

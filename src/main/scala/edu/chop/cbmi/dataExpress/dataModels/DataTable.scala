@@ -97,7 +97,7 @@ object DataRow{
  * base class for other data representation classes organized as a 2-D table with column names.
  */
 //TODO: Issue 14 should extend Iterator instead of Iterable 
-abstract case class DataTable[+T](val column_names_generator: ColumnNameGenerator) extends Iterable[DataRow[T]] with Dynamic{
+abstract case class DataTable[+T](val column_names_generator: ColumnNameGenerator) extends Iterator[DataRow[T]] with Dynamic{
 
   lazy val column_names = column_names_generator.generate_column_names()
 
@@ -111,14 +111,14 @@ abstract case class DataTable[+T](val column_names_generator: ColumnNameGenerato
    * @param name name of column
    * @return an iterable collection of Option[T] of the elements in the column wrapped in an Option
    */
-  def col(name: String) : Iterable[Option[T]]
+  def col(name: String) : Iterator[Option[T]]
 
   /**
    * @param G the desired return type
    * @param name the name of the column
    * @return an iterable collection of Option[G] of the elements in the column cast to type G wrapped in an Option
    */
-  def col_as[G](name: String)(implicit m: Manifest[G]): Iterable[Option[G]]
+  def col_as[G](name: String)(implicit m: Manifest[G]): Iterator[Option[G]]
 
   /**
    * @param G the desired return type
@@ -126,7 +126,7 @@ abstract case class DataTable[+T](val column_names_generator: ColumnNameGenerato
    * @return an iterable collection of Option[G] of the elements in the column cast to type G
    * Note this method will likely fail if null instances exist in the column
    */
-  def col_asu[G](name: String)(implicit m: Manifest[G]): Iterable[G]
+  def col_asu[G](name: String)(implicit m: Manifest[G]): Iterator[G]
 
   def applyDynamic(name : String)(args: Any*) = {
     if(hasColumn(name))this.col(name)
