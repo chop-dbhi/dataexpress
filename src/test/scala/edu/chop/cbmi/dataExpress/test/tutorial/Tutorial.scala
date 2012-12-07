@@ -49,7 +49,7 @@ class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatcher
   "The user" should "be able to get the first president in the table by using .head" in withDatabase { source =>
   	register store source as "source"
   	val the_presidents = get table "presidents" from "source"
-  	val lincoln = the_presidents.head
+  	val lincoln = the_presidents.next
   	lincoln.name.asu[String] should equal("Abraham Lincoln")
   	
   }
@@ -59,6 +59,7 @@ class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatcher
   	    register store target as "target"
   	    copy query "select distinct(party) as name from presidents" from "source" to "target" create "political_party"
   	    val pol_party = get table "political_party" from target
+  	    println(pol_party.next)
   	}
   }
 
