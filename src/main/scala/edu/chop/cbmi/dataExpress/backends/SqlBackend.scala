@@ -295,7 +295,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
   def batchInsert(tableName:String, table:DataTable[_], schemaName:Option[String] = None):Int = {
     val sqlStatement = sqlDialect.insertRecord(tableName, table.column_names.toList, schemaName)
     val statement = statementCache.getStatement(sqlStatement)
-    executeBatch(statement, table.iterator, 50, {dr:DataRow[_] => dr})
+    executeBatch(statement, table, 50, {dr:DataRow[_] => dr})
   }
 
   def updateRow(tableName: String, updated_row: DataRow[_], filter: List[(String, Any)], schemaName: Option[String] = None) = {
