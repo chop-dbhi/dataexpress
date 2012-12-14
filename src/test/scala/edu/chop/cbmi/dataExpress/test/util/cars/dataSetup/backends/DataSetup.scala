@@ -101,15 +101,10 @@ class OracleDataSetup {
   def createTargetSchema()    = {
 
     //lazy  val  createSourceSchemaStatement     =   "CREATE USER qe10 IDENTIFIED BY qe10 DEFAULT TABLESPACE APEX_00000001"
-
     lazy  val  createSourceSchemaStatement      =   "CREATE USER qe10c01 IDENTIFIED BY qe10c01"
-
     lazy  val  setQuotaStatement                =   "ALTER USER qe10c01 QUOTA 100M ON SYSTEM"
-
     lazy  val  grantCreateSessionStatement      =   "grant create session to qe10c01"
-
     lazy  val  grantCreateTableStatement        =   "grant create table to qe10c01"
-
     lazy  val  grantAllPrivilegesStatement      =   "grant all on qe10c01 to qe10c01"
 
 

@@ -34,7 +34,7 @@ object TestProps {
       case "mysql" => "/mysql_test.properties"
       case "postgres" => "/postgres_test.properties"
       case "sqlite" => "/sqlite_test.properties"
-      case _ => "/%s.properties".format(dbname)
+      case _ => "/%s_test.properties".format(dbname)
     }
   }
 
