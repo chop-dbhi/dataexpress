@@ -8,15 +8,15 @@ assemblySettings
 
 name := "DataExpress"
 
-version := "0.9.0.4"
+version := "0.9.0.5"
 
 organization := "edu.chop.cbmi"
 
-scalaVersion := "2.9.1"
+scalaVersion := "2.9.2"
 
 //assembly options
 
-jarName in assembly <<=version("DataExpress-" + _ + "-jar-with-dependencies.jar")
+jarName in assembly <<=version("DataExpress_" + _ + "_standalone.jar")
 
 test in assembly := {}
 
@@ -32,6 +32,7 @@ libraryDependencies ++= Seq(
   "postgresql" % "postgresql" % "9.0-801.jdbc4",
   "mysql" % "mysql-connector-java" % "5.1.21"
 )
+
 
 //test dependencies------------------------------
 
