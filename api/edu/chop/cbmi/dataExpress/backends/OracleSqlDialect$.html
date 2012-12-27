@@ -178,7 +178,7 @@ To change this template use File | Settings | File Templates.
         <span class="name">commit</span><span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns a <code>COMMIT</code> SQL Statement</p><div class="fullcomment"><div class="comment cmt"><p>Returns a <code>COMMIT</code> SQL Statement</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect#createTable" data-isabs="false">
       <a id="createTable(String,List[(String, DataType)],Option[String]):String"></a>
       <h4 class="signature">
@@ -190,7 +190,10 @@ To change this template use File | Settings | File Templates.
         <span class="name">createTable</span><span class="params">(<span name="name">name: String</span>, <span name="columns">columns: List[(String, <a name="edu.chop.cbmi.dataExpress.dataModels.DataType" class="extype" href="../dataModels/DataType.html">DataType</a>)]</span>, <span name="schemaName">schemaName: <span name="scala.Option" class="extype">Option</span>[String]</span>)</span><span class="result">: String</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns a complete <code>CREATE TABLE</code> SQL statement
+</p><div class="fullcomment"><div class="comment cmt"><p>Returns a complete <code>CREATE TABLE</code> SQL statement
+</p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>the table name</p></dd><dt class="param">columns</dt><dd class="cmt"><p>a list of column tuples where each tuple is a column name and edu.chop.dataExpress.dataModels.sql.DataType</p></dd><dt class="param">schemaName</dt><dd class="cmt"><p>the schema where the table will be created
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect#dropTable" data-isabs="false">
       <a id="dropTable(String,Boolean,Option[String]):String"></a>
       <h4 class="signature">
@@ -202,7 +205,10 @@ To change this template use File | Settings | File Templates.
         <span class="name">dropTable</span><span class="params">(<span name="name">name: String</span>, <span name="cascade">cascade: <span name="scala.Boolean" class="extype">Boolean</span> = <span class="symbol">false</span></span>, <span name="schemaName">schemaName: <span name="scala.Option" class="extype">Option</span>[String]</span>)</span><span class="result">: String</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns a complete <code>DROP TABLE</code> SQL Statement
+</p><div class="fullcomment"><div class="comment cmt"><p>Returns a complete <code>DROP TABLE</code> SQL Statement
+</p></div><dl class="paramcmts block"><dt class="param">name</dt><dd class="cmt"><p>The name of the table</p></dd><dt class="param">cascade</dt><dd class="cmt"><p>Indicates whether the cascade option should be used (by default it is not)</p></dd><dt class="param">schemaName</dt><dd class="cmt"><p>The schema where the table should be dropped
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect#endTransaction" data-isabs="false">
       <a id="endTransaction():String"></a>
       <h4 class="signature">
@@ -214,7 +220,9 @@ To change this template use File | Settings | File Templates.
         <span class="name">endTransaction</span><span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns an end SQL transaction statement
+</p><div class="fullcomment"><div class="comment cmt"><p>Returns an end SQL transaction statement
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -301,7 +309,12 @@ To change this template use File | Settings | File Templates.
         <span class="name">insertRecord</span><span class="params">(<span name="tableName">tableName: String</span>, <span name="columnNames">columnNames: List[String]</span>, <span name="schemaName">schemaName: <span name="scala.Option" class="extype">Option</span>[String] = <span class="symbol"><span class="name"><a href="../../../../../scala/package.html">None</a></span></span></span>)</span><span class="result">: String</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns an <code>INSERT</code> statement (where the values to be inserted are placeholder variables to be assigned during
+JDBC prepared statement construction
+</p><div class="fullcomment"><div class="comment cmt"><p>Returns an <code>INSERT</code> statement (where the values to be inserted are placeholder variables to be assigned during
+JDBC prepared statement construction
+</p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"><p>The name of the table where the insert will be applied</p></dd><dt class="param">columnNames</dt><dd class="cmt"><p>A list of the column names to use when performing the insert</p></dd><dt class="param">schemaName</dt><dd class="cmt"><p>The schema where the table is located
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect#insertStatement" data-isabs="false">
       <a id="insertStatement:String"></a>
       <h4 class="signature">
@@ -349,7 +362,10 @@ To change this template use File | Settings | File Templates.
         <span class="name">mapDataTypes</span><span class="params">(<span name="column_names">column_names: <span name="scala.collection.Seq" class="extype">Seq</span>[String]</span>, <span name="meta">meta: <span name="java.sql.ResultSetMetaData" class="extype">ResultSetMetaData</span></span>)</span><span class="result">: <span name="scala.collection.Seq" class="extype">Seq</span>[<span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span> with <a name="edu.chop.cbmi.dataExpress.dataModels.DataType" class="extype" href="../dataModels/DataType.html">DataType</a>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns the DataExpress <a name="edu.chop.cbmi.dataExpress.dataModels.DataType" class="extype" href="../dataModels/DataType.html">DataType</a> values for columns in a JDBC <code>ResultSet</code>
+</p><div class="fullcomment"><div class="comment cmt"><p>Returns the DataExpress <a name="edu.chop.cbmi.dataExpress.dataModels.DataType" class="extype" href="../dataModels/DataType.html">DataType</a> values for columns in a JDBC <code>ResultSet</code>
+</p></div><dl class="paramcmts block"><dt class="param">column_names</dt><dd class="cmt"><p>A sequence of column names</p></dd><dt class="param">meta</dt><dd class="cmt"><p>JDBC <code>ResultSet</code> metadata
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
@@ -445,7 +461,11 @@ To change this template use File | Settings | File Templates.
         <span class="name">quoteIdentifier</span><span class="params">(<span name="id">id: String</span>)</span><span class="result">: String</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns a database identifier (such as a table or column name) using the proper quote format.</p><div class="fullcomment"><div class="comment cmt"><p>Returns a database identifier (such as a table or column name) using the proper quote format. Note that
+in some databases it is considered an error to quote non-system strings, so this method should carefully
+implement this logic if necessary.
+</p></div><dl class="paramcmts block"><dt class="param">id</dt><dd class="cmt"><p>The identifier that must be returned quoted
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect#quoteSchemaName" data-isabs="false">
       <a id="quoteSchemaName(Option[String]):String"></a>
       <h4 class="signature">
@@ -493,7 +513,9 @@ To change this template use File | Settings | File Templates.
         <span class="name">rollback</span><span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns a <code>ROLLBACK</code> SQL statement
+</p><div class="fullcomment"><div class="comment cmt"><p>Returns a <code>ROLLBACK</code> SQL statement
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect#startTransaction" data-isabs="false">
       <a id="startTransaction():String"></a>
       <h4 class="signature">
@@ -505,7 +527,9 @@ To change this template use File | Settings | File Templates.
         <span class="name">startTransaction</span><span class="params">()</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns a start SQL transaction statement
+</p><div class="fullcomment"><div class="comment cmt"><p>Returns a start SQL transaction statement
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">
@@ -577,7 +601,9 @@ To change this template use File | Settings | File Templates.
         <span class="name">toSqlString</span><span class="params">(<span name="dataType">dataType: <a name="edu.chop.cbmi.dataExpress.dataModels.DataType" class="extype" href="../dataModels/DataType.html">DataType</a></span>)</span><span class="result">: String</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns the database-appropriate SQL type representation of a <a name="edu.chop.cbmi.dataExpress.dataModels.DataType" class="extype" href="../dataModels/DataType.html">DataType</a>
+</p><div class="fullcomment"><div class="comment cmt"><p>Returns the database-appropriate SQL type representation of a <a name="edu.chop.cbmi.dataExpress.dataModels.DataType" class="extype" href="../dataModels/DataType.html">DataType</a>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect#toString" data-isabs="false">
       <a id="toString():String"></a>
       <h4 class="signature">
@@ -649,7 +675,10 @@ To change this template use File | Settings | File Templates.
         <span class="name">truncate</span><span class="params">(<span name="table">table: String</span>, <span name="schemaName">schemaName: <span name="scala.Option" class="extype">Option</span>[String]</span>)</span><span class="result">: String</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
+      <p class="shortcomment cmt">Returns a complete <code>TRUNCATE TABLE</code> SQL Statement
+</p><div class="fullcomment"><div class="comment cmt"><p>Returns a complete <code>TRUNCATE TABLE</code> SQL Statement
+</p></div><dl class="paramcmts block"><dt class="param">table</dt><dd class="cmt"><p>The name of the table to truncate</p></dd><dt class="param">schemaName</dt><dd class="cmt"><p>The schema where the table should be truncated
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect#updateRecords" data-isabs="false">
       <a id="updateRecords(String,List[String],List[(String, Any)],Option[String]):String"></a>
       <h4 class="signature">
@@ -661,7 +690,12 @@ To change this template use File | Settings | File Templates.
         <span class="name">updateRecords</span><span class="params">(<span name="tableName">tableName: String</span>, <span name="columnNames">columnNames: List[String]</span>, <span name="filter">filter: List[(String, <span name="scala.Any" class="extype">Any</span>)]</span>, <span name="schemaName">schemaName: <span name="scala.Option" class="extype">Option</span>[String] = <span class="symbol"><span class="name"><a href="../../../../../scala/package.html">None</a></span></span></span>)</span><span class="result">: String</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
+      <p class="shortcomment cmt"> Returns a SQL <code>UPDATE</code> statement that using a filter on table values.</p><div class="fullcomment"><div class="comment cmt"><p> Returns a SQL <code>UPDATE</code> statement that using a filter on table values. In order to allow specificity,
+ the user passes in a list of (<code>columnName</code>, <code>value</code>) filters. The expected behavior is that these tuples
+ get converted into the <code>WHERE</code> clause. For example:</p><pre>
+<span class="std">List</span>((<span class="lit">"id"</span>,<span class="num">12345</span>),(<span class="lit">"type"</span>,<span class="lit">"Luggage Combination"</span>))
+</pre><p> passed in as a filter is converted to the SQL <code>WHERE id = 12345 AND type = 'Luggage Combination'
+</code></p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"><p>The name of the table where the update will be applied</p></dd><dt class="param">columnNames</dt><dd class="cmt"><p>The list of column names to be updated</p></dd><dt class="param">filter</dt><dd class="cmt"><p>A list of (<code>columnName</code>,<code>value</code>) tuples to be used when constructing the <code>WHERE</code> clause</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" class="extype" href="">OracleSqlDialect</a> → <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
       <a id="wait():Unit"></a>
       <h4 class="signature">

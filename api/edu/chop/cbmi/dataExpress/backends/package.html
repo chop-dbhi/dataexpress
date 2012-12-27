@@ -119,7 +119,7 @@
         <a href="SqlBackend.html"><span class="name">SqlBackend</span></a><span class="params">(<span name="connectionProperties">connectionProperties: Properties</span>, <span name="sqlDialect">sqlDialect: SqlDialect</span>, <span name="driverClassName">driverClassName: String</span>)</span><span class="result"> extends Product with Serializable</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">Wrapper around JDBC that simplifies the mechanics of interacting with databases in an RDBMS-neutral way.</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlBackendProvider" data-isabs="true">
       <a id="SqlBackendProvider:SqlBackendProvider"></a>
       <h4 class="signature">
@@ -131,7 +131,8 @@
         <a href="SqlBackendProvider.html"><span class="name">SqlBackendProvider</span></a><span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      <p class="comment cmt">Provides a mechanism to get a SqlBackend by supplying the necessary parameters at runtime
+</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlDialect" data-isabs="true">
       <a id="SqlDialect:SqlDialect"></a>
       <h4 class="signature">
@@ -143,7 +144,7 @@
         <a href="SqlDialect.html"><span class="name">SqlDialect</span></a><span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      <p class="comment cmt">This trait is to be used when constructing new SQL backends for DataExpress.</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlQueryCache" data-isabs="false">
       <a id="SqlQueryCache:SqlQueryCache"></a>
       <h4 class="signature">
@@ -174,7 +175,7 @@
         <a href="GenericSqlDialect$.html"><span class="name">GenericSqlDialect</span></a><span class="result"> extends SqlDialect with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      <p class="comment cmt">This is a &quot;generic&quot; implementation of a <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a>.</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.MySqlDialect" data-isabs="false">
       <a id="MySqlDialect:MySqlDialect"></a>
       <h4 class="signature">
@@ -234,7 +235,7 @@
         <a href="SqlBackendFactory$.html"><span class="name">SqlBackendFactory</span></a><span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">Factory for <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlQueryCache" data-isabs="false">
       <a id="SqlQueryCache:SqlQueryCache"></a>
       <h4 class="signature">
