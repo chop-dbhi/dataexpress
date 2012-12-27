@@ -1,23 +1,3 @@
-/*
-Copyright (c) 2012, The Children's Hospital of Philadelphia All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-   disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-   following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 package edu.chop.cbmi.dataExpress.backends
 
 import edu.chop.cbmi.dataExpress.dataModels.DataType
@@ -28,22 +8,22 @@ import edu.chop.cbmi.dataExpress.logging.Log
 import java.sql.{ResultSet, PreparedStatement, Statement, Driver}
 import java.util.ServiceLoader
 
-/**
- * Created by IntelliJ IDEA.
- * User: italiam
- * Date: 8/19/11
- * Time: 8:43 AM
- * To change this template use File | Settings | File Templates.
+/** 
+ * Provides a mechanism to get a SqlBackend by supplying the necessary parameters at runtime
+ * 
+ * @param db_vendor A string value for the database vendor (e.g. postgresql, mysql, sqlite, oracle, etc...)
+ * @param connectionProperties a [[java.util.Properties]] object that contains the connection information
+ * @param sqlDialect an [[edu.chop.cbmi.dataExpress.backends.SqlDialect]] to be used with the database system
+ * @param driverClassName the string name of the JDBC driver class
+ * 
  */
-
 trait SqlBackendProvider {
   def getProviderFor(db_vendor : String, connectionProperties : Properties, sqlDialect : SqlDialect, driverClassName : String) : Option[SqlBackend]
 }
-
+/** Factory for [[edu.chop.cbmi.dataExpress.backends.SqlBackend]] */
 object SqlBackendFactory{
 	
   val sqlBackendProviderLoader = ServiceLoader.load[SqlBackendProvider](classOf[SqlBackendProvider])
-  
   private val included_backends = List("postgresql", "mysql", "sqlite")
 
   private def load_included_bakcend(db_type: String, connection_properties: Properties, sqlDialect: SqlDialect = null,
@@ -55,7 +35,13 @@ object SqlBackendFactory{
     case "sqlite" => new SqLiteBackend(connection_properties, sqlDialect, driver_class_name)
     case _ => throw new RuntimeException("Unsupported database type: " + db_type)
   }
-
+/**
+ * Creates the appropriate [[edu.chop.cbmi.dataExpress.backends.SqlBackend]] from a [[java.util.Properties]] object
+ * 
+ * @param connection_properties a [[java.util.Properties]] object containing all the necessary information to connect
+ * @param sqlDialect The [[edu.chop.cbmi.dataExpress.backends.SqlDialect]] to use with the database
+ * @param driver_class_name The string name of the driver class to be used
+ */
   def apply(connection_properties: Properties, sqlDialect: SqlDialect = null,
     driver_class_name: String = null): SqlBackend = {
     // try {
@@ -80,8 +66,14 @@ object SqlBackendFactory{
     //       case _ => throw new RuntimeException("Required property 'jdbcUri' not in properties file")
     //     }
   }
-
-  def apply(connection_properties_file: String, sqlDialect : SqlDialect, driver_class_name : String) : SqlBackend = {
+  /**
+   * Creates the appropriate [[edu.chop.cbmi.dataExpress.backends.SqlBackend]] from a .properties file
+   *
+   * @param connection_properties a .properties file that can be serialized to a [[java.util.Properties]] object containing all the necessary information to connect
+   * @param sqlDialect The [[edu.chop.cbmi.dataExpress.backends.SqlDialect]] to use with the database
+   * @param driver_class_name The string name of the driver class to be used
+   */
+  def apply(connection_properties_file: String, sqlDialect: SqlDialect, driver_class_name: String): SqlBackend = {
     val prop_stream = new FileInputStream(connection_properties_file)
     val props = new Properties()
     props.load(prop_stream)
@@ -101,7 +93,11 @@ object SqlBackendFactory{
   def apply(connection_properties_file: String) : SqlBackend = apply(connection_properties_file, null, null)
 
 }
-
+/**
+ * Wrapper around JDBC that simplifies the mechanics of interacting with databases in an RDBMS-neutral way.
+ * 
+ * Instances of SqlBacked should normally be instantiated via [[edu.chop.cbmi.dataExpress.backends.SqlBackendFactory]]
+ */
 case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialect, driverClassName : String) {
   var connection:java.sql.Connection = _
   var statementCache:SqlQueryCache = _
@@ -114,9 +110,16 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
   val SUPPORTS_MULT_RS = true
 
   /*------ Connection Management functions ------*/
-
+  /**
+   * Opens the connection to the database
+   */
   def connect() : java.sql.Connection = connect(connectionProperties)
 
+  /**
+   * Opens a connection to the database via properties defined in a [[java.util.Properties]] object
+   * 
+   * @param props the [[java.util.Properties]] object with the connect information
+   */
   def connect(props:Properties):java.sql.Connection = {
 
     val dr = java.lang.Class.forName(driverClassName).newInstance().asInstanceOf[Driver]
@@ -134,11 +137,18 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
       throw new RuntimeException("Required Property 'jdbcUri' not present. Properties are: %s".format(props.stringPropertyNames()))
     }
   }
-
+  
+  /** returns the URI for the JDBC connection
+   */
+  //TODO: Check to confirm this is actually still needed
   def get_jdbcUri = if(jdbcUri==null)connectionProperties.getProperty("jdbcUri") else jdbcUri
 
+  /** Closes a [[java.sql.Connection]] 
+   * @param connection the connection to close
+   */
   def close(connection:java.sql.Connection) = connection.close()
 
+  /** Closes the [[java.sql.connection]] associated with instances of the backend */
   def close() = {
     if (connection != null) checkResultSetThenExecute {
       statementCache.cleanUp
@@ -211,7 +221,14 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
      isFirstResultAResultSet
    }
 
-
+   /**
+    * Executes a SQL statement where new keys are auto-generated from an auto-incrementing primary key.
+    * Autogenerated keys are returned as a result of the statement. Not all databases implement this, and their
+    * individual implementations vary widely
+    * 
+    * @param sqlStatement the statement to be run 
+    * @param bindVars set of bind variables to use
+    */
    def executeReturningKeys(sqlStatement: String, bindVars: Seq[Option[_]]): DataRow[_] = {
      val statement = statementCache.getStatementReturningKeys(sqlStatement)
      prepStatement(statement, bindVars)
@@ -234,14 +251,26 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
      }else DataRow.empty
 
   }
+   
+  /** 
+   * Commit any open transactions to the database
+   */
+  def commit(): Boolean = execute(sqlDialect.commit)
+  
+  /**
+   * Rollback an existing transaction
+   */
+  def rollback(): Boolean = execute(sqlDialect.rollback)
 
-  def commit() : Boolean              = execute(sqlDialect.commit)
-
-  def rollback() : Boolean            = execute(sqlDialect.rollback)
-
-  def startTransaction() : Boolean    = execute(sqlDialect.startTransaction())
-
-  def endTransaction() : Boolean      = execute(sqlDialect.endTransaction())
+  /**
+   * Start a new transaction (potentially closing the old one)
+   */
+  def startTransaction(): Boolean = execute(sqlDialect.startTransaction())
+  
+  /**
+   * End the existing transaction
+   */
+  def endTransaction(): Boolean = execute(sqlDialect.endTransaction())
 
   /*------ Table Management Methods ------*/
 
@@ -250,7 +279,14 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
     val sql = sqlDialect.createTable(tableName, colTypeMap)
     execute(sql)
   }*/
-
+  /**
+   * Create a new table
+   * 
+   * @param tableName the name of the table
+   * @param columnNames the list of column names to use
+   * @param dataTypes a list of DataExpress [[edu.chop.cbmi.dataExpress.dataModels.DataType]] objects that correspond to the columns
+   * @param schemaNames The name of the schema where the table will be created
+   */
   def createTable(tableName: String, columnNames : List[String], dataTypes: List[DataType], schemaName:Option[String] = None) :
   Boolean = {
     //Initially, this seems wasteful to get tables each time, but there's no way
