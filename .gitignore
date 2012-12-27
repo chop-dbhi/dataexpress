@@ -1,0 +1,9 @@
+.DS_Store
+.cache
+.classpath
+.project
+.settings
+lib/
+project/
+target/
+*.swp
