@@ -29,7 +29,9 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="toggleContainer block">
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>While the JDBC spec encourages individual drivers to handle their own query cache,
+this behavior is not guaranteed. This class exists to provide consistent cache functionality
+across all drivers in DataExpress</p></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent">AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
@@ -161,7 +163,8 @@
         <span class="name">cleanUp</span><span class="params">()</span><span class="result">: <span name="scala.collection.immutable.List" class="extype">List</span>[<span name="scala.Unit" class="extype">Unit</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Cleans up the cache (usually in preparation for closing connections and committing results)
+by closing all statements.</p>
     </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
@@ -239,7 +242,7 @@
         <span class="name">getStatement</span><span class="params">(<span name="sql">sql: String</span>)</span><span class="result">: <span name="java.sql.PreparedStatement" class="extype">PreparedStatement</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Retrieve an ordinary statement from the cache (if it does not exist, it will be created)</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlQueryCache#getStatementReturningKeys" data-isabs="false">
       <a id="getStatementReturningKeys(String):PreparedStatement"></a>
       <h4 class="signature">
@@ -251,7 +254,8 @@
         <span class="name">getStatementReturningKeys</span><span class="params">(<span name="sql">sql: String</span>)</span><span class="result">: <span name="java.sql.PreparedStatement" class="extype">PreparedStatement</span></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Retrieve a statement that returns auto-generated primary keys from the cache
+(if it does not exist, it will be created)</p>
     </li><li visbl="pub" name="scala.AnyRef#hashCode" data-isabs="false">
       <a id="hashCode():Int"></a>
       <h4 class="signature">
@@ -347,7 +351,7 @@
         <span class="name">statementMap</span><span class="result">: <span name="scala.collection.mutable.LinkedHashMap" class="extype">LinkedHashMap</span>[String, <span name="java.sql.PreparedStatement" class="extype">PreparedStatement</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Map of string statement values to corresponding prepared statements</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlQueryCache#statementsWithKeysMap" data-isabs="false">
       <a id="statementsWithKeysMap:LinkedHashMap[String, PreparedStatement]"></a>
       <h4 class="signature">
@@ -359,7 +363,7 @@
         <span class="name">statementsWithKeysMap</span><span class="result">: <span name="scala.collection.mutable.LinkedHashMap" class="extype">LinkedHashMap</span>[String, <span name="java.sql.PreparedStatement" class="extype">PreparedStatement</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Statement mapping for statements expected to return primary keys</p>
     </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
       <a id="synchronized[T0](⇒ T0):T0"></a>
       <h4 class="signature">

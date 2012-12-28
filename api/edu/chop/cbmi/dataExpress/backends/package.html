@@ -29,7 +29,42 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"></div>
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Provides database wrappers and connectivity for MySQL, Postgres, Oracle, and SQLite JDBC drivers.</p><h4>Overview</h4><p>The support for individual databases is broken out into several classes:</p><ul><li>A <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a> which is the wrapper around the various JDBC method calls</li><li>A <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a> that contains the database-specific SQL quirks and implementation details</li><li>A <a name="edu.chop.cbmi.dataExpress.backends.SqlBackendProvider" class="extype" href="SqlBackendProvider.html">SqlBackendProvider</a> (optional) that allows a third-party backend to be supplied outside DataExpress</li></ul><p>The SqlBackend for the corresponding database is the primary means of establishing a datsbase connection when using DataExpress.
+However, <b>It is important to note that it is generally easier, and safer to use the edu.chop.cbmi.dataExpress.backends.SqlBackendFactory to establish the necessary backend and set up the connection</b></p><p>In general the SQLDialect and BackendProvider are used as part of a SQLBackend, and not directly.</p><h4>Usage</h4><p>The <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a> requires properties to fully configure itself. Typically
+these are loaded from a file, but can also be supplied through a standard java.util.Properties object. The
+SQL backend has very simple requirements for properties files. They must contain the following keys:</p><ul><li><code><code><code>driverClassName</code></code></code>: The class name for the actual database driver</li><li><code><code><code>jdbcUri</code></code></code>: This is the URI required by the database driver. It is passed through directly to JDBC
+   so you are free to specify schemas and other information here</li><li><code><code><code>username</code></code></code>: The username to authenticate against the database (not
+  required for non-authenticated RDBMS systems such as SQLite)
+  -<code><code><code>password</code></code></code>: The password for accessing the database</li></ul><p>DataExpress will pass along any other properties it finds directly to JDBC, so in cases where a database
+requires specific connection configuration (e.g. to enable SSL for Postgres), those settings can be passed along.</p><p>In some cases, DataExpress will set specific properties on the connection to ensure predictable behavior. Most of these
+have been empirically determined by our testing given the narrow use cases for DataExpress. Where possible, we have made it possible
+for you to override these defaults in your own configuration file, however this is generally not recommended.
+</p></div><dl class="attributes block"> <div class="block">Example:
+                <ol><li class="cmt"><p></p><pre>
+scala&gt; <span class="kw">import</span> edu.chop.cbmi.dataExpress.backends._
+<span class="kw">import</span> edu.chop.cbmi.dataExpress.backends._
+
+scala&gt; <span class="kw">val</span> backend = SqlBackendFactory <span class="lit">"src/test/resources/sqlite_test.properties"</span>
+backend: edu.chop.cbmi.dataExpress.backends.SqlBackend = SqlBackend({jdbcUri=jdbc:sqlite:target/source.sqlite},SqLiteDialect,org.sqlite.JDBC)
+
+scala&gt; backend connect
+res0: java.sql.Connection = org.sqlite.Conn@<span class="num">7168</span>f171
+
+scala&gt; backend execute <span class="lit">""</span><span class="lit">"CREATE TABLE de_test(id INTEGER, first_name VARCHAR, last_name VARCHAR)"</span><span class="lit">""</span>
+res1: <span class="std">Boolean</span> = <span class="kw">false</span>
+
+scala&gt; backend commit
+res3: <span class="std">Boolean</span> = <span class="kw">false</span>
+
+scala&gt; backend executeQuery <span class="lit">"select count(*) from de_test"</span>
+res4: java.sql.ResultSet = org.sqlite.RS@<span class="num">3</span>b070e76
+
+scala&gt; res4.getInt(<span class="num">1</span>)
+res5: <span class="std">Int</span> = <span class="num">0</span>
+</pre></li></ol>
+              </div><dt>Note</dt><dd><span class="cmt"><p>The SQL backends return jdbc ResultSets which are typically a little more &quot;low-level&quot; than what you would
+probably want for ETL purporses. The <a name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation" class="extype" href="../dataModels/sql/SqlRelation.html">SqlRelation</a> is a much more convenient object
+to use for ETL.</p></span></dd></dl></div>
     
 
       <div id="mbrsel">
@@ -59,7 +94,7 @@
         <a href="MySqlBackend.html"><span class="name">MySqlBackend</span></a><span class="result"> extends SqlBackend</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      <p class="comment cmt">Backend for accessing MySQL databases.</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.OracleBackend" data-isabs="false">
       <a id="OracleBackend:OracleBackend"></a>
       <h4 class="signature">
@@ -71,7 +106,7 @@
         <a href="OracleBackend.html"><span class="name">OracleBackend</span></a><span class="result"> extends SqlBackend</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      <p class="comment cmt">Backend for accessing Oracle databases.</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.OracleServiceProvider" data-isabs="false">
       <a id="OracleServiceProvider:OracleServiceProvider"></a>
       <h4 class="signature">
@@ -83,7 +118,8 @@
         <a href="OracleServiceProvider.html"><span class="name">OracleServiceProvider</span></a><span class="result"> extends SqlBackendProvider</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">Service provider class for Oracle that allows runtime class loading of the Oracle driver
+</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.PostgresBackend" data-isabs="false">
       <a id="PostgresBackend:PostgresBackend"></a>
       <h4 class="signature">
@@ -95,7 +131,7 @@
         <a href="PostgresBackend.html"><span class="name">PostgresBackend</span></a><span class="result"> extends SqlBackend</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      <p class="comment cmt">Backend for accessing Postgres databases.</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqLiteBackend" data-isabs="false">
       <a id="SqLiteBackend:SqLiteBackend"></a>
       <h4 class="signature">
@@ -107,7 +143,7 @@
         <a href="SqLiteBackend.html"><span class="name">SqLiteBackend</span></a><span class="result"> extends SqlBackend</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">Backend for accessing Sqlite databases.</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlBackend" data-isabs="false">
       <a id="SqlBackend:SqlBackend"></a>
       <h4 class="signature">
@@ -156,7 +192,8 @@
         <a href="SqlQueryCache.html"><span class="name">SqlQueryCache</span></a><span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">While the JDBC spec encourages individual drivers to handle their own query cache,
+this behavior is not guaranteed.</p>
     </li></ol>
             </div>
 
@@ -187,7 +224,7 @@
         <a href="MySqlDialect$.html"><span class="name">MySqlDialect</span></a><span class="result"> extends SqlDialect with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      <p class="comment cmt">SQL dialect for MySQL</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" data-isabs="false">
       <a id="OracleSqlDialect:OracleSqlDialect"></a>
       <h4 class="signature">
@@ -199,7 +236,7 @@
         <a href="OracleSqlDialect$.html"><span class="name">OracleSqlDialect</span></a><span class="result"> extends SqlDialect with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      <p class="comment cmt">SQL dialect for Oracle</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.PostgresSqlDialect" data-isabs="false">
       <a id="PostgresSqlDialect:PostgresSqlDialect"></a>
       <h4 class="signature">
@@ -211,7 +248,7 @@
         <a href="PostgresSqlDialect$.html"><span class="name">PostgresSqlDialect</span></a><span class="result"> extends SqlDialect with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      <p class="comment cmt">SQL dialect for Postgres</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqLiteDialect" data-isabs="false">
       <a id="SqLiteDialect:SqLiteDialect"></a>
       <h4 class="signature">
@@ -223,7 +260,7 @@
         <a href="SqLiteDialect$.html"><span class="name">SqLiteDialect</span></a><span class="result"> extends SqlDialect with Product with Serializable</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">SQL dialect for SQLite</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlBackendFactory" data-isabs="false">
       <a id="SqlBackendFactory:SqlBackendFactory"></a>
       <h4 class="signature">
@@ -235,7 +272,7 @@
         <a href="SqlBackendFactory$.html"><span class="name">SqlBackendFactory</span></a><span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      <p class="comment cmt">Factory for <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></p>
+      <p class="comment cmt">Factory for edu.chop.cbmi.dataExpress.backends.SqlBackendFactory</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlQueryCache" data-isabs="false">
       <a id="SqlQueryCache:SqlQueryCache"></a>
       <h4 class="signature">
@@ -247,7 +284,7 @@
         <a href="SqlQueryCache$.html"><span class="name">SqlQueryCache</span></a><span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      <p class="comment cmt">Factory for <a name="edu.chop.cbmi.dataExpress.backends.SqlQueryCache" class="extype" href="SqlQueryCache.html">SqlQueryCache</a> instances</p>
     </li></ol>
             </div>
 

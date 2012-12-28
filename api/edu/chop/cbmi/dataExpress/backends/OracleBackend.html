@@ -29,12 +29,14 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Created by IntelliJ IDEA.
-User: italiam
-Date: 8/19/11
-Time: 9:17 AM
-To change this template use File | Settings | File Templates.
-</p></div><div class="toggleContainer block">
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Backend for accessing Oracle databases. This will use a connection properties file that
+should look something like the following:</p><pre>
+driverClassName=jdbc.driver.OracleDriver
+jdbcUri=jdbc:oracle:thin:@<span class="cmt">//server_address:server_port</span>
+user=username
+schema=schema_name
+password=password
+</pre></div><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a>, <span name="scala.Serializable" class="extype">Serializable</span>, <span name="java.io.Serializable" class="extype">Serializable</span>, <span name="scala.Product" class="extype">Product</span>, <span name="scala.Equals" class="extype">Equals</span>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
@@ -190,7 +192,10 @@ To change this template use File | Settings | File Templates.
         <span class="name">batchInsert</span><span class="params">(<span name="tableName">tableName: String</span>, <span name="table">table: edu.chop.cbmi.dataExpress.dataModels.DataTable[_]</span>, <span name="schemaName">schemaName: <span name="scala.Option" class="extype">Option</span>[String] = <span class="symbol"><span class="name"><a href="../../../../../scala/package.html">None</a></span></span></span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
+      <p class="shortcomment cmt">Perform a batch insert into a table.</p><div class="fullcomment"><div class="comment cmt"><p>Perform a batch insert into a table. <b>This is the preferred insertion method for large
+insert operations</b>
+</p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"><p>The name of the table to do the insert</p></dd><dt class="param">table</dt><dd class="cmt"><p>A <a name="edu.chop.cbmi.dataExpress.dataModels.DataTable" class="extype" href="../dataModels/DataTable.html">DataTable</a> that holds the data for the insert</p></dd><dt class="param">schemaName</dt><dd class="cmt"><p>The schema where the table is located
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlBackend#canEqual" data-isabs="false">
       <a id="canEqual(Any):Boolean"></a>
       <h4 class="signature">
@@ -214,7 +219,9 @@ To change this template use File | Settings | File Templates.
         <span class="name">checkResultSetThenExecute</span><span class="params">(<span name="code">code: ⇒ <span name="scala.Option" class="extype">Option</span>[<span name="java.sql.ResultSet" class="extype">ResultSet</span>]</span>)</span><span class="result">: <span name="scala.Option" class="extype">Option</span>[<span name="java.sql.ResultSet" class="extype">ResultSet</span>]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
+      <p class="shortcomment cmt">Finesses the situation where some databases allow for only one open result set at a time.</p><div class="fullcomment"><div class="comment cmt"><p>Finesses the situation where some databases allow for only one open result set at a time. This is called
+whenever a new result set might be created to ensure that any open result set is closed.
+</p></div><dl class="paramcmts block"><dt class="param">code</dt><dd class="cmt"><p>a code block that is likely to return a ResultSet</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
     </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
@@ -361,7 +368,10 @@ To change this template use File | Settings | File Templates.
       </h4>
       <p class="shortcomment cmt">Drops a database table, optionally cascading constraints
 </p><div class="fullcomment"><div class="comment cmt"><p>Drops a database table, optionally cascading constraints
-</p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"><p>the name of the table to drop</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
+</p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"><p>the name of the table to drop</p></dd><dt class="param">cascade</dt><dd class="cmt"><p>when </p><pre>
+<span class="kw">true</span>
+</pre><p> indicates that constraints should be cascadedd
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlBackend#endTransaction" data-isabs="false">
       <a id="endTransaction():Boolean"></a>
       <h4 class="signature">
@@ -427,7 +437,11 @@ statement.</p></div><dl class="paramcmts block"><dt class="param">sqlStatement</
         <span class="name">executeBatch</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="statement">statement: <span name="java.sql.PreparedStatement" class="extype">PreparedStatement</span></span>, <span name="values">values: Iterator[T]</span>, <span name="batchSize">batchSize: <span name="scala.Int" class="extype">Int</span></span>, <span name="callback">callback: (T) ⇒ Seq[Option[_]]</span>)</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
+      <p class="shortcomment cmt">Executes a set of java.sql.PreparedStatements in a batch mode.</p><div class="fullcomment"><div class="comment cmt"><p>Executes a set of java.sql.PreparedStatements in a batch mode. The primary operation where this makes
+sense is <code><code><code>INSERT</code></code></code> operations, but one could imagine a stored procedure used in this way as well
+</p></div><dl class="paramcmts block"><dt class="param">statement</dt><dd class="cmt"><p>The java.sql.PreparedStatement to be used for the insert</p></dd><dt class="param">values</dt><dd class="cmt"><p>The bind values of any bind variables that might be needed for placeholders in the prepared statement</p></dd><dt class="param">batchSize</dt><dd class="cmt"><p>The size of the batch to use before executing the batch in the database</p></dd><dt class="param">callback</dt><dd class="cmt"><p>A function that will be applied to each set of data values before they are added to the prepared statement
+</p></dd><dt>returns</dt><dd class="cmt"><p>the number of statements that correctly executed
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlBackend#executeQuery" data-isabs="false">
       <a id="executeQuery(String,Seq[Option[_]],Int):ResultSet"></a>
       <h4 class="signature">
@@ -441,9 +455,8 @@ statement.</p></div><dl class="paramcmts block"><dt class="param">sqlStatement</
       </h4>
       <p class="shortcomment cmt">Will execute a SQL SELECT statement with a fetch size of 20.</p><div class="fullcomment"><div class="comment cmt"><p>Will execute a SQL SELECT statement with a fetch size of 20.
 </p></div><dl class="paramcmts block"><dt class="param">sqlStatement</dt><dd class="cmt"><p>the <code>SELECT</code> statement to run
-</p></dd><dt class="param">bindvars</dt><dd class="cmt"><p>set of bind variables for substitution in the statement
-                (@see java.sql.PreparedStatement)
-</p></dd><dt>returns</dt><dd class="cmt"><p><code>Java.sql.ResultSet</code> representing the query</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
+</p></dd><dt class="param">bindvars</dt><dd class="cmt"><p>set of bind variables for substitution in the statement (see java.sql.PreparedStatement)
+</p></dd><dt>returns</dt><dd class="cmt"><p>java.sql.ResultSet representing the query</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlBackend#executeReturningKeys" data-isabs="false">
       <a id="executeReturningKeys(String,Seq[Option[_]]):edu.chop.cbmi.dataExpress.dataModels.DataRow[_]"></a>
       <h4 class="signature">
@@ -524,7 +537,8 @@ individual implementations vary widely
         <span class="name">insertReturningKeys</span><span class="params">(<span name="tableName">tableName: String</span>, <span name="row">row: edu.chop.cbmi.dataExpress.dataModels.DataRow[_]</span>, <span name="schemaName">schemaName: <span name="scala.Option" class="extype">Option</span>[String] = <span class="symbol"><span class="name"><a href="../../../../../scala/package.html">None</a></span></span></span>)</span><span class="result">: edu.chop.cbmi.dataExpress.dataModels.DataRow[_]</span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
+      <p class="shortcomment cmt">Insert a single edu.chop.cbmi.dataModels.DataRow into a table, returning auto-generated primary keys</p><div class="fullcomment"><div class="comment cmt"><p>Insert a single edu.chop.cbmi.dataModels.DataRow into a table, returning auto-generated primary keys</p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"><p>The name of the table to do the insert</p></dd><dt class="param">row</dt><dd class="cmt"><p>The <a name="edu.chop.cbmi.dataExpress.dataModels.DataRow" class="extype" href="../dataModels/DataRow.html">DataRow</a> to insert</p></dd><dt class="param">schemaName</dt><dd class="cmt"><p>The schema where the table is located
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlBackend#insertRow" data-isabs="false">
       <a id="insertRow(String,edu.chop.cbmi.dataExpress.dataModels.DataRow[_],Option[String]):Boolean"></a>
       <h4 class="signature">
@@ -536,7 +550,10 @@ individual implementations vary widely
         <span class="name">insertRow</span><span class="params">(<span name="tableName">tableName: String</span>, <span name="row">row: edu.chop.cbmi.dataExpress.dataModels.DataRow[_]</span>, <span name="schemaName">schemaName: <span name="scala.Option" class="extype">Option</span>[String] = <span class="symbol"><span class="name"><a href="../../../../../scala/package.html">None</a></span></span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
+      <p class="shortcomment cmt">Insert a single <a name="edu.chop.cbmi.dataExpress.dataModels.DataRow" class="extype" href="../dataModels/DataRow.html">DataRow</a> into a table
+</p><div class="fullcomment"><div class="comment cmt"><p>Insert a single <a name="edu.chop.cbmi.dataExpress.dataModels.DataRow" class="extype" href="../dataModels/DataRow.html">DataRow</a> into a table
+</p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"><p>The name of the table to do the insert</p></dd><dt class="param">row</dt><dd class="cmt"><p>The <a name="edu.chop.cbmi.dataExpress.dataModels.DataRow" class="extype" href="../dataModels/DataRow.html">DataRow</a> to insert</p></dd><dt class="param">schemaName</dt><dd class="cmt"><p>The schema where the table is located
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
     </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
       <a id="isInstanceOf[T0]:Boolean"></a>
       <h4 class="signature">
@@ -596,7 +613,10 @@ individual implementations vary widely
         <span class="name">prepStatement</span><span class="params">(<span name="sqlStatement">sqlStatement: <span name="java.sql.PreparedStatement" class="extype">PreparedStatement</span></span>, <span name="bindVars">bindVars: Seq[Option[_]]</span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
+      <p class="shortcomment cmt">Generate a JDBC java.sql.PreparedStatement using bindVariables
+</p><div class="fullcomment"><div class="comment cmt"><p>Generate a JDBC java.sql.PreparedStatement using bindVariables
+</p></div><dl class="paramcmts block"><dt class="param">sqlStatement</dt><dd class="cmt"><p>A java.sql.PreparedStatement  that has place holders for bind variables</p></dd><dt class="param">bindVars</dt><dd class="cmt"><p>A list of values to be bound to the statement
+</p></dd></dl><dl class="attributes block"> <dt>Attributes</dt><dd>protected </dd><dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlBackend#productArity" data-isabs="false">
       <a id="productArity:Int"></a>
       <h4 class="signature">
@@ -745,7 +765,14 @@ individual implementations vary widely
         <span class="name">updateRow</span><span class="params">(<span name="tableName">tableName: String</span>, <span name="updated_row">updated_row: edu.chop.cbmi.dataExpress.dataModels.DataRow[_]</span>, <span name="filter">filter: List[(String, <span name="scala.Any" class="extype">Any</span>)]</span>, <span name="schemaName">schemaName: <span name="scala.Option" class="extype">Option</span>[String] = <span class="symbol"><span class="name"><a href="../../../../../scala/package.html">None</a></span></span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
+      <p class="shortcomment cmt">Update existing table rows.</p><div class="fullcomment"><div class="comment cmt"><p>Update existing table rows. In order to allow specificity,
+the <code>filter</code> parameter is a set of (<code>columnName</code>, <code>value</code>) tuples. These tuples
+ get converted into the <code>WHERE</code> clause. For example:</p><pre>
+<span class="std">List</span>((<span class="lit">"id"</span>,<span class="num">12345</span>),(<span class="lit">"type"</span>,<span class="lit">"Luggage Combination"</span>))
+</pre><p> passed in as a filter is converted to the SQL <code>WHERE id = 12345 AND type = 'Luggage Combination' Currently,
+ there is no support for operations other than equality on filters (e.g. </code><code><code>WHERE id &gt; 100</code></code><code>).
+</code></p></div><dl class="paramcmts block"><dt class="param">tableName</dt><dd class="cmt"><p>The name of the table to do the insert</p></dd><dt class="param">updated_row</dt><dd class="cmt"><p>The contents to be used for the update</p></dd><dt class="param">filter</dt><dd class="cmt"><p>A list of (<code>columnName</code>,<code>value</code>) tuples to be used when constructing the <code>WHERE</code> clause</p></dd><dt class="param">schemaName</dt><dd class="cmt"><p>The schema where the table is located
+</p></dd></dl><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a></dd></dl></div>
     </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
       <a id="wait():Unit"></a>
       <h4 class="signature">
