@@ -20,7 +20,8 @@ import java.util.ServiceLoader
 trait SqlBackendProvider {
   def getProviderFor(db_vendor : String, connectionProperties : Properties, sqlDialect : SqlDialect, driverClassName : String) : Option[SqlBackend]
 }
-/** Factory for [[edu.chop.cbmi.dataExpress.backends.SqlBackend]] */
+
+/** Factory for [[edu.chop.cbmi.dataExpress.backends.SqlBackendFactory]] */
 object SqlBackendFactory{
 	
   val sqlBackendProviderLoader = ServiceLoader.load[SqlBackendProvider](classOf[SqlBackendProvider])
@@ -35,6 +36,7 @@ object SqlBackendFactory{
     case "sqlite" => new SqLiteBackend(connection_properties, sqlDialect, driver_class_name)
     case _ => throw new RuntimeException("Unsupported database type: " + db_type)
   }
+  
 /**
  * Creates the appropriate [[edu.chop.cbmi.dataExpress.backends.SqlBackend]] from a [[java.util.Properties]] object
  * 
@@ -66,6 +68,7 @@ object SqlBackendFactory{
     //       case _ => throw new RuntimeException("Required property 'jdbcUri' not in properties file")
     //     }
   }
+  
   /**
    * Creates the appropriate [[edu.chop.cbmi.dataExpress.backends.SqlBackend]] from a .properties file
    *
@@ -83,13 +86,31 @@ object SqlBackendFactory{
     }
     apply(props, sqlDialect, driver_class_name)
   }
-
+  
+  /**
+   * Creates the appropriate [[edu.chop.cbmi.dataExpress.backends.SqlBackend]] from a .properties file
+   *
+   * @param connection_properties a .properties file that can be serialized to a [[java.util.Properties]] object containing all the necessary information to connect
+   * @param sqlDialect The [[edu.chop.cbmi.dataExpress.backends.SqlDialect]] to use with the database
+   */
   def apply(connection_properties_file: String, sqlDialect : SqlDialect) : SqlBackend =
     apply(connection_properties_file, sqlDialect, null)
 
+  /**
+   * Creates the appropriate [[edu.chop.cbmi.dataExpress.backends.SqlBackend]] from a .properties file
+   *
+   * @param connection_properties a .properties file that can be serialized to a [[java.util.Properties]] object containing all the necessary information to connect
+   * @param driver_class_name The string name of the driver class to be used
+   */
   def apply(connection_properties_file: String, driver_class_name : String) : SqlBackend =
     apply(connection_properties_file, null, driver_class_name)
 
+  /**
+   * Creates the appropriate [[edu.chop.cbmi.dataExpress.backends.SqlBackend]] from a .properties file
+   *
+   * @param connection_properties a .properties file that can be serialized to a [[java.util.Properties]] object containing all the necessary information to connect
+   * @param driver_class_name The string name of the driver class to be used
+   */
   def apply(connection_properties_file: String) : SqlBackend = apply(connection_properties_file, null, null)
 
 }
@@ -160,7 +181,13 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
     }
   }
   /*------ Query Execution functions -----*/
-
+/**
+ * Finesses the situation where some databases allow for only one open result set at a time. This is called
+ * whenever a new result set might be created to ensure that any open result set is closed. 
+ * 
+ * @param code a code block that is likely to return a ResultSet
+ * 
+ */
  protected def checkResultSetThenExecute(code: => Option[ResultSet]) = {
     if(SUPPORTS_MULT_RS)code
     else{
@@ -179,17 +206,15 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    *
    * @param sqlStatement the <code>SELECT</code> statement to run
    *
-   * @param bindvars set of bind variables for substitution in the statement
-   *                 (@see java.sql.PreparedStatement)
+   * @param bindvars set of bind variables for substitution in the statement (see [[java.sql.PreparedStatement]])
    *
-   * @return <code>Java.sql.ResultSet</code> representing the query
+   * @return [[java.sql.ResultSet]] representing the query
    *
    */
   def executeQuery(sqlStatement: String, bindvars: Seq[Option[_]] = Seq.empty[Option[_]], fetchSize:Int=20): java.sql.ResultSet = {
     checkResultSetThenExecute{
       val statement = statementCache.getStatement(sqlStatement)
       prepStatement(statement, bindvars)
-
       //ideally, you'd like to set this based on how much memory a row
       //unfortunately, the JVM can't tell you how much memory something uses
       //TODO: dynamically calculate a good fetch size during activity
@@ -273,12 +298,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
   def endTransaction(): Boolean = execute(sqlDialect.endTransaction())
 
   /*------ Table Management Methods ------*/
-
-/*  def createTable(tableName: String, colNames:List[String], sqlTypes:List[String]):Boolean = {
-    val colTypeMap = colNames.zip(sqlTypes).toMap
-    val sql = sqlDialect.createTable(tableName, colTypeMap)
-    execute(sql)
-  }*/
+  
   /**
    * Create a new table
    * 
@@ -297,6 +317,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
       val tableFromMeta = rs.getString(3)
       if (tableFromMeta.toUpperCase == tableName.toUpperCase){
         //automatically cascades constraints, this is usually what you want with ETL
+        //TODO: this side effect should probably be removed and pushed up to the DSL or some higher level place
         dropTable(tableName, true, schemaName)
       }
 
@@ -316,24 +337,61 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * Drops a database table, optionally cascading constraints
    *
    * @param tableName the name of the table to drop
-   * @cascade when <code>true</code> indicates that constraints should be cascadedd
+   * @param cascade when {{{true}}} indicates that constraints should be cascadedd
    */
   def dropTable(tableName: String, cascade:Boolean=false, schemaName:Option[String] = None) : Boolean =
     execute(sqlDialect.dropTable(tableName, cascade, schemaName))
   /*------ Insertion Methods ------*/
-
+  /** 
+   * Insert a single [[edu.chop.cbmi.dataModels.DataRow]] into a table, returning auto-generated primary keys
+   * 
+   * 
+   * @param tableName The name of the table to do the insert
+   * @param row The [[edu.chop.cbmi.dataExpress.dataModels.DataRow]] to insert
+   * @param schemaName The schema where the table is located
+   */
   def insertReturningKeys(tableName: String, row: DataRow[_], schemaName:Option[String] = None): DataRow[_] =
     executeReturningKeys(sqlDialect.insertRecord(tableName, row.column_names.toList, schemaName), row)
  
+   /**
+   * Insert a single [[edu.chop.cbmi.dataExpress.dataModels.DataRow]] into a table
+   * 
+   * @param tableName The name of the table to do the insert
+   * @param row The [[edu.chop.cbmi.dataExpress.dataModels.DataRow]] to insert
+   * @param schemaName The schema where the table is located
+   */
   def insertRow(tableName: String, row: DataRow[_], schemaName:Option[String] = None): Boolean = 
     execute(sqlDialect.insertRecord(tableName, row.column_names.toList, schemaName), row)
-    
+  
+  /**
+   * Perform a batch insert into a table. '''This is the preferred insertion method for large
+   * insert operations'''
+   * 
+   * @param tableName The name of the table to do the insert
+   * @param table A [[edu.chop.cbmi.dataExpress.dataModels.DataTable]] that holds the data for the insert
+   * @param schemaName The schema where the table is located
+   */
   def batchInsert(tableName:String, table:DataTable[_], schemaName:Option[String] = None):Int = {
     val sqlStatement = sqlDialect.insertRecord(tableName, table.column_names.toList, schemaName)
     val statement = statementCache.getStatement(sqlStatement)
     executeBatch(statement, table, 50, {dr:DataRow[_] => dr})
   }
 
+  /**
+   * Update existing table rows. In order to allow specificity,
+   * the <code>filter</code> parameter is a set of (`columnName`, `value`) tuples. These tuples
+   *  get converted into the `WHERE` clause. For example:
+   *
+   *  {{{List(("id",12345),("type","Luggage Combination"))}}}
+   *
+   *  passed in as a filter is converted to the SQL `WHERE id = 12345 AND type = 'Luggage Combination' Currently,
+   *  there is no support for operations other than equality on filters (e.g. ```WHERE id > 100```).
+   * 
+   * @param tableName The name of the table to do the insert
+   * @param updated_row The contents to be used for the update
+   * @param filter A list of (`columnName`,`value`) tuples to be used when constructing the `WHERE` clause
+   * @param schemaName The schema where the table is located  
+   */
   def updateRow(tableName: String, updated_row: DataRow[_], filter: List[(String, Any)], schemaName: Option[String] = None) = {
     val sqlStatement = sqlDialect.updateRecords(tableName, updated_row.column_names.toList, filter, schemaName)
     val bind_vars = DataRow.map_to_option(updated_row.map((v:Option[_])=>{
@@ -345,7 +403,18 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
 
     execute(sqlStatement, bind_vars)
   }
-
+  
+  /**
+   * Executes a set of [[java.sql.PreparedStatement]]s in a batch mode. The primary operation where this makes
+   * sense is ```INSERT``` operations, but one could imagine a stored procedure used in this way as well
+   * 
+   * @param statement The [[java.sql.PreparedStatement]] to be used for the insert
+   * @param values The bind values of any bind variables that might be needed for placeholders in the prepared statement
+   * @param batchSize The size of the batch to use before executing the batch in the database
+   * @param callback A function that will be applied to each set of data values before they are added to the prepared statement
+   * 
+   * @return the number of statements that correctly executed
+   */
   def executeBatch[T](statement: java.sql.PreparedStatement,
                       values: Iterator[T], batchSize: Int, callback: T => Seq[Option[_]]): Int = {
 
@@ -355,7 +424,6 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
     while (values.hasNext) {
       val bindVars = callback(values.next())
       prepStatement(statement, bindVars)
-
       statement.addBatch()
       currentBatch += 1
       if (currentBatch % batchSize == 0) {
@@ -363,26 +431,26 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
         try {
           val status = statement.executeBatch.toList
           successfulStatementCount += status.filter(i => i != Statement.EXECUTE_FAILED).length
-        }
-        catch {
+        } catch {
           case e: java.sql.BatchUpdateException => {
-
             throw e.getNextException
-
           }
         }
-
       }
     }
-
     if (currentBatch % batchSize != 0) {
       val status = statement.executeBatch.toList
       successfulStatementCount += status.filter(i => i != Statement.EXECUTE_FAILED).length
     }
-
     successfulStatementCount
   }
-
+ 
+  /**
+   * Generate a JDBC [[java.sql.PreparedStatement]] using bindVariables
+   * 
+   * @param sqlStatement A [[java.sql.PreparedStatement]]  that has place holders for bind variables
+   * @param bindVars A list of values to be bound to the statement
+   */
   protected def prepStatement(sqlStatement: PreparedStatement, bindVars: Seq[Option[_]]) = {
     if (bindVars.length > 0) {
       val vars = bindVars.zipWithIndex

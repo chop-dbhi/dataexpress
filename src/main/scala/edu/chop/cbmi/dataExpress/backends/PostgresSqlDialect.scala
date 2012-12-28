@@ -24,13 +24,10 @@ import edu.chop.cbmi.dataExpress.dataModels.sql._
 import edu.chop.cbmi.dataExpress.dataModels.DataType
 
 /**
- * Created by IntelliJ IDEA.
- * User: italiam
- * Date: 8/18/11
- * Time: 3:22 PM
- * To change this template use File | Settings | File Templates.
+ * SQL dialect for Postgres 
+ * @see [[edu.chop.cbmi.dataExpress.backends.SqlDialect]]
+ * 
  */
-
 case object PostgresSqlDialect extends SqlDialect {
   val identifierQuote = "\""
   val tableCreate = "CREATE TABLE"

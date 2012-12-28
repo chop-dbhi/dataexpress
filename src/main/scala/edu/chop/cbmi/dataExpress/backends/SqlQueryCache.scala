@@ -1,48 +1,44 @@
-/*
-Copyright (c) 2012, The Children's Hospital of Philadelphia All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-   disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-   following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 package edu.chop.cbmi.dataExpress.backends
-
 import java.sql.Statement
 
-/**
- * Created by IntelliJ IDEA.
- * User: masinoa
- * Date: 1/27/12
- * Time: 12:23 PM
- * To change this template use File | Settings | File Templates.
- */
 
+/** Factory for [[edu.chop.cbmi.dataExpress.backends.SqlQueryCache]] instances */
 object SqlQueryCache {
+  /**
+   * Creates a new [[edu.chop.cbmi.dataExpress.backends.SqlQueryCache]]
+   * 
+   * @param size the number of statements to hold in the cache
+   * @param connection the JDBC connection for which the cache should be used 
+   */
   def apply(size: Int, connection:java.sql.Connection) = {
     new SqlQueryCache(size,connection)
   }
 }
 
+/**
+ * 
+ * While the JDBC spec encourages individual drivers to handle their own query cache, 
+ * this behavior is not guaranteed. This class exists to provide consistent cache functionality
+ * across all drivers in DataExpress
+ * 
+ */
 class SqlQueryCache(size: Int, connection:java.sql.Connection) {
+  /** Map of string statement values to corresponding prepared statements */
   val statementMap = new scala.collection.mutable.LinkedHashMap[String,java.sql.PreparedStatement]()
+  /** Statement mapping for statements expected to return primary keys */
   val statementsWithKeysMap = new scala.collection.mutable.LinkedHashMap[String,java.sql.PreparedStatement]()
-
+  
   def prepReturningKeys(sql:String) = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
   def prepSimpleStatement(sql:String) = connection.prepareStatement(sql)
-
+  
+  /**
+   * Prepare a SQL statement by first checking the cache to see if it exists. If the exact SQL string
+   * does not exist in the cache, the driver will be asked to prepare the statement. The resulting statement
+   * is added to the cache and returned.
+   * 
+   * @param sql A SQL string of the statement to be prepared
+   * @param returnKeys Set to {{{true}}} if auto-generated primary keys are to be returned
+   */
   private def prepStatement(sql: String, returnKeys: Boolean) = {
     val (prepareMethod, cache) = returnKeys match {
       case true => (prepReturningKeys(sql), statementsWithKeysMap)
@@ -58,21 +54,30 @@ class SqlQueryCache(size: Int, connection:java.sql.Connection) {
 
     preparedStatement
   }
-
+  
+  /** Retrieve an ordinary statement from the cache (if it does not exist, it will be created) */
   def getStatement(sql: String): java.sql.PreparedStatement = {
      prepStatement(sql, false)
   }
-
+  
+  /** Retrieve a statement that returns auto-generated primary keys from the cache 
+   * (if it does not exist, it will be created) */
   def getStatementReturningKeys(sql: String): java.sql.PreparedStatement = {
     prepStatement(sql, true)
   }
   
+  /** Cleans up the cache (usually in preparation for closing connections and committing results) 
+   * by closing all statements. 
+   */
   def cleanUp() = {
     List(statementMap, statementsWithKeysMap).map{closeAndClear(_)}
-	  
   }
+  
   private def closeAndClear(map:scala.collection.mutable.LinkedHashMap[String,java.sql.PreparedStatement]) = {
     statementMap.foreach{e => 
+      /* Annoyingly, some JDBC drivers don't implement .isClosed(), so this try/catch guards against a 
+       * runtime error and just forces the statement closed if the exception gets thrown.
+       */
       try{
 	    if (!e._2.isClosed()) {
 	      e._2.close() 

@@ -4,13 +4,16 @@ import java.util.Properties
 import java.io.FileInputStream
 
 /**
- * Created by IntelliJ IDEA.
- * User: italiam
- * Date: 8/19/11
- * Time: 9:17 AM
- * To change this template use File | Settings | File Templates.
+ * Backend for accessing Oracle databases. This will use a connection properties file that
+ * should look something like the following:
+ * {{{driverClassName=jdbc.driver.OracleDriver
+ * jdbcUri=jdbc:oracle:thin:@//server_address:server_port
+ * user=username
+ * schema=schema_name
+ * password=password}}}
+ * 
+ * 
  */
-
 
 class OracleBackend(override val connectionProperties : Properties, _sqlDialect : SqlDialect = null,
                            _driverClassName : String = null)
