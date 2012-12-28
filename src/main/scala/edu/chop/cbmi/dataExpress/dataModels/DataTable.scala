@@ -1,32 +1,4 @@
-/*
-Copyright (c) 2012, The Children's Hospital of Philadelphia All rights reserved.
-
-Redistribution and use in source and binary forms, with or without modification, are permitted provided that the
-following conditions are met:
-
-1. Redistributions of source code must retain the above copyright notice, this list of conditions and the following
-   disclaimer.
-
-2. Redistributions in binary form must reproduce the above copyright notice, this list of conditions and the
-   following disclaimer in the documentation and/or other materials provided with the distribution.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES,
-INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
-DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
-SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
-SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY,
-WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
-USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- */
 package edu.chop.cbmi.dataExpress.dataModels
-
-/**
- * Created by IntelliJ IDEA.
- * User: masinoa
- * Date: 11/2/11
- * Time: 2:22 PM
- * To change this template use File | Settings | File Templates.
- */
 
 import scala.reflect.Manifest
 import edu.chop.cbmi.dataExpress.backends.SqlBackend
@@ -35,6 +7,10 @@ import edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation
 import edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage
 import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
 
+/**
+ * When mapping column names to methods via Scala's dynamic trait, it is necessary to generate names that
+ * comply with Scala's rules. A name generator is needed to ensure the method names are properly formed.
+ */
 trait ColumnNameGenerator{
   /**
    * method to generate column_names.
@@ -42,12 +18,13 @@ trait ColumnNameGenerator{
   def generate_column_names() : Seq[String]
 }
 
+//TODO investigate this, it seems over-engineered to have this as a case class, given what it does
 case class SeqColumnNames(column_names : Seq[String]) extends ColumnNameGenerator {
   def generate_column_names() = column_names
 }
 
 /**
- * A Wrapper class that extends Seq[T] with Dynamic to enable row element access using the column names with dot notation
+ * A Wrapper class that extends Seq[T] with [[scala.Dynamic]] to enable row element access using the column names with dot notation
  * e.g. Given a DataRow instance, dr, with column_names = Seq("a","b") and data = Seq(1,2), the values
  * can be accessed as dr.a and dr.b
  */
@@ -96,7 +73,6 @@ object DataRow{
 /**
  * base class for other data representation classes organized as a 2-D table with column names.
  */
-//TODO: Issue 14 should extend Iterator instead of Iterable 
 abstract case class DataTable[+T](val column_names_generator: ColumnNameGenerator) extends Iterator[DataRow[T]] with Dynamic{
 
   lazy val column_names = column_names_generator.generate_column_names()
@@ -139,26 +115,52 @@ abstract case class DataTable[+T](val column_names_generator: ColumnNameGenerato
 
 /** Factory for [[edu.chop.cbmi.dataExpress.dataModels.DataTable]] */
 object DataTable {
-
+  /* 
+   * Generates a column name from a numerical index using a similar algorithm to what Excel does
+   */
   private def column_name_from_index(i: Int) = {
     val alphabet = "abcdefghijklmnopqrstuvwxyz"
     "a" * (i / 26) + alphabet(i % 26)
   }
-
+  
+  /** Convenience method for creating empty tables */
   def empty = apply(Seq.empty[String], Seq.empty[Nothing])
-
+  
+  /**
+   * Creates a [[edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable]] using an in-memory data structure
+   * 
+   * @param column_names The names of the columns
+   * @param row A set of {{{Seq}}} objects, each representing a row
+   * 
+   * @return A simple data table that holds all data in memory
+   */
   def apply[T](column_names: Seq[String], row: Seq[T]*): SimpleDataTable[T] = {
     val rows = List(row: _*)
     SimpleDataTable(SeqColumnNames(column_names))(rows)
   }
-
+  
+  /**
+   * Creates a [[edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable]] using an in-memory data structure with auto-generated column names
+   * 
+   * @param row A set of {{{Seq}}} objects, each representing a row
+   */
   def apply[T](row: Seq[T]*): SimpleDataTable[T] = {
     val cns = (0 to (row.length - 1)) map ((i: Int) => column_name_from_index(i))
     apply(cns, row: _*)
   }
 
+  /**
+   * Creates a [[edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation]]
+   * 
+   * @param dataStore An open [[edu.chop.cbmi.dataExpress.backend.SqlBackend]] ready to accept queries
+   * @param query A SQL query that returns results
+   * @param bindVars (optional) set of values to bind to placeholder variables 
+   */
+  //TODO Should this really be here in a generic package? Seems like you would want SQLRelation to emit a data table.
   def apply(dataStore : SqlBackend, query : String, bindVars : Seq[Option[_]] = Seq.empty[Option[_]]) = {
     SqlRelation(SqlQueryPackage(dataStore,query,bindVars))
   }
+  
+  //TODO create a simple apply() method that calls .empty so this behaves like List()
 
 }
