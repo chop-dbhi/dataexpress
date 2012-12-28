@@ -179,7 +179,8 @@
         <a href="SqlIterator.html"><span class="name">SqlIterator</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="params">(<span name="sql_query_package">sql_query_package: SqlQueryPackage</span>)</span><span class="result"> extends Iterator[T] with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      <p class="comment cmt">Specialized scala.collection.Iterator that handles the peculiarities of dealing with a JDBC ResultSet
+</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage" data-isabs="false">
       <a id="SqlQueryPackage:SqlQueryPackage"></a>
       <h4 class="signature">
@@ -191,7 +192,8 @@
         <a href="SqlQueryPackage.html"><span class="name">SqlQueryPackage</span></a><span class="params">(<span name="dataStore">dataStore: SqlBackend</span>, <span name="query">query: String</span>, <span name="bindVars">bindVars: Seq[Option[_]]</span>)</span><span class="result"> extends ColumnNameGenerator with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      <p class="comment cmt">Wrapper for queries that produce a JDBC ResultSet
+</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation" data-isabs="false">
       <a id="SqlRelation:SqlRelation[T]"></a>
       <h4 class="signature">
@@ -203,7 +205,8 @@
         <a href="SqlRelation.html"><span class="name">SqlRelation</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="params">(<span name="sql_query_package">sql_query_package: SqlQueryPackage</span>)</span><span class="result"> extends DataTable[T] with Product with Serializable</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">A <a name="edu.chop.cbmi.dataExpress.dataModels.DataTable" class="extype" href="../DataTable.html">DataTable</a> that represents a SQL relation (either a table or
+the complete result of a query).</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelationColumn" data-isabs="false">
       <a id="SqlRelationColumn:SqlRelationColumn[G]"></a>
       <h4 class="signature">
@@ -215,7 +218,7 @@
         <a href="SqlRelationColumn.html"><span class="name">SqlRelationColumn</span></a><span class="tparams">[<span name="G">G</span>]</span><span class="params">(<span name="sql_query_package">sql_query_package: SqlQueryPackage</span>, <span name="f">f: (Any) ⇒ G</span>)</span><span class="result"> extends Iterator[G] with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.TextDataType" data-isabs="false">
       <a id="TextDataType:TextDataType"></a>
       <h4 class="signature">
@@ -251,7 +254,7 @@
         <a href="TinyIntegerDataType.html"><span class="name">TinyIntegerDataType</span></a><span class="params">()</span><span class="result"> extends DataType with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      
     </li></ol>
             </div>
 

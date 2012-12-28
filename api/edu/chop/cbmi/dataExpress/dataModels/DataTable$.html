@@ -134,7 +134,10 @@
         <span class="name">apply</span><span class="params">(<span name="dataStore">dataStore: <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="../backends/SqlBackend.html">SqlBackend</a></span>, <span name="query">query: String</span>, <span name="bindVars">bindVars: Seq[Option[_]] = <span class="symbol">Seq.empty[Option[_]]</span></span>)</span><span class="result">: <a name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation" class="extype" href="sql/SqlRelation.html">SqlRelation</a>[<span name="scala.Nothing" class="extype">Nothing</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Creates a <a name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation" class="extype" href="sql/SqlRelation.html">SqlRelation</a>
+</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <a name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation" class="extype" href="sql/SqlRelation.html">SqlRelation</a>
+</p></div><dl class="paramcmts block"><dt class="param">dataStore</dt><dd class="cmt"><p>An open edu.chop.cbmi.dataExpress.backend.SqlBackend ready to accept queries</p></dd><dt class="param">query</dt><dd class="cmt"><p>A SQL query that returns results</p></dd><dt class="param">bindVars</dt><dd class="cmt"><p>(optional) set of values to bind to placeholder variables
+</p></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.DataTable#apply" data-isabs="false">
       <a id="apply[T](Seq[T]*):SimpleDataTable[T]"></a>
       <h4 class="signature">
@@ -146,7 +149,12 @@
         <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="row">row: Seq[T]*</span>)</span><span class="result">: <a name="edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable" class="extype" href="SimpleDataTable.html">SimpleDataTable</a>[T]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Creates a <a name="edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable" class="extype" href="SimpleDataTable.html">SimpleDataTable</a> using an in-memory data structure with auto-generated column names
+</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <a name="edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable" class="extype" href="SimpleDataTable.html">SimpleDataTable</a> using an in-memory data structure with auto-generated column names
+</p></div><dl class="paramcmts block"><dt class="param">row</dt><dd class="cmt"><p>A set of </p><pre>
+<span class="std">Seq</span>
+</pre><p> objects, each representing a row
+</p></dd></dl></div>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.DataTable#apply" data-isabs="false">
       <a id="apply[T](Seq[String],Seq[T]*):SimpleDataTable[T]"></a>
       <h4 class="signature">
@@ -158,7 +166,13 @@
         <span class="name">apply</span><span class="tparams">[<span name="T">T</span>]</span><span class="params">(<span name="column_names">column_names: Seq[String]</span>, <span name="row">row: Seq[T]*</span>)</span><span class="result">: <a name="edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable" class="extype" href="SimpleDataTable.html">SimpleDataTable</a>[T]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Creates a <a name="edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable" class="extype" href="SimpleDataTable.html">SimpleDataTable</a> using an in-memory data structure
+</p><div class="fullcomment"><div class="comment cmt"><p>Creates a <a name="edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable" class="extype" href="SimpleDataTable.html">SimpleDataTable</a> using an in-memory data structure
+</p></div><dl class="paramcmts block"><dt class="param">column_names</dt><dd class="cmt"><p>The names of the columns</p></dd><dt class="param">row</dt><dd class="cmt"><p>A set of </p><pre>
+<span class="std">Seq</span>
+</pre><p> objects, each representing a row
+</p></dd><dt>returns</dt><dd class="cmt"><p>A simple data table that holds all data in memory
+</p></dd></dl></div>
     </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
@@ -197,7 +211,7 @@
         <span class="name">empty</span><span class="result">: <a name="edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable" class="extype" href="SimpleDataTable.html">SimpleDataTable</a>[<span name="scala.Nothing" class="extype">Nothing</span>]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">Convenience method for creating empty tables</p>
     </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">

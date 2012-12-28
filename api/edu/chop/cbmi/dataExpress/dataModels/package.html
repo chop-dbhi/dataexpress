@@ -59,7 +59,8 @@
         <a href="ColumnNameGenerator.html"><span class="name">ColumnNameGenerator</span></a><span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      
+      <p class="comment cmt">When mapping column names to methods via Scala's dynamic trait, it is necessary to generate names that
+comply with Scala's rules.</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.DataRow" data-isabs="false">
       <a id="DataRow:DataRow[T]"></a>
       <h4 class="signature">
@@ -71,7 +72,7 @@
         <a href="DataRow.html"><span class="name">DataRow</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="params">(<span name="column_names">column_names: Seq[String]</span>, <span name="data">data: Seq[Option[T]]</span>)</span><span class="result"> extends Seq[Option[T]] with Dynamic with Product with Serializable</span>
       </span>
       </h4>
-      <p class="comment cmt">A Wrapper class that extends Seq[T] with Dynamic to enable row element access using the column names with dot notation
+      <p class="comment cmt">A Wrapper class that extends Seq[T] with scala.Dynamic to enable row element access using the column names with dot notation
 e.</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.DataTable" data-isabs="true">
       <a id="DataTable:DataTable[T]"></a>
@@ -96,7 +97,7 @@ e.</p>
         <a href="DataType.html"><span class="name">DataType</span></a><span class="result"> extends AnyRef</span>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+      
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.RichOption" data-isabs="false">
       <a id="RichOption:RichOption[T]"></a>
       <h4 class="signature">

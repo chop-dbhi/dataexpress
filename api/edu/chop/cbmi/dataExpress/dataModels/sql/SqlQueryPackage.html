@@ -29,12 +29,8 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Created by IntelliJ IDEA.
-User: masinoa
-Date: 11/11/11
-Time: 12:27 PM
-To change this template use File | Settings | File Templates.
-</p></div><div class="toggleContainer block">
+      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Wrapper for queries that produce a JDBC ResultSet
+</p></div><dl class="paramcmts block"><dt class="param">dataStore</dt><dd class="cmt"><p>A <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="../../backends/SqlBackend.html">SqlBackend</a> with an open connection, ready for queries</p></dd><dt class="param">query</dt><dd class="cmt"><p>A string representation of a SQL query, optionally with placeholder values for bind variables</p></dd><dt class="param">bindVars</dt><dd class="cmt"><p>An optional set of values to be bound when making a prepared statement</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
           <div class="superTypes hiddenContent"><span name="scala.Serializable" class="extype">Serializable</span>, <span name="java.io.Serializable" class="extype">Serializable</span>, <span name="scala.Product" class="extype">Product</span>, <span name="scala.Equals" class="extype">Equals</span>, <a name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator" class="extype" href="../ColumnNameGenerator.html">ColumnNameGenerator</a>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
         </div></div>
@@ -73,7 +69,7 @@ To change this template use File | Settings | File Templates.
         <span class="name">SqlQueryPackage</span><span class="params">(<span name="dataStore">dataStore: <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="../../backends/SqlBackend.html">SqlBackend</a></span>, <span name="query">query: String</span>, <span name="bindVars">bindVars: <span name="scala.collection.Seq" class="extype">Seq</span>[Option[_]]</span>)</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">dataStore</dt><dd class="cmt"><p>A <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="../../backends/SqlBackend.html">SqlBackend</a> with an open connection, ready for queries</p></dd><dt class="param">query</dt><dd class="cmt"><p>A string representation of a SQL query, optionally with placeholder values for bind variables</p></dd><dt class="param">bindVars</dt><dd class="cmt"><p>An optional set of values to be bound when making a prepared statement</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -166,7 +162,7 @@ To change this template use File | Settings | File Templates.
         <span class="name">bindVars</span><span class="result">: <span name="scala.collection.Seq" class="extype">Seq</span>[Option[_]]</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">An optional set of values to be bound when making a prepared statement</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#canEqual" data-isabs="false">
       <a id="canEqual(Any):Boolean"></a>
       <h4 class="signature">
@@ -229,7 +225,7 @@ To change this template use File | Settings | File Templates.
         <span class="name">dataStore</span><span class="result">: <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="../../backends/SqlBackend.html">SqlBackend</a></span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">A <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="../../backends/SqlBackend.html">SqlBackend</a> with an open connection, ready for queries</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#dataTypes" data-isabs="false">
       <a id="dataTypes():Seq[DataType]"></a>
       <h4 class="signature">
@@ -437,7 +433,7 @@ To change this template use File | Settings | File Templates.
         <span class="name">query</span><span class="result">: String</span>
       </span>
       </h4>
-      
+      <p class="shortcomment cmt">A string representation of a SQL query, optionally with placeholder values for bind variables</p>
     </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#resultSet" data-isabs="false">
       <a id="resultSet():ResultSet"></a>
       <h4 class="signature">
