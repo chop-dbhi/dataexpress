@@ -12,6 +12,8 @@ import java.io.FileInputStream
  * schema=schema_name
  * password=password}}}
  * 
+ * If you must use an SID, the following is the format for the URI line:
+ * {{{jdbc:oracle:thin:@host:port:SID}} 
  * 
  */
 
