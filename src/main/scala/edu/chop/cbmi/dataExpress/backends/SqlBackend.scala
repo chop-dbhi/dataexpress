@@ -25,13 +25,13 @@ trait SqlBackendProvider {
 object SqlBackendFactory{
 	
   val sqlBackendProviderLoader = ServiceLoader.load[SqlBackendProvider](classOf[SqlBackendProvider])
-  private val included_backends = List("postgresql", "mysql", "sqlite")
+  private val included_backends = List("postgresql", "mysql", "sqlite", "oracle")
 
   private def load_included_bakcend(db_type: String, connection_properties: Properties, sqlDialect: SqlDialect = null,
     driver_class_name: String = null) = db_type match {
     case "postgresql" => new PostgresBackend(connection_properties, sqlDialect, driver_class_name)
     case "mysql" => new MySqlBackend(connection_properties, sqlDialect, driver_class_name)
-    //case "oracle"     => new OracleBackend(connection_properties, sqlDialect, driver_class_name)
+    case "oracle"     => new OracleBackend(connection_properties, sqlDialect, driver_class_name)
     //case "sqlserver"  => new SqlServerBackend(connection_properties, sqlDialect, driver_class_name)
     case "sqlite" => new SqLiteBackend(connection_properties, sqlDialect, driver_class_name)
     case _ => throw new RuntimeException("Unsupported database type: " + db_type)
