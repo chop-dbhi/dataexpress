@@ -141,7 +141,8 @@ sealed case class SqlRelation[+T] private[dataModels](private val sql_query_pack
     def f(a:Any) = if(a==null)None.asu[G] else Some(a).asu[G]
     SqlRelationColumn[G](SqlQueryPackage(sql_query_package.dataStore, sub_query(name), sql_query_package.bindVars), f _)
   }else throw ColumnDoesNotExist(name)
-
+  
+ 
   case class SqlRelationIterator[+T] private[SqlRelation](val sql_query_package : SqlQueryPackage)
     extends SqlIterator[DataRow[T]](sql_query_package){
 

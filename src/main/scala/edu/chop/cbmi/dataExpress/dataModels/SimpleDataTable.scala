@@ -47,7 +47,7 @@ case class SimpleDataTable[+T] private[dataModels](override val column_names_gen
     data.iterator.map((l: Seq[T]) => if (l(idx) == null) None.asu[G] else Some(l(idx)).asu[G])
   } else throw ColumnDoesNotExist(name)
 
-  override def applyDynamic(name: String)(args: Any*): Iterator[Option[T]] = {
+  def selectDynamic(name: String): Iterator[Option[T]] = {
     if (hasColumn(name)) this.col(name)
     else throw ColumnDoesNotExist(name)
   }

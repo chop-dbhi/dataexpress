@@ -9,6 +9,7 @@ import edu.chop.cbmi.dataExpress.test.util.presidents._
 import org.scalatest.{GivenWhenThen, FunSpec}
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest._
+import edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation
 
 /**
  * Created by IntelliJ IDEA.

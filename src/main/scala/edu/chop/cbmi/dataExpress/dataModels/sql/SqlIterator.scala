@@ -5,7 +5,7 @@ import java.sql.ResultSet
 /**
  * Specialized [[scala.collection.Iterator]] that handles the peculiarities of dealing with a JDBC ResultSet 
  */
-abstract case class SqlIterator[+T] private[sql](private val sql_query_package: SqlQueryPackage) extends Iterator[T] {
+abstract class SqlIterator[+T] private[sql](private val sql_query_package: SqlQueryPackage) extends Iterator[T] {
   protected var cursor_advanced = false
   protected var more_rows = false
 

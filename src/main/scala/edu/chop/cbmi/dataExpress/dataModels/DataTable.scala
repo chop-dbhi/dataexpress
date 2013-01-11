@@ -6,6 +6,7 @@ import edu.chop.cbmi.dataExpress.backends.SqlBackend
 import edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation
 import edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage
 import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
+import scala.language.dynamics
 
 /**
  * When mapping column names to methods via Scala's dynamic trait, it is necessary to generate names that
@@ -47,7 +48,7 @@ case class DataRow[+T] (column_names : Seq[String])(private val data : Seq[Optio
   /**
    * enables access to data elements using dot notation
    */
-  def applyDynamic(name : String)(args: Any*) = find_value(name)
+  def selectDynamic(name : String) = find_value(name)
 
   protected def find_value(name : String) = {
     if(column_names.contains(name))data(column_names.indexOf(name))
@@ -73,7 +74,7 @@ object DataRow{
 /**
  * base class for other data representation classes organized as a 2-D table with column names.
  */
-abstract case class DataTable[+T](val column_names_generator: ColumnNameGenerator) extends Iterator[DataRow[T]] with Dynamic{
+abstract class DataTable[+T](val column_names_generator: ColumnNameGenerator) extends Iterator[DataRow[T]] with Dynamic{
 
   lazy val column_names = column_names_generator.generate_column_names()
 
@@ -104,7 +105,7 @@ abstract case class DataTable[+T](val column_names_generator: ColumnNameGenerato
    */
   def col_asu[G](name: String)(implicit m: Manifest[G]): Iterator[G]
 
-  def applyDynamic(name : String)(args: Any*) = {
+  def slectDynamic(name: String) = {
     if(hasColumn(name))this.col(name)
     else throw ColumnDoesNotExist(name)
   }
