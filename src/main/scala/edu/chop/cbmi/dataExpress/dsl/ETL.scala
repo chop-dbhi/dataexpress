@@ -50,7 +50,7 @@ object ETL {
             "execute exception %s".format(println(ex.getMessage))
             None
           }
-          case _ => None
+          case _:Throwable => None
         }
       finally {
         if(do_cleanup)cleanup()
