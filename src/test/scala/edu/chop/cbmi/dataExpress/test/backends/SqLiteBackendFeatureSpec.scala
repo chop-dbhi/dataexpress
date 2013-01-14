@@ -21,6 +21,7 @@ import edu.chop.cbmi.dataExpress.dataModels._
 import edu.chop.cbmi.dataExpress.dataModels.sql._
 import edu.chop.cbmi.dataExpress.dataModels.sql.IntegerDataType
 
+import scala.language.reflectiveCalls
 
 
 class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {

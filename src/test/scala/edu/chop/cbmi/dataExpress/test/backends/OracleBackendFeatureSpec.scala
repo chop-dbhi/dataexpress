@@ -19,6 +19,7 @@ import edu.chop.cbmi.dataExpress.dataModels._
 import edu.chop.cbmi.dataExpress.dataModels.sql._
 import edu.chop.cbmi.dataExpress.backends.OracleBackend
 
+import scala.language.reflectiveCalls
 import edu.chop.cbmi.dataExpress.test.util.cars.dataSetup.backends.OracleDataSetup
 
 

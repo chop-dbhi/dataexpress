@@ -24,6 +24,7 @@ import edu.chop.cbmi.dataExpress.dataModels.sql._
 import edu.chop.cbmi.dataExpress.test.util.TestProps
 import edu.chop.cbmi.dataExpress.test.util.cars.dataSetup.backends.PostgresDataSetup
 
+import scala.language.reflectiveCalls
 
 class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
 

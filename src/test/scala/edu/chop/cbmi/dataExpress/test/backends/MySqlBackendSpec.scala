@@ -14,6 +14,7 @@ import java.util.Properties
 import edu.chop.cbmi.dataExpress.backends.MySqlBackend
 import edu.chop.cbmi.dataExpress.test.util._
 import org.scalatest.FunSuite
+import scala.language.reflectiveCalls
 
 class MySqlBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  {
 

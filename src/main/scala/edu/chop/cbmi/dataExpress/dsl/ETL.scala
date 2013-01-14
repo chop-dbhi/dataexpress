@@ -24,6 +24,7 @@ import java.io.FileNotFoundException
 import edu.chop.cbmi.dataExpress.dataModels.{DataRow, DataTable}
 import statements.{InsertSelect, GetSelect, CopySelect}
 import stores.{RegisterAsPre, Store}
+import scala.language.implicitConversions
 
 /**
  * Created by IntelliJ IDEA.

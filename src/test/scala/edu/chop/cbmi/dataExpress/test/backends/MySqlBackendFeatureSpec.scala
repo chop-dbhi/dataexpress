@@ -19,6 +19,7 @@ import edu.chop.cbmi.dataExpress.test.util.TestProps
 import edu.chop.cbmi.dataExpress.test.util.cars.dataSetup.backends.MySqlDataSetup
 import edu.chop.cbmi.dataExpress.test.util.TestProps$
 
+import scala.language.reflectiveCalls
 
 class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
 

@@ -12,6 +12,7 @@ import org.scalatest.{GivenWhenThen, Spec, FunSpec}
 import java.util.Properties
 import edu.chop.cbmi.dataExpress.test.util._
 import edu.chop.cbmi.dataExpress.backends.OracleBackend
+import scala.language.reflectiveCalls
 
 class OracleBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  {
 

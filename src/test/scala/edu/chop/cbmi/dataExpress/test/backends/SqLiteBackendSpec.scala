@@ -10,6 +10,7 @@ import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import edu.chop.cbmi.dataExpress.backends.SqLiteBackend
 import org.scalatest.FunSpec
+import scala.language.reflectiveCalls
 
 
 class SqLiteBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  {

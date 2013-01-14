@@ -16,6 +16,7 @@ import edu.chop.cbmi.dataExpress.test.util._
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSpec
+import scala.language.reflectiveCalls
 
 class PostgresBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  {
 

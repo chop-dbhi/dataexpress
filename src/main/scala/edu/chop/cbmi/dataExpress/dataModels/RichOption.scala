@@ -1,6 +1,7 @@
 package edu.chop.cbmi.dataExpress.dataModels
 
 import scala.reflect.Manifest
+import scala.language.implicitConversions
 
 class RichOption[T] private (private val data:Option[T]){
 
