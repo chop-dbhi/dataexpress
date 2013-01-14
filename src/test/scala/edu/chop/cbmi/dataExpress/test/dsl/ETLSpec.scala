@@ -9,6 +9,7 @@ import edu.chop.cbmi.dataExpress.dsl.stores.{Store, SqlDb}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
 import org.scalatest.FunSpec
+import scala.language.reflectiveCalls
 
 /**
  * Created by IntelliJ IDEA.
@@ -57,16 +58,16 @@ class ETLSpec extends FunSpec with GivenWhenThen with ShouldMatchers with Before
     }
 
     it("should open a store when register is called"){
-      given("a valid store type")
+      Given("a valid store type")
       var s : Store = null
       ETL.execute(true){
         s = registerStore(SqlDb(f.prop_file))
         s.is_closed_? should equal(false)
       }
-      and("close the store when the execute block is done if cleanup is true which is the default")
+      And("close the store when the execute block is done if cleanup is true which is the default")
       s.is_closed_? should equal(true)
 
-      and("leave the store open when the execute block is done if cleanup is false")
+      And("leave the store open when the execute block is done if cleanup is false")
       ETL.execute(true, false){
         s = registerStore(SqlDb(f.prop_file))
       }
@@ -74,18 +75,18 @@ class ETLSpec extends FunSpec with GivenWhenThen with ShouldMatchers with Before
       s.close
       s.is_closed_? should equal(true)
 
-      and("have zero registered stores after cleanup")
+      And("have zero registered stores after cleanup")
       ETL.cleanup()
       ETL.registered_store_count should equal(0)
 
-      and("only register a given store once")
+      And("only register a given store once")
       ETL.registerStore(SqlDb(f.prop_file))
       ETL.registered_store_count should equal(1)
       ETL.registerStore(SqlDb(f.prop_file))
       ETL.registered_store_count should equal(1)
       ETL.cleanup()
       
-      and("not persist stores after they have been cleaned up")
+      And("not persist stores after they have been cleaned up")
       register store (SqlDb(f.prop_file)) as "source"
       ETL.cleanup()
       ETL.registered_store_count should equal(0)

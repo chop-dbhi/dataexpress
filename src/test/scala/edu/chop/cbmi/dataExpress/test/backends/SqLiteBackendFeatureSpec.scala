@@ -20,7 +20,6 @@ import edu.chop.cbmi.dataExpress.test.util._
 import edu.chop.cbmi.dataExpress.dataModels._
 import edu.chop.cbmi.dataExpress.dataModels.sql._
 import edu.chop.cbmi.dataExpress.dataModels.sql.IntegerDataType
-
 import scala.language.reflectiveCalls
 
 
@@ -62,11 +61,11 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val backend = new SqLiteBackend(f.props)
     val cascade: Boolean = true
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("the user issues a valid create table instruction for a table that does not exist")
+    When("the user issues a valid create table instruction for a table that does not exist")
 
       val startTableCount = backend.executeQuery(verifyTableStatement)
       assert(startTableCount.next())
@@ -87,7 +86,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     /* Table should be dropped now if it existed) */
 
     backend.createTable(tableName,columnNames,dataTypes)
-    then("the table should exist")
+    Then("the table should exist")
     val tableExistResult = backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
     tableExistResult.getInt("count") should equal(1)
@@ -103,16 +102,16 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val countStatement: String = """select count(*) as 'count' from """ + tableName
     val backend = new SqLiteBackend(f.props)
 
-     given("an active connection and a populated table")
+     Given("an active connection and a populated table")
      assert(backend.connect().isInstanceOf[java.sql.Connection] )
      backend.connection.setAutoCommit(false)
 
 
-     when("the user issues truncate and then commit instructions for that table")
+     When("the user issues truncate and Then commit instructions for that table")
        backend.truncateTable(tableName)
        backend.commit()
 
-     then("the table should be truncated")
+     Then("the table should be truncated")
      val countResult = backend.executeQuery(countStatement)
      assert(countResult.next())
      countResult.getInt("count") should equal (0)
@@ -147,15 +146,15 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     var insertedRow:DataRow[Any] = DataRow.empty
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("an insert query is executed and committed")
+    When("an insert query is executed and committed")
     backend.execute(sqlStatement,bindVars)
     backend.commit()
 
-    then("the inserted row should be in the database")
+    Then("the inserted row should be in the database")
     val rs = backend.executeQuery("select count(*) from %s where %s = ?".format(tableName, columnNames(0)), List(Option(carId)))
     rs.next
     rs.getInt(1) should equal(1)
@@ -176,14 +175,14 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val bindVars: DataRow[String] = DataRow((columnNames(0), valuesList(0)))
     var hasResults: Boolean = false
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection])
     backend.connection.setAutoCommit(false)
 
-    when("a query that should generate results is executed")
+    When("a query that should generate results is executed")
     val resultSet = backend.executeQuery(sqlStatement, bindVars)
 
-    then("one or more results should be returned")
+    Then("one or more results should be returned")
     hasResults = resultSet.next()
     hasResults should be(true)
 
@@ -202,15 +201,15 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val valuesList = List("K0000001")
     val bindVars:DataRow[String] = DataRow((columnNames(0),valuesList(0)))
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("a select query that has a non empty result is executed")
+    When("a select query that has a non empty result is executed")
     //resultSetReturned                             = backend.execute(sqlStatement,bindVars)
     //resultSetReturned seems to only be true only if it is an update count or if execute does not return anything at all
       val results = backend.executeQuery(sqlStatement, bindVars)
-      then("the query should have returned a non empty result set")
+      Then("the query should have returned a non empty result set")
       val nonEmptyResultSet: Boolean = results.next()
       nonEmptyResultSet should be(true)
       backend.close()
@@ -236,15 +235,15 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val valuesList = List(carId, carNumber, carMake, carModel)
     val bindVars: DataRow[Any] = DataRow(("carid", carId), ("carnumber", carNumber), ("carmake", carMake), ("carmodel", carModel))
 
-    given("an active connection with an open transaction ")
+    Given("an active connection with an open transaction ")
     assert(backend.connect().isInstanceOf[java.sql.Connection])
     backend.connection.setAutoCommit(false)
     backend.commit()
     backend.startTransaction()
     backend.execute(sqlStatement, bindVars)
-    when("the user issues a commit instruction")
+    When("the user issues a commit instruction")
     backend.commit()
-    then("the data should be persisted")
+    Then("the data should be persisted")
     backend.close()
     backend.connection.isClosed should be (true)
 
@@ -268,17 +267,17 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val countStatement = "select count(1) as 'count' from %s".format(tableName)
     val backend = new SqLiteBackend(f.props)
 
-    given("an active connection and a populated table")
+    Given("an active connection and a populated table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
     var countResult = backend.executeQuery(countStatement)
     countResult.next() should  be (true)
     countResult.getInt("count") should be > (0)
 
-    when("the user issues a truncate table instruction for that table")
+    When("the user issues a truncate table instruction for that table")
     backend.truncateTable(tableName)
 
-    then("the table should be truncated")
+    Then("the table should be truncated")
     countResult = backend.executeQuery(countStatement)
     assert(countResult.next())
     countResult.getInt("count") should equal(0)
@@ -305,7 +304,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val valuesList = List(carId, carNumber, carMake, carModel)
     val bindVars: DataRow[Any] = DataRow(("carid", carId), ("carnumber", carNumber), ("carmake", carMake), ("carmodel", carModel))
 
-    given("an active connection with an open transaction ")
+    Given("an active connection with an open transaction ")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
     backend.commit()
@@ -314,10 +313,10 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     //can't depend on the row coming back
     //assert(insertedRow.isInstanceOf[DataRow[Any]])
 
-    when("the user issues a rollback instruction")
+    When("the user issues a rollback instruction")
     backend.rollback()
     
-    then("the data should not be persisted")
+    Then("the data should not be persisted")
     backend.close()
     backend.connection.isClosed should be(true)
     val sqlVerifyStatement = """select count(*) as count from %s  
@@ -360,17 +359,17 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
 
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
     backend.commit()
-    when("the user issues a start transaction instruction")
+    When("the user issues a start transaction instruction")
     backend.startTransaction()
-    and("the user inserts a row")
+    And("the user inserts a row")
     backend.execute(sqlStatement,bindVars)
-    and("the user ends the transaction")
+    And("the user ends the transaction")
     backend.endTransaction()
-    then("the data should be persisted")
+    Then("the data should be persisted")
     backend.close()
     backend.connection.isClosed should be (true)
     val sqlVerifyStatement = """select count(*) as count from %s  
@@ -408,14 +407,14 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val verifyTableStatement: String = "SELECT COUNT(*) as 'count' FROM sqlite_master WHERE tbl_name = '%s'".format(tableName)
     val backend = new SqLiteBackend(f.props)
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("the user issues a valid create table instruction")
+    When("the user issues a valid create table instruction")
     backend.createTable(tableName,columnNames,dataTypes)
 
-    then("the table should exist")
+    Then("the table should exist")
     val tableExistResult  =  backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
     tableExistResult.getInt("count") should equal (1)
@@ -438,11 +437,11 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val backend = new SqLiteBackend(f.props)
     val verifyRecordStatement = "select count(*) as count from %s where carid = '%s'".format(tableName, row.carid.get)
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("the user issues a valid insert command for an existing table and a unique record")
+    When("the user issues a valid insert command for an existing table and a unique record")
     var recordCountResult = backend.executeQuery(verifyRecordStatement)
     assert(recordCountResult.next())
     var recordCount = recordCountResult.getInt("count")
@@ -450,7 +449,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
      backend.insertRow(tableName,row)
 
 
-    and("the row should be inserted")
+    And("the row should be inserted")
     recordCountResult = backend.executeQuery(verifyRecordStatement)
     assert(recordCountResult.next())
     recordCount = recordCountResult.getInt("count")
@@ -482,19 +481,19 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     var successfulStatementCount = 0
     val verifyRowsStatement = "select count(*) as count from %s where carid in (%s)".format(tableName, rows.map{r => "'%s'".format(r.head)}.mkString(", ") )
 
-    given("an active connection and an empty table")
+    Given("an active connection and an empty table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
     backend.truncateTable(tableName)
     
-    when("the user issues a batch insert command (with commit) to insert multiple rows into the table ")
+    When("the user issues a batch insert command (with commit) to insert multiple rows into the table ")
     successfulStatementCount = backend.batchInsert(tableName, table)
     backend.commit()
     
-    then("the batch insert command should be successful")
+    Then("the batch insert command should be successful")
     successfulStatementCount  should equal  (rows.length)
 
-    and("the rows should be inserted")
+    And("the rows should be inserted")
     val recordCountResult = backend.executeQuery(verifyRowsStatement)
     assert(recordCountResult.next())
     val recordCount = recordCountResult.getInt("count")
@@ -514,7 +513,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val verifyTableStatement: String = "SELECT COUNT(*) as 'count' FROM sqlite_master WHERE tbl_name = '%s'".format(tableName)
     val backend = new SqLiteBackend(f.props)
 
-    given("an active connection and an existing table")
+    Given("an active connection and an existing table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
     backend.createTable(tableName,columnNames,dataTypes)
@@ -523,10 +522,10 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     tableVerifiedResult.getInt("count") should be (1)
     tableVerifiedResult.close()
 
-    when("the user issues a drop table command for that table")
+    When("the user issues a drop table command for that table")
     backend.dropTable(tableName)
     
-    then("the table should be dropped")
+    Then("the table should be dropped")
     val tableExistResult  = backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
     tableExistResult.getInt("count") should be (0)
@@ -549,7 +548,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val backend = new SqLiteBackend(f.props)
     val cascade = true
 
-    given("an active connection, an existing table, and a view on the existing table")
+    Given("an active connection, an existing table, and a view on the existing table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
     backend.createTable(tableName,columnNames,dataTypes)
@@ -558,10 +557,10 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     assert(tableVerifiedResult.next())
     tableVerifiedResult.getInt("count") should equal(1)
 
-    when("the user issues a drop table command with cascade for that table")
+    When("the user issues a drop table command with cascade for that table")
     backend.dropTable(tableName, cascade)
     
-    then("the table  be dropped")
+    Then("the table  be dropped")
     val tableExistResult = backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
     tableExistResult.getInt("count") should be(0)
@@ -580,17 +579,17 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     var resultsCount: Int = 0
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("a query that should generate multiple results is executed")
+    When("a query that should generate multiple results is executed")
     val resultSet = backend.executeQuery(sqlStatement,bindVars)
 
-    then("the user should be able to iterate over the results")
+    Then("the user should be able to iterate over the results")
     while (resultSet.next()) { resultsCount+=1 }
 
-    and("multiple results should be returned")
+    And("multiple results should be returned")
     resultsCount should be > (1)
 
     backend.close()
@@ -617,13 +616,13 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
                            ("carmodel", carModel))
     var resultsCount: Int = 0
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
-    when("an update query is executed")
+    When("an update query is executed")
     backend.execute(sqlStatement,bindVars)
 
-    then("the record(s) should be updated")
+    Then("the record(s) should be updated")
     val sqlVerifyStatement = "select count(*) as count from %s where carmodel = ?".format(tableName)
 
     val recordCountResult = backend.executeQuery(sqlVerifyStatement, Seq(Some(carModel)))
@@ -647,14 +646,14 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val valuesList = List(carModel)
     val bindVars = DataRow((columnNames(0), carModel))
     
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection])
     backend.connection.setAutoCommit(false)
 
-    when("an update query for multiple records is executed")
+    When("an update query for multiple records is executed")
     backend.execute(sqlStatement, bindVars)
     
-    then("multiple record(s) should be updated")
+    Then("multiple record(s) should be updated")
     val sqlVerifyStatement = "select count(*) as count from %s where carmodel = ?".format(tableName)
 
     val recordCountResult = backend.executeQuery(sqlVerifyStatement, bindVars)
@@ -686,14 +685,14 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     		  (columnNames(1),valuesList(1)),
     		  (columnNames(2),valuesList(2)))
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("an update row instruction for multiple records is executed")
+    When("an update row instruction for multiple records is executed")
     backend.updateRow(tableName,updatesBindVars,filter)
     
-    then("multiple record(s) should be updated")
+    Then("multiple record(s) should be updated")
     val sqlStatement = "select count(*) as count from %s where carmake = ?".format(tableName)
 
     val bindVars = DataRow((columnNames(1), valuesList(1)))
@@ -724,11 +723,11 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val verifyRecordsStatement = """select count(*) as count 
       								from %s where carid in (%s)""".format(tableName, carIds.map("'%s'".format(_)).mkString(", "))
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("the user issues valid insert row commands in a loop for an existing table")
+    When("the user issues valid insert row commands in a loop for an existing table")
     carIds.zipWithIndex.foreach{
       case (carId,index) => backend.insertRow(tableName, DataRow(("carid", carId), 
     		  									              ("carnumber", carNumbers(index)), 
@@ -737,7 +736,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     }	
 
 
-    then("the rows should be inserted")
+    Then("the rows should be inserted")
     val recordCountResult = backend.executeQuery(verifyRecordsStatement)
     assert(recordCountResult.next())
     recordCountResult.getInt("count") should equal(carIds.length)

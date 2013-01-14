@@ -38,20 +38,20 @@ class RichOptionSpec extends FunSpec with GivenWhenThen with ShouldMatchers {
 
   describe("A RichOption Object") {
     it("should implicitly convert Option[T] objects to RichOption[T] objects") {
-      given("a None Object it should return a RichOption(None)")
+      Given("a None Object it should return a RichOption(None)")
       val x = None
       x.as[testClass] match {
         case None => assert(true)
         case _ => assert(false)
       }
 
-      given("a list of elements Some() of mixed type, the result is List[Some(Any)]")
+      Given("a list of elements Some() of mixed type, the result is List[Some(Any)]")
       val y: List[Some[Any]] = List(Some(1), Some(testClass(1)))
 
-      when("a variable, say x, is assigned to a specific element of that list, with result type Some[Any]")
+      When("a variable, say x, is assigned to a specific element of that list, with result type Some[Any]")
       val y1: Some[Any] = y(1)
 
-      and("x.as[T] is called, the result should be Some[T]")
+      And("x.as[T] is called, the result should be Some[T]")
       y1 match {
         case Some(testClass(1)) => assert(true)
         case _ => assert(false)

@@ -41,29 +41,29 @@ class SimpleDataTableSpec extends FunSpec with GivenWhenThen with ShouldMatchers
 
   describe("A SimpleDataTable") {
     it("should be an Iterator Seq of DataRow[Option[T]]") {
-      given("one or more rows, all of a HOMOGENEOUS type, say Int")
+      Given("one or more rows, all of a HOMOGENEOUS type, say Int")
       val col_names = List("c1", "c2")
       val row_1 = List(1, 2)
       val row_2 = List(3, 4)
       val sdt1 = DataTable(col_names, row_1, row_2)
 
 //No longer applies with the switch to Iterator
-//      when("accessed by index, should return a DataRow[Option[Int]]")
+//      When("accessed by index, should return a DataRow[Option[Int]]")
 //      val sdt1_r1 = sdt1(0)
 //      assert(3 == ((sdt1_r1.head.get /: sdt1_r1.tail)(_ + _.get)))
 
-      then("the row elements should be accessible using the column names with dot notation")
+      Then("the row elements should be accessible using the column names with dot notation")
       val sdt1_r1 = sdt1.next
       sdt1_r1.c1.get should equal(1)
       sdt1_r1.c2.get should equal(2)
 
-      and("also with map notation")
+      And("also with map notation")
       sdt1_r1("c1").get should equal(1)
 
-      and("the row elements should be accessible using index notation")
+      And("the row elements should be accessible using index notation")
       sdt1_r1(0).get should equal(1)
 
-//      when("accessed as an iterable, should require a f(dr:DataRow[Option[Int]])=>_")
+//      When("accessed as an iterable, should require a f(dr:DataRow[Option[Int]])=>_")
 //      var i = 0
 //      sdt1.foreach((dr: DataRow[Int]) => {
 //        dr.foreach((d: Option[Int]) => {
@@ -72,17 +72,17 @@ class SimpleDataTableSpec extends FunSpec with GivenWhenThen with ShouldMatchers
 //        })
 //      })
 
-      given("one ore more rows with HETEROGENEOUS types")
+      Given("one ore more rows with HETEROGENEOUS types")
       val row_3 = List(1.0, testClass(2.5))
       val row_4 = List(3.0, testClass(4.5))
       val sdt2 = DataTable(col_names, row_3, row_4)
 
-      when("accessed by index, should return a DataRow[Option[Any]]")
+      When("accessed by index, should return a DataRow[Option[Any]]")
       val sdt2_r1 = sdt2(0)
       val s = (sdt2_r1.head.as[Double].get /: sdt2_r1.tail)(_ + _.as[testClass].get.d)
       s should equal(3.5)
 
-//      when("accessed as an interable, should require a f(dr:DataRow[Option[_]])=>_")
+//      When("accessed as an interable, should require a f(dr:DataRow[Option[_]])=>_")
 //      var i = 0
 //      sdt2.foreach((dr: DataRow[_]) => {
 //        dr.foreach((o: Option[_]) => {
@@ -92,7 +92,7 @@ class SimpleDataTableSpec extends FunSpec with GivenWhenThen with ShouldMatchers
 //          dv should equal(i + half)
 //        })
 //      })
-      when("rows are accessed with Iterator methods, it should advance through the rows")
+      When("rows are accessed with Iterator methods, it should advance through the rows")
       val itr_row1 = List(1.0, "foo", testClass(2.5))
       val itr_row2 = List(2.0, "bar", testClass(4.5))
       val itr_tbl = DataTable(List("col1", "col2", "col3"), itr_row1, itr_row2)
@@ -111,7 +111,7 @@ class SimpleDataTableSpec extends FunSpec with GivenWhenThen with ShouldMatchers
       itr_tbl.hasNext should be(false)
       
       
-      when("accessed using dot notation for specific columns, it should return a Seq[Option[_]]")
+      When("accessed using dot notation for specific columns, it should return a Seq[Option[_]]")
       val y = sdt2.c1
       val x = sdt2.c2
       val XFirstVal = x.next
@@ -124,21 +124,21 @@ class SimpleDataTableSpec extends FunSpec with GivenWhenThen with ShouldMatchers
       XFirstVal.asu[testClass].d should equal(2.5)
       (XFirstVal.asu[testClass].d /: x)(_ + _.asu[testClass].d) should equal(7.0)
 
-      when("accessed using the col method, it should return a Seq[Option[_]]")
+      When("accessed using the col method, it should return a Seq[Option[_]]")
       val sdt2_c1 = sdt2.col("c1")
       sdt2_c1.next.get should equal(1.0)
 
-      when("accessed using the col_as[G] method, it should return a Seq[Option[G]]")
+      When("accessed using the col_as[G] method, it should return a Seq[Option[G]]")
       val sdt2_c2 = sdt2.col_as[testClass]("c2")
       val sdt2_c2_sum = (sdt2_c2.next.get.d /: sdt2_c2)(_ + _.get.d)
       sdt2_c2_sum should equal(7.0)
 
-      when("accessed using the col_asu[G] method, it should return a Seq[G]")
+      When("accessed using the col_asu[G] method, it should return a Seq[G]")
       val sdt2_c2u = sdt2.col_asu[testClass]("c2")
       val sdt2_c2u_sum = (sdt2_c2u.next.d /: sdt2_c2u)(_ + _.d)
       sdt2_c2u_sum should equal(7.0)
 
-      when("trying to access columns that don't exist should throw ColumnDoesNotExist for all access methods")
+      When("trying to access columns that don't exist should throw ColumnDoesNotExist for all access methods")
       intercept[ColumnDoesNotExist] {
         sdt2.bad_name
       }

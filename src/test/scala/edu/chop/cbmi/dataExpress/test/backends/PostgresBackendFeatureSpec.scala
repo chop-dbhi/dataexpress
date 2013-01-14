@@ -23,7 +23,6 @@ import edu.chop.cbmi.dataExpress.dataModels.sql._
 
 import edu.chop.cbmi.dataExpress.test.util.TestProps
 import edu.chop.cbmi.dataExpress.test.util.cars.dataSetup.backends.PostgresDataSetup
-
 import scala.language.reflectiveCalls
 
 class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
@@ -114,11 +113,11 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     val cascade:Boolean                       =     true
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("the user issues a valid create table instruction for a table that does not exist")
+    When("the user issues a valid create table instruction for a table that does not exist")
     try {
       var tableExistResult                    =   backend.executeQuery(verifyTableStatement)
       assert(tableExistResult.next())
@@ -166,7 +165,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
     }
 
 
-    then("the table should exist")
+    Then("the table should exist")
     val tableExistResult                          =     backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
     tableExistResult.getInt("count") should equal (1)
@@ -187,12 +186,12 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
      val backend                                     =     new PostgresBackend(f.props)
 
-     given("an active connection and a populated table")
+     Given("an active connection and a populated table")
      assert(backend.connect().isInstanceOf[java.sql.Connection] )
      backend.connection.setAutoCommit(false)
 
 
-     when("the user issues truncate and then commit instructions for that table")
+     When("the user issues truncate and then commit instructions for that table")
      try
        backend.truncateTable(tableName, schemaName = dbSchema)
      catch {
@@ -207,7 +206,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
              fail("backend.commit()produced java.sql.SQLException" )
      }
 
-     then("the table should be truncated")
+     Then("the table should be truncated")
      val countResult                                 =     backend.executeQuery(countStatement)
      assert(countResult.next())
      countResult.getInt("count") should equal (0)
@@ -254,11 +253,11 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     var insertedRow:DataRow[Any]           = DataRow.empty
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("an insert query is executed and committed with returning keys")
+    When("an insert query is executed and committed with returning keys")
     try
       insertedRow                     = backend.executeReturningKeys(sqlStatement,bindVars)
     catch {
@@ -274,7 +273,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
             fail("backend.commit()produced java.sql.SQLException" )
     }
 
-    then("the inserted row should be returned")
+    Then("the inserted row should be returned")
     isDataRow                         = insertedRow.isInstanceOf[DataRow[Any]]
     isDataRow  should be (true)
     insertedRow.length should equal  (bindVars.length)
@@ -303,14 +302,14 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     var hasResults:Boolean                        = false
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("a query that should generate results is executed")
+    When("a query that should generate results is executed")
     val resultSet = backend.executeQuery(sqlStatement,bindVars)
 
-    then("one or more results should be returned")
+    Then("one or more results should be returned")
     hasResults                                    = resultSet.next()
     hasResults should be (true)
 
@@ -338,16 +337,16 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     val bindVars:DataRow[String]                  = DataRow((columnNames(0),valuesList(0)))
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("a select query that has a non empty result is executed")
+    When("a select query that has a non empty result is executed")
     //resultSetReturned                             = backend.execute(sqlStatement,bindVars)
     //resultSetReturned seems to only be true only if it is an update count or if execute does not return anything at all
     try {
           val results =  backend.executeQuery(sqlStatement,bindVars)
-          then("the query should have returned a non empty result set")
+          Then("the query should have returned a non empty result set")
           val nonEmptyResultSet:Boolean                 =   results.next()
           nonEmptyResultSet should be (true)
     }
@@ -404,13 +403,13 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     var dataPersistent:Boolean        = false
 
-    given("an active connection with an open transaction ")
+    Given("an active connection with an open transaction ")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
     backend.execute("START TRANSACTION")          //This should be replaced with backend.startTransaction when available
     val insertedRow                   = backend.executeReturningKeys(sqlStatement,bindVars)
 
-    when("the user issues a commit instruction")
+    When("the user issues a commit instruction")
     try
       backend.commit()
     catch {
@@ -418,7 +417,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
             fail("backend.commit()produced java.sql.SQLException" )
     }
 
-    then("the data should be persisted")
+    Then("the data should be persisted")
     backend.close()
     connectionClosed                    = backend.connection.isClosed
     connectionClosed  should be (true)
@@ -451,14 +450,14 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     val backend                                     =     new PostgresBackend(f.props)
 
-    given("an active connection and a populated table")
+    Given("an active connection and a populated table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
     var countResult                                 =     backend.executeQuery(countStatement)
     countResult.next() should  be (true)
     countResult.getInt("count") should be > (0)
 
-    when("the user issues a truncate table instruction for that table")
+    When("the user issues a truncate table instruction for that table")
     try
       backend.truncateTable(tableName, schemaName = dbSchema)
     catch {
@@ -466,7 +465,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
             fail("backend.truncateTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
     }
 
-    then("the table should be truncated")
+    Then("the table should be truncated")
     countResult                                     =     backend.executeQuery(countStatement)
     assert(countResult.next())
     countResult.getInt("count") should equal (0)
@@ -512,14 +511,14 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     var dataPersistent:Boolean        = false
 
-    given("an active connection with an open transaction ")
+    Given("an active connection with an open transaction ")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
     backend.execute("START TRANSACTION")          //This should be replaced with backend.startTransaction when available
     val insertedRow                   = backend.executeReturningKeys(sqlStatement,bindVars)
     assert(insertedRow.isInstanceOf[DataRow[Any]])
 
-    when("the user issues a roll back instruction")
+    When("the user issues a roll back instruction")
     try
       backend.rollback()
     catch {
@@ -527,7 +526,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
             fail("backend.rollback(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
     }
 
-    then("the data should not be persisted")
+    Then("the data should not be persisted")
     backend.close()
     connectionClosed                  = backend.connection.isClosed
     connectionClosed  should be (true)
@@ -587,11 +586,11 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
 
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("the user issues a start transaction instruction")
+    When("the user issues a start transaction instruction")
     try
             backend.startTransaction()          //This should be replaced with backend.startTransaction when available
     catch {
@@ -600,7 +599,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
             fail("backend.startTransaction() produced java.sql.SQLException" )
     }
 
-    and("the user inserts a row")
+    And("the user inserts a row")
     try   {
             val insertedRow                   = backend.executeReturningKeys(sqlStatement,bindVars)
             assert(insertedRow.isInstanceOf[DataRow[Any]])
@@ -611,7 +610,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
             fail("backend.executeReturningKeys(" + sqlStatement + ") produced java.sql.SQLException" )
     }
 
-    and("the user ends the transaction")
+    And("the user ends the transaction")
     try
             backend.endTransaction()
     catch {
@@ -619,7 +618,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
             fail("backend.endTransaction() produced java.sql.SQLException" )
     }
 
-    then("the data should be persisted")
+    Then("the data should be persisted")
     backend.close()
     connectionClosed                  = backend.connection.isClosed
     connectionClosed  should be (true)
@@ -665,11 +664,11 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     val backend                               =     new PostgresBackend(f.props)
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("the user issues a valid create table instruction")
+    When("the user issues a valid create table instruction")
     try
       backend.createTable(tableName,columnNames,dataTypes, schemaName = dbSchema)
     catch {
@@ -678,7 +677,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
     }
 
 
-    then("the table should exist")
+    Then("the table should exist")
     val tableExistResult                                      =     backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
     tableExistResult.getInt("count") should equal (1)
@@ -721,11 +720,11 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
 
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("the user issues a valid insert command for an existing table and a unique record")
+    When("the user issues a valid insert command for an existing table and a unique record")
     var recordCountResult                         =     backend.executeQuery(verifyRecordStatement)
     assert(recordCountResult.next())
     var recordCount                               =     recordCountResult.getInt("count")
@@ -733,13 +732,13 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
     val insertedRow                               =     backend.insertReturningKeys(tableName,row,dbSchema)
 
 
-    then("the insert command should be successful")
+    Then("the insert command should be successful")
     val isInstanceOfDataRow                       =     insertedRow.isInstanceOf[DataRow[Any]]
     isInstanceOfDataRow   should be (true)
     insertedRow.length    should equal (valuesList.length)
 
 
-    and("the row should be inserted")
+    And("the row should be inserted")
     recordCountResult                             =     backend.executeQuery(verifyRecordStatement)
     assert(recordCountResult.next())
     recordCount                                   =     recordCountResult.getInt("count")
@@ -788,7 +787,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
                                                     {for (i <- 0 to (rows.length - 1)) yield "'" + rows(i).toList.head.toString + "'"}.toString().dropRight(1).drop(7) +
                                                     ")"
 
-    given("an active connection and an empty table")
+    Given("an active connection and an empty table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
     try
@@ -798,7 +797,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
             fail("backend.truncateTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
     }
 
-    when("the user issues a batch insert command (with commit) to insert multiple rows into the table ")
+    When("the user issues a batch insert command (with commit) to insert multiple rows into the table ")
     successfulStatementCount                      =     backend.batchInsert(tableName, table, dbSchema )
     try
       backend.commit()
@@ -807,11 +806,11 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
             fail("backend.commit() produced java.sql.SQLException" )
     }
 
-    then("the batch insert command should be successful")
+    Then("the batch insert command should be successful")
     successfulStatementCount  should equal  (rows.length)
 
 
-    and("the rows should be inserted")
+    And("the rows should be inserted")
     val recordCountResult                         =     backend.executeQuery(verifyRowsStatement)
     assert(recordCountResult.next())
     val recordCount                               =     recordCountResult.getInt("count")
@@ -847,7 +846,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     var tableDropped:Boolean                  =     false
 
-    given("an active connection and an existing table")
+    Given("an active connection and an existing table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
     try
@@ -859,7 +858,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
     tableVerified                             =     backend.execute(verifyTableStatement)
     tableVerified should be (true)
 
-    when("the user issues a drop table command for that table")
+    When("the user issues a drop table command for that table")
     try
       backend.dropTable(tableName, schemaName = dbSchema)
     catch {
@@ -868,7 +867,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
     }
 
 
-    then("the table should be dropped")
+    Then("the table should be dropped")
     val tableExistResult                    =     backend.executeQuery(verifyTableStatement)
     val tableExist                          =     tableExistResult.next()
     tableExist should be (false)
@@ -908,7 +907,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     val cascade                               =     true
 
-    given("an active connection, an existing table, and a view on the existing table")
+    Given("an active connection, an existing table, and a view on the existing table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
@@ -941,7 +940,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
 
 
-    when("the user issues a drop table command with cascade for that table")
+    When("the user issues a drop table command with cascade for that table")
     try
       backend.dropTable(tableName, cascade, schemaName = dbSchema)
     catch {
@@ -951,7 +950,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
     }
 
 
-    then("the table and its associated view should be dropped")
+    Then("the table and its associated view should be dropped")
     val tableExistResult                    =     backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
     tableExistResult.getInt("count")  should be (0)
@@ -985,18 +984,18 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     var resultsCount:Int                          = 0
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("a query that should generate multiple results is executed")
+    When("a query that should generate multiple results is executed")
     val resultSet = backend.executeQuery(sqlStatement,bindVars)
 
-    then("the user should be able to iterate over the results")
+    Then("the user should be able to iterate over the results")
     while (resultSet.next()) { resultsCount+=1 }
 
 
-    and("multiple results should be returned")
+    And("multiple results should be returned")
     resultsCount should be > (1)
 
     backend.close()
@@ -1036,11 +1035,11 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     var resultsCount:Int              = 0
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("an update query is executed")
+    When("an update query is executed")
     try
       backend.execute(sqlStatement,bindVars)
     catch {
@@ -1049,7 +1048,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
     }
 
 
-    then("the record(s) should be updated")
+    Then("the record(s) should be updated")
     columnNames                                   = List("carmodel")
     valuesList                                    = List(carModel)
     bindVars                                      = DataRow(("carmodel",carModel))
@@ -1090,11 +1089,11 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     var resultsCount:Int                          = 0
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("an update query for multiple records is executed")
+    When("an update query for multiple records is executed")
     try
       backend.execute(sqlStatement,bindVars)
     catch {
@@ -1102,7 +1101,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
             fail("backend.execute(" + "\"" + sqlStatement + "\"" + ")produced java.sql.SQLException" )
     }
 
-    then("multiple record(s) should be updated")
+    Then("multiple record(s) should be updated")
     sqlStatement                                  = "select count(1) as count from " + dbSchema.get + "." + tableName + " where "     +
                                                     "carmodel = ?"
 
@@ -1150,11 +1149,11 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     var resultsCount:Int                          = 0
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("an update row instruction for multiple records is executed")
+    When("an update row instruction for multiple records is executed")
     try
       backend.updateRow(tableName,updatesBindVars,filter,dbSchema)
     catch {
@@ -1163,7 +1162,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
             fail("backend.updateRow()produced java.sql.SQLException" )
     }
 
-    then("multiple record(s) should be updated")
+    Then("multiple record(s) should be updated")
     val sqlStatement                              = "select count(1) as count from " + dbSchema.get + "." + tableName + " where "     +
                                                     "carmake = ?"
 
@@ -1216,11 +1215,11 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     var recordCount:Int                       =     0
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("the user issues valid insert row commands in a loop for an existing table")
+    When("the user issues valid insert row commands in a loop for an existing table")
 
     for (i <- 0 to (carIds.length -1))
     {
@@ -1232,7 +1231,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
     }
 
 
-    then("the rows should be inserted")
+    Then("the rows should be inserted")
     val recordCountResult                       =     backend.executeQuery(verifyRecordsStatement)
     assert(recordCountResult.next())
     recordCount                                 =     recordCountResult.getInt("count")
@@ -1276,11 +1275,11 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
 
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("a delete query for multiple records is executed")
+    When("a delete query for multiple records is executed")
     try
       backend.execute(sqlStatement,bindVars)
     catch {
@@ -1289,7 +1288,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
             fail("backend.execute(" + "\"" + sqlStatement + "\"" + ")produced java.sql.SQLException" )
     }
 
-    then ("those records should be deleted")
+    Then("those records should be deleted")
     sqlStatement                      =   "select count(1) as count from "   + dbSchema.get + "." + tableName             +
                                           " where carmodel = ?"
 
@@ -1372,11 +1371,11 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     val cascade:Boolean                       =         true
 
-    given("an active connection")
+    Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
     backend.connection.setAutoCommit(false)
 
-    when("the user issues drop table commands for tables that begin with a certain string")
+    When("the user issues drop table commands for tables that begin with a certain string")
     try {
 
     val  objectResult                         =         backend.executeQuery(objectStatement)
@@ -1403,7 +1402,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
     }
 
 
-    then("then those tables should be dropped")
+    Then("then those tables should be dropped")
     val objectExistResult                      =     backend.executeQuery(verifyObjectCountStatement)
     assert(objectExistResult.next())
     objectExistResult.getInt("count")  should be (0)

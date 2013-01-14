@@ -27,6 +27,7 @@ import org.scalatest.matchers.ShouldMatchers
 import edu.chop.cbmi.dataExpress.dataModels.DataRow
 import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
 import collection.mutable.ListBuffer
+import scala.language.implicitConversions
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,25 +40,25 @@ class DataRowSpec extends FunSpec with GivenWhenThen with ShouldMatchers {
 
   describe("A DataRow object") {
     it("should function as a Seq with dot notation and map like access to elements") {
-      given("a list of column names and a list of data items")
+      Given("a list of column names and a list of data items")
       val names = List("a", "b")
       val values = List(1, 2)
       val row = DataRow(names)(values map (Some(_)))
 
-      when("treated as a normal seq, allow iterations")
+      When("treated as a normal seq, allow iterations")
       val sum = (row.head.get /: row.tail)(_ + _.get)
       sum should equal(3)
 
-      when("accessed using dot notation with column names, enable dynamic method calls")
+      When("accessed using dot notation with column names, enable dynamic method calls")
       (row.a.get + row.b.get) should equal(3)
 
-      when("accessed using map notation with column names, enable the apply(string) call")
+      When("accessed using map notation with column names, enable the apply(string) call")
       (row("a").get + row("b").get) should equal(3)
 
-      when("accessed using index notation, enable apply(int) call")
+      When("accessed using index notation, enable apply(int) call")
       (row(0).get + row(1).get) should equal(3)
 
-      and("should throw a columnDoesNotExist exception if accessed with an invalid column name")
+      And("should throw a columnDoesNotExist exception if accessed with an invalid column name")
       intercept[ColumnDoesNotExist] {
         row.c
       }
@@ -65,12 +66,12 @@ class DataRowSpec extends FunSpec with GivenWhenThen with ShouldMatchers {
         row("c")
       }
 
-      given("variable argument length of (String,Any) should return a DataRow[Any]")
+      Given("variable argument length of (String,Any) should return a DataRow[Any]")
       val m = ListBuffer("fn" -> "Jane", "ln" -> "Doe", "age" -> 10)
       val row2 = DataRow(m: _*)
       row2.fn should equal(Some("Jane"))
       row2.fn.get should equal("Jane")
-      and("the DataRow should be immutable even though the map is mutable")
+      And("the DataRow should be immutable even though the map is mutable")
       m += "gender" -> "female"
       m(0) = "fn" -> "Jen"
       row2.fn.get should equal("Jane")

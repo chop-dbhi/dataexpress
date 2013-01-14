@@ -35,7 +35,7 @@ class SqlTableWriterSpec extends PresidentsSpecWithSourceTarget{
   describe("A SqlTableWriter"){
     val dw = DataWriter(target_backend)
     it("should allow the insertion of data into a table in the db"){
-      given("a datarow with the appropriate number of arguments insert it into the table")
+      Given("a datarow with the appropriate number of arguments insert it into the table")
 
       val monroe = SQLStatements.potus_data_row(SQLStatements.MONROE)
       dw.insert_row(PRESIDENTS, monroe).operation_succeeded_? should equal(true)
@@ -48,20 +48,20 @@ class SqlTableWriterSpec extends PresidentsSpecWithSourceTarget{
       dw.insert_row(PRESIDENTS,rr).operation_succeeded_? should equal(true)
 
 
-      and("after commiting the backend the rows should appear in a new query")
+      And("after commiting the backend the rows should appear in a new query")
       query_and_count(PRESIDENTS) should equal(7)
 
-      given("any DataTable whose DataRows have an appropriate number of arguments, insert all rows into the table")
+      Given("any DataTable whose DataRows have an appropriate number of arguments, insert all rows into the table")
       val gb = List(8,"George","Bush", 1)
       val bc = List(9,"William","Clinton",2)
       val sdt = DataTable(List("id", "first_name", "last_name", "num_terms"), gb, bc)
       dw.insert_rows(PRESIDENTS,sdt).operation_succeeded_? should equal(true)
 
-      and("after committing the backend the rows of the table should be in a new query")
+      And("after committing the backend the rows of the table should be in a new query")
       query_and_count(PRESIDENTS) should equal(9)
 
 
-      given("a function mapping from a String to a T, insert a new row into the tables")
+      Given("a function mapping from a String to a T, insert a new row into the tables")
       dw.insert_row(PRESIDENTS,(name:String)=>{
         name match{
           case "id" => Some(10)
@@ -72,12 +72,12 @@ class SqlTableWriterSpec extends PresidentsSpecWithSourceTarget{
           case _ => None
         }
       })
-      and("after comitting the backend the rows of the table should be in a new query")
+      And("after comitting the backend the rows of the table should be in a new query")
       query_and_count(PRESIDENTS) should equal(10)
 
 
-      and("it should allow updates of existing rows")
-      given("a new DataRow and a filter")
+      And("it should allow updates of existing rows")
+      Given("a new DataRow and a filter")
       val washington = DataRow("first_name"->"Bob")
       dw.update_row(PRESIDENTS, washington, "id"->1)
       query_and_count(PRESIDENTS) should equal(10)
@@ -91,7 +91,7 @@ class SqlTableWriterSpec extends PresidentsSpecWithSourceTarget{
       gw.num_terms.asu[Int] should equal(2)
 
 
-      and("a function mapping from a String to a T, insert a new row into the tables")
+      And("a function mapping from a String to a T, insert a new row into the tables")
       dw.update_row(PRESIDENTS,"id"->2)((name:String)=>{
         name match{
           case "first_name" => Some("Johnie")
@@ -108,7 +108,7 @@ class SqlTableWriterSpec extends PresidentsSpecWithSourceTarget{
       ja.id.asu[Int] should equal(2)
 
 
-      and("it should allow creation of new tables")
+      And("it should allow creation of new tables")
       val biden = List("Joe","Biden")
       val cheney = List("Dick", "Cheney")
       val vps = DataTable(List("first_name","last_name"), biden, cheney)
