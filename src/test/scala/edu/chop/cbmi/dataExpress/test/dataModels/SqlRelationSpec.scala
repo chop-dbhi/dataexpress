@@ -11,6 +11,7 @@ import org.scalatest.matchers.ShouldMatchers
 import org.scalatest._
 import edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation
 
+
 /**
  * Created by IntelliJ IDEA.
  * User: masinoa
@@ -28,9 +29,8 @@ class SqlRelationSpec extends PresidentsSpecWithSourceTarget{
     it("should result from a call to DataTable") {
       given("a query statement and a datastore")
       val query = """select * from %s""".format(PRESIDENTS)
-      val sr = DataTable(source_backend, query)
-
-
+      val sr:SqlRelation[Any] = DataTable(source_backend, query)
+     
       and("the table should have column names that match the table meta information")
       sr.hasColumn("first_name") should equal(true)
       sr.hasColumn("middle_name") should equal(false)

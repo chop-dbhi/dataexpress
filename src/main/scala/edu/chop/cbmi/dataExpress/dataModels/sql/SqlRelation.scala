@@ -26,7 +26,7 @@ import edu.chop.cbmi.dataExpress.backends.SqlBackend
 import collection.Seq
 import edu.chop.cbmi.dataExpress.dataModels.{DataType, DataRow, ColumnNameGenerator, DataTable}
 import java.sql.{ResultSetMetaData, ResultSet}
-
+import scala.language.dynamics
 
 /**
  * Wrapper for queries that produce a JDBC ResultSet
@@ -142,6 +142,7 @@ sealed case class SqlRelation[+T] private[dataModels](private val sql_query_pack
     SqlRelationColumn[G](SqlQueryPackage(sql_query_package.dataStore, sub_query(name), sql_query_package.bindVars), f _)
   }else throw ColumnDoesNotExist(name)
   
+
  
   case class SqlRelationIterator[+T] private[SqlRelation](val sql_query_package : SqlQueryPackage)
     extends SqlIterator[DataRow[T]](sql_query_package){

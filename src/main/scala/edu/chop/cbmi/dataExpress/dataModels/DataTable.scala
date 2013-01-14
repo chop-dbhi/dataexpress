@@ -105,8 +105,8 @@ abstract class DataTable[+T](val column_names_generator: ColumnNameGenerator) ex
    */
   def col_asu[G](name: String)(implicit m: Manifest[G]): Iterator[G]
 
-  def slectDynamic(name: String) = {
-    if(hasColumn(name))this.col(name)
+  def selectDynamic(name: String) = {
+    if(hasColumn(name)) {this.col(name)}
     else throw ColumnDoesNotExist(name)
   }
 
