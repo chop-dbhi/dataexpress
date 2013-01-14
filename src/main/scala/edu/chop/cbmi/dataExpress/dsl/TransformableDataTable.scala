@@ -78,7 +78,7 @@ class FixedDimensionTransformableTable(private val table: DataTable[_]) extends 
     val old_names = old_to_new map {
       _._1
     }
-    val name_map = old_to_new toMap
+    val name_map = old_to_new.toMap
 
     val temp = _final_column_names map {
       name =>
