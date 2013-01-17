@@ -69,7 +69,6 @@ object DataRow{
 /**
  * base class for other data representation classes organized as a 2-D table with column names.
  */
-abstract class DataTable[+T](val column_names_generator: ColumnNameGenerator) extends Iterator[DataRow[T]] with Dynamic{
 abstract class DataTable[+T] extends Iterator[DataRow[T]] with Dynamic with Metadata {
 
 
@@ -140,7 +139,7 @@ object DataTable {
    * 
    * @param row A set of {{{Seq}}} objects, each representing a row
    */
-  def apply[T](row: Seq[T]*): SimpleDataTable[T] = {
+    def apply[T](row: Seq[T]*): SimpleDataTable[T] = {
     val cns = (0 to (row.length - 1)) map ((i: Int) => column_name_from_index(i))
     apply(cns, row: _*)
   }
@@ -153,8 +152,8 @@ object DataTable {
    * @param bindVars (optional) set of values to bind to placeholder variables 
    */
   //TODO Should this really be here in a generic package? Seems like you would want SQLRelation to emit a data table.
-  def apply(dataStore : SqlBackend, query : String, bindVars : Seq[Option[_]] = Seq.empty[Option[_]]) = {
-    SqlRelation(SqlQueryPackage(dataStore,query,bindVars))
+  def apply(dataStore:SqlBackend, query:String, bindVars:Seq[Option[_]] = Seq.empty[Option[_]]) = {
+    SqlRelation(query, bindVars, dataStore)
   }
   
   //TODO create a simple apply() method that calls .empty so this behaves like List()
