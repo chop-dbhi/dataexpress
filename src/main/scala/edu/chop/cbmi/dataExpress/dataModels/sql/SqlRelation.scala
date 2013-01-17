@@ -4,7 +4,7 @@ import edu.chop.cbmi.dataExpress.dataModels.RichOption._
 import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
 import edu.chop.cbmi.dataExpress.backends.SqlBackend
 import collection.Seq
-import edu.chop.cbmi.dataExpress.dataModels.{DataType, DataRow, ColumnNameGenerator, DataTable}
+import edu.chop.cbmi.dataExpress.dataModels._
 import java.sql.{ResultSetMetaData, ResultSet}
 import scala.language.dynamics
 
