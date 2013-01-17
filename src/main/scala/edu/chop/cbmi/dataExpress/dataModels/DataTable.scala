@@ -8,19 +8,15 @@ import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
 import scala.language.dynamics
 
 /**
- * When mapping column names to methods via Scala's dynamic trait, it is necessary to generate names that
- * comply with Scala's rules. A name generator is needed to ensure the method names are properly formed.
+ * Ensures a common set of Metadata traits across any classes that implement this trait. Specific implementations are
+ * left to the implementing class (e.g. [[edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation]] will need to lazily
+ * produce some of this at query time whereas simple tab delimited files might need to autogenerate it
+ * 
  */
-trait ColumnNameGenerator{
-  /**
-   * method to generate column_names.
-   */
-  def generate_column_names() : Seq[String]
-}
-
-//TODO investigate this, it seems over-engineered to have this as a case class, given what it does
-case class SeqColumnNames(column_names : Seq[String]) extends ColumnNameGenerator {
-  def generate_column_names() = column_names
+trait Metadata {
+	val columnNames:Seq[String]
+	val dataTypes:Seq[DataType]
+	val columnCount:Int
 }
 
 /**
@@ -74,14 +70,14 @@ object DataRow{
  * base class for other data representation classes organized as a 2-D table with column names.
  */
 abstract class DataTable[+T](val column_names_generator: ColumnNameGenerator) extends Iterator[DataRow[T]] with Dynamic{
+abstract class DataTable[+T] extends Iterator[DataRow[T]] with Dynamic with Metadata {
 
-  lazy val column_names = column_names_generator.generate_column_names()
 
   /**
    * @param name name of column
    * @return boolean corresponding to existence of the column in this table
    */
-  def hasColumn(name: String) = column_names.contains(name)
+  def hasColumn(name: String) = columnNames.contains(name)
 
   /**
    * @param name name of column
@@ -110,7 +106,7 @@ abstract class DataTable[+T](val column_names_generator: ColumnNameGenerator) ex
   }
 
 
-  override def toString() : String = "DataTable[" + (column_names.head /: column_names.tail) { (s1,s2) => s1 + ", " + s2} + "]"
+  override def toString() : String = "DataTable[" + (columnNames.head /: columnNames.tail) { (s1,s2) => s1 + ", " + s2} + "]"
 }
 
 /** Factory for [[edu.chop.cbmi.dataExpress.dataModels.DataTable]] */
@@ -136,7 +132,7 @@ object DataTable {
    */
   def apply[T](column_names: Seq[String], row: Seq[T]*): SimpleDataTable[T] = {
     val rows = List(row: _*)
-    SimpleDataTable(SeqColumnNames(column_names))(rows)
+    SimpleDataTable(column_names)(rows)
   }
   
   /**
