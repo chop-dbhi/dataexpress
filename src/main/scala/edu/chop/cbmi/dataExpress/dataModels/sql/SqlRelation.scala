@@ -44,6 +44,7 @@ sealed case class SqlRelation[+T](query:String, bindVars:Seq[Option[_]],  backen
 
   override def col_as[G](name: String)(implicit m: Manifest[G]) = {
     if(hasColumn(name)) SqlRelation(sub_query(name), bindVars, backend).map{r:DataRow[G] => r(0).as[G]}
+    else throw ColumnDoesNotExist(name)
   }
 
   override def col_asu[G](name: String)(implicit m: Manifest[G]) = {
