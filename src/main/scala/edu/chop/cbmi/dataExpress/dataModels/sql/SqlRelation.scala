@@ -10,6 +10,10 @@ import scala.language.dynamics
 
 
 
+//TODO: Maybe use this?
+//case class SqlQuery(query: String)(bindVars:Seq[Option[_]] = Seq())(backend: SqlBackend) {
+//
+//}
 
 /**
  * A [[edu.chop.cbmi.dataExpress.dataModels.DataTable]] that represents a SQL relation (either a table or
