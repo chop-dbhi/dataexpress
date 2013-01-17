@@ -377,7 +377,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * @param schemaName The schema where the table is located
    */
   def batchInsert(tableName:String, table:DataTable[_], schemaName:Option[String] = None):Int = {
-    val sqlStatement = sqlDialect.insertRecord(tableName, table.column_names.toList, schemaName)
+    val sqlStatement = sqlDialect.insertRecord(tableName, table.columnNames.toList, schemaName)
     val statement = statementCache.getStatement(sqlStatement)
     executeBatch(statement, table, 50, {dr:DataRow[_] => dr})
   }
