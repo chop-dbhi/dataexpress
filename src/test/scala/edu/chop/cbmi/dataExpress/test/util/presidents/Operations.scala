@@ -50,7 +50,7 @@ object BackendOps {
 
 object TableOps{
   def convert_to_in_mem_table(sql_relation : SqlRelation[_]) = {
-    DataTable(sql_relation.column_names, sql_relation.toSeq: _*)
+    DataTable(sql_relation.columnNames, sql_relation.toSeq)
 
   }
 }
