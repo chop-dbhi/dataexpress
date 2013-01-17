@@ -106,7 +106,7 @@ case class SqlTableWriter(val backend : SqlBackend, val schema : Option[String] 
     else {
       overwrite_option match {
         case SqlTableWriter.OVERWRITE_OPTION_DROP =>
-          backend.createTable(table_name, table.column_names.toList, data_types.toList, schema)
+          backend.createTable(table_name, table.columnNames.toList, data_types.toList, schema)
         case SqlTableWriter.OVERWRITE_OPTION_TRUNCATE => backend.truncateTable(table_name)
         case SqlTableWriter.OVERWRITE_OPTION_APPEND =>{} //nothing to do hear
         case _ => throw new Exception("Unsupported option : " + overwrite_option)

@@ -56,7 +56,7 @@ abstract class TransformableDataTable() {
 class FixedDimensionTransformableTable(private val table: DataTable[_]) extends TransformableDataTable() {
 
   val _transformers = scala.collection.mutable.ListBuffer.empty[(DataRow[_]) => Option[DataRow[_]]]
-  var _final_column_names: List[String] = table.column_names.toList
+  var _final_column_names: List[String] = table.columnNames.toList
   var _final_data_types: Option[List[DataType]] = None
 
   def data_table() = table
