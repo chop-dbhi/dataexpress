@@ -4,7 +4,6 @@ import scala.reflect.Manifest
 import edu.chop.cbmi.dataExpress.backends.SqlBackend
 
 import edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation
-import edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage
 import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
 import scala.language.dynamics
 import edu.chop.cbmi.dataExpress.backends.file.FileBackend
