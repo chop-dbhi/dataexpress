@@ -21,11 +21,11 @@ trait Metadata {
 
 /**
  * A Wrapper class that extends Seq[T] with [[scala.Dynamic]] to enable row element access using the column names with dot notation
- * e.g. Given a DataRow instance, dr, with column_names = Seq("a","b") and data = Seq(1,2), the values
+ * e.g. Given a DataRow instance, dr, with columnNames = Seq("a","b") and data = Seq(1,2), the values
  * can be accessed as dr.a and dr.b
  */
-case class DataRow[+T] (column_names : Seq[String])(private val data : Seq[Option[T]]) extends Seq[Option[T]] with Dynamic{
-  require(column_names.length == data.length)
+case class DataRow[+T] (columnNames : Seq[String])(private val data : Seq[Option[T]]) extends Seq[Option[T]] with Dynamic{
+  require(columnNames.length == data.length)
   /**
    * enables access to data elements using Map like syntax
    */
@@ -46,7 +46,7 @@ case class DataRow[+T] (column_names : Seq[String])(private val data : Seq[Optio
   def selectDynamic(name : String) = find_value(name)
 
   protected def find_value(name : String) = {
-    if(column_names.contains(name))data(column_names.indexOf(name))
+    if(columnNames.contains(name))data(columnNames.indexOf(name))
     else throw ColumnDoesNotExist(name)
   }
 }
@@ -55,9 +55,9 @@ case class DataRow[+T] (column_names : Seq[String])(private val data : Seq[Optio
 object DataRow{
 
   def apply[T](values : (String,T)*) : DataRow[T] = {
-    val col_names = values map((t:(String,T))=>t._1)
+    val columnNames = values map((t:(String,T))=>t._1)
     val items = values map((t:(String, T))=>t._2)
-    DataRow(col_names)(map_to_option(items))
+    DataRow(columnNames)(map_to_option(items))
   }
 
   def map_to_option[T](l: Seq[T]) = l map((t:T)=> if(t==null) None else Some(t))
@@ -124,14 +124,14 @@ object DataTable {
   /**
    * Creates a [[edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable]] using an in-memory data structure
    * 
-   * @param column_names The names of the columns
+   * @param columnNames The names of the columns
    * @param row A set of {{{Seq}}} objects, each representing a row
    * 
    * @return A simple data table that holds all data in memory
    */
-  def apply[T](column_names: Seq[String], row: Seq[T]*): SimpleDataTable[T] = {
+  def apply[T](columnNames: Seq[String], row: Seq[T]*): SimpleDataTable[T] = {
     val rows = List(row: _*)
-    SimpleDataTable(column_names)(rows)
+    SimpleDataTable(columnNames)(rows)
   }
   
   /**
