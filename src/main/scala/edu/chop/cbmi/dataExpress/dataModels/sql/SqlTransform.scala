@@ -2,6 +2,17 @@ package edu.chop.cbmi.dataExpress.dataModels.sql
 
 import edu.chop.cbmi.dataExpress.dataModels.{DataTable,DataRow}
 
+/**
+ * SqlTransform provides a formal mechanism for transforming the rows of tables.
+ * SqlTransform wraps another DataTable and applies a
+ * function which transforms the rows of the table. The result is a new
+ * DataTable which may columns that differ in number and type from the
+ * source table.
+ *
+ * @param sourceTable The table where rows will be drawn
+ * @param transform function that converts DataRows from the source table into new rows
+ */
+
 case class SqlTransform[T](sourceTable:DataTable[_])(transformation:DataRow[_] => DataRow[T]) extends DataTable[T] {
 	/** As seen from class SqlTransform, the missing signatures are as follows.
 	 * *  For convenience, these are usable as stub implementations.  */
@@ -16,6 +27,7 @@ case class SqlTransform[T](sourceTable:DataTable[_])(transformation:DataRow[_] =
   lazy val columnNames: Seq[String] = getColumns
   lazy val dataTypes: Seq[edu.chop.cbmi.dataExpress.dataModels.DataType] = ???
 
+  //Not crazy about maintaining vars, but all this state needs to go somewhere
   private var cursor_advanced = false
   private var nextRow:Option[DataRow[T]] = None
   private var more_rows = true
