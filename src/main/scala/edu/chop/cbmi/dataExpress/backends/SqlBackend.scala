@@ -356,7 +356,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * @param schemaName The schema where the table is located
    */
   def insertReturningKeys(tableName: String, row: DataRow[_], schemaName:Option[String] = None): DataRow[_] =
-    executeReturningKeys(sqlDialect.insertRecord(tableName, row.column_names.toList, schemaName), row)
+    executeReturningKeys(sqlDialect.insertRecord(tableName, row.columnNames.toList, schemaName), row)
  
    /**
    * Insert a single [[edu.chop.cbmi.dataExpress.dataModels.DataRow]] into a table
@@ -366,7 +366,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * @param schemaName The schema where the table is located
    */
   def insertRow(tableName: String, row: DataRow[_], schemaName:Option[String] = None): Boolean = 
-    execute(sqlDialect.insertRecord(tableName, row.column_names.toList, schemaName), row)
+    execute(sqlDialect.insertRecord(tableName, row.columnNames.toList, schemaName), row)
   
   /**
    * Perform a batch insert into a table. '''This is the preferred insertion method for large
@@ -416,7 +416,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * @param schemaName The schema where the table is located  
    */
   def updateRow(tableName: String, updated_row: DataRow[_], filter: List[(String, Any)], schemaName: Option[String] = None) = {
-    val sqlStatement = sqlDialect.updateRecords(tableName, updated_row.column_names.toList, filter, schemaName)
+    val sqlStatement = sqlDialect.updateRecords(tableName, updated_row.columnNames.toList, filter, schemaName)
     val bind_vars = DataRow.map_to_option(updated_row.map((v:Option[_])=>{
       v match {
         case Some(s) => s
