@@ -10,7 +10,7 @@ import edu.chop.cbmi.dataExpress.dataModels.{DataTable,DataRow}
  * source table.
  * 
  * @param sourceTable The table where rows will be drawn
- * @param transform function that converts DataRows from the source table into new rows
+ * @param transformation function that converts DataRows from the source table into new rows
  */
 
 case class SqlTransform[T](sourceTable:DataTable[_])(transformation:DataRow[_] => DataRow[T]) extends DataTable[T] {
