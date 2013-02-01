@@ -64,7 +64,7 @@ class FixedDimensionTransformableTable(private val table: DataTable[_]) extends 
   private def update_column_names(names: String*): FixedDimensionTransformableTable = {
     _final_column_names = names.toList
     transform_rows((dr: DataRow[_]) => {
-      val items = dr.column_names.zipWithIndex.sortWith((t1: (String, Int), t2: (String, Int)) => {
+      val items = dr.columnNames.zipWithIndex.sortWith((t1: (String, Int), t2: (String, Int)) => {
         t1._2 < t2._2
       }).map((t: (String, Int)) => {
         names(t._2) -> dr(t._1).getOrElse(null)
