@@ -18,6 +18,7 @@ case class SqlTransform[T](sourceTable:DataTable[_])(transformation:DataRow[_] =
 	 * *  For convenience, these are usable as stub implementations.  */
   // Members declared in edu.chop.cbmi.dataExpress.dataModels.DataTable
 
+  //Considering moving these out as a trait or completely eliminating
   override def col(name: String): Iterator[Option[T]] = ???
   def col_as[G](name: String)(implicit m: scala.reflect.Manifest[G]): Iterator[Option[G]] = ???
   def col_asu[G](name: String)(implicit m: scala.reflect.Manifest[G]): Iterator[G] = ???
