@@ -15,10 +15,10 @@ All  commands assume you are working in the dataexpress root directory, here ~/d
 4. To test current source code:
     $sbt test
 
-5. To package WITHOUT dependencies
+5. To package WITHOUT dependencies:
     $sbt package
 
-6. To package WITH dependencies (does not include Scala library, to do so in ~/dataexpress/build.sbt set assembleArtifact in packageScala := true
+6. To package WITH dependencies (does not include Scala library, to do so in ~/dataexpress/build.sbt set assembleArtifact in packageScala := true):
     $sbt assembly
 
 7. To create scaladocs
