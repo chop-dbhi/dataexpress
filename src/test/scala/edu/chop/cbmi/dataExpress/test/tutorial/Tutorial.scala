@@ -43,7 +43,7 @@ class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatcher
   	the_presidents foreach {row => println(row.name.asu[String])}
   }
   
-  "The user" should "be able to get the first president in the table by using .head" in withDatabase { source =>
+  "The user" should "be able to get the first president in the table by using .next" in withDatabase { source =>
   	register store source as "source"
   	val the_presidents = get table "presidents" from "source"
   	val lincoln = the_presidents.next
