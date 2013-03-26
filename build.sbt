@@ -38,7 +38,7 @@ libraryDependencies ++= Seq(
 
 libraryDependencies ++= {
   val deps = Seq(
-        "org.scalatest" %% "scalatest" % "2.0.M5b",
+        "org.scalatest" % "scalatest_2.10" % "2.0.M5b",
         "junit" % "junit" % "4.8.1"
       )
   deps map {v => v % "test"}
@@ -47,6 +47,10 @@ libraryDependencies ++= {
 //scala options------------------------------
 
 scalacOptions +="-language:dynamics"
+
+//scct settings--------------------------------
+
+seq(ScctPlugin.instrumentSettings : _*)
 
 //console imports------------------------------
 
