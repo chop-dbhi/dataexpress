@@ -30,7 +30,10 @@ parallelExecution in Test := false
 libraryDependencies ++= Seq(
   "org.xerial" % "sqlite-jdbc" % "3.7.2",
   "postgresql" % "postgresql" % "9.0-801.jdbc4",
-  "mysql" % "mysql-connector-java" % "5.1.21"
+  "mysql" % "mysql-connector-java" % "5.1.21",
+  "net.sf.opencsv" % "opencsv" % "2.0",
+  "org.apache.poi" %"poi" % "3.9",
+  "org.scalatest" % "scalatest_2.10" % "1.9.1" % "test"
 )
 
 

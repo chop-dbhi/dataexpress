@@ -27,7 +27,7 @@ object SqlBackendFactory{
   val sqlBackendProviderLoader = ServiceLoader.load[SqlBackendProvider](classOf[SqlBackendProvider])
   private val included_backends = List("postgresql", "mysql", "sqlite", "oracle")
 
-  private def load_included_bakcend(db_type: String, connection_properties: Properties, sqlDialect: SqlDialect = null,
+  private def load_included_backend(db_type: String, connection_properties: Properties, sqlDialect: SqlDialect = null,
     driver_class_name: String = null) = db_type match {
     case "postgresql" => new PostgresBackend(connection_properties, sqlDialect, driver_class_name)
     case "mysql" => new MySqlBackend(connection_properties, sqlDialect, driver_class_name)
@@ -48,7 +48,7 @@ object SqlBackendFactory{
     driver_class_name: String = null): SqlBackend = {
     // try {
     val db_type: String = connection_properties.getProperty("jdbcUri").split(":")(1)
-    if (included_backends contains db_type) load_included_bakcend(db_type, connection_properties, sqlDialect, driver_class_name)
+    if (included_backends contains db_type) load_included_backend(db_type, connection_properties, sqlDialect, driver_class_name)
     else{
       val providers = sqlBackendProviderLoader.iterator()
       var provider : SqlBackend = null
@@ -117,9 +117,9 @@ object SqlBackendFactory{
 /**
  * Wrapper around JDBC that simplifies the mechanics of interacting with databases in an RDBMS-neutral way.
  * 
- * Instances of SqlBacked should normally be instantiated via [[edu.chop.cbmi.dataExpress.backends.SqlBackendFactory]]
+ * Instances of SqlBackend should normally be instantiated via [[edu.chop.cbmi.dataExpress.backends.SqlBackendFactory]]
  */
-case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialect, driverClassName : String) {
+case class SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialect, driverClassName : String) {
   var connection:java.sql.Connection = _
   var statementCache:SqlQueryCache = _
   val CACHESIZE=20

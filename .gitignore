@@ -9,6 +9,7 @@ out/
 .cache
 backup/
 .idea/
+.idea_modules/
 .DS_Store
 *.iml
 *.ipr
