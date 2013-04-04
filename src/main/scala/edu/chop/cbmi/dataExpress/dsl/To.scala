@@ -56,44 +56,31 @@ case class ToFromRow(target : Store, row : DataRow[_]) extends To(target) {
     }
   }
 }
+//Note that this is causing a compile error because something must be done with all the existing transformed data table
+//code. Some of the things from TransformedData table should be brought into the DataExpress data models and SqlTransform
+//should be genericized into a transform trait
+case class ToFromTable(target: Store, source_table: DataTable[_]) extends To(target) {
 
-case class ToFromTable(target : Store, source_table : TransformableDataTable) extends To(target) {
-
-  def create(table_name : String) = {
-    target match {
-          case (s:SqlDb) => {
-            val schema = s.schema
-            val catalog = s.catalog.getOrElse(null)
-            val data_types = source_table._final_data_types match{
-              case Some(l:List[DataType]) => l
-              case _ => source_table.data_table match {
-                case (st: SqlRelation[_]) => st.dataTypes.toList
-                case _ => throw new Exception("dataTypes must be provided to create_table for SqlDb and DataTable that is not of type SqlRelation")
-              }
-            }
-            val col_names = source_table._final_column_names
-            s.backend.createTable(table_name, col_names, data_types, schema)
-            val writer = DataWriter(s.backend, schema, catalog)
-            source_table.data_table.foreach((next_row:DataRow[_])=>{
-              val row_to_insert =
-               (Some(next_row).asInstanceOf[Option[DataRow[_]]] /: source_table._transformers)((output:Option[DataRow[_]], f:(DataRow[_])=>Option[DataRow[_]])=>{
-                 output match{
-                   case Some(r:DataRow[_]) => f(r)
-                   case _ => None
-                 }
-
-               })
-              (row_to_insert : @unchecked) match{
-                case Some(r:DataRow[_]) => writer.insert_row(table_name, r)
-                case None =>  {} //TODO maybe do some logging here of filtered rows?
-              }
-
-            })
-          }
-          //case (s:ExcelStore) =>
-          //case (s:csvStore) =>
-          case _ => throw UnsupportedStoreType(target, "create_table")
-        }
+  def create(table_name: String) = {
+            target.createTable(table_name, source_table)
+            target.insertRows(table_name, source_table)
+//            s.backend.createTable(table_name, col_names, data_types, schema)
+//            val writer = DataWriter(s.backend, schema, catalog)
+//            source_table.data_table.foreach((next_row:DataRow[_])=>{
+//              val row_to_insert =
+//               (Some(next_row).asInstanceOf[Option[DataRow[_]]] /: source_table._transformers)((output:Option[DataRow[_]], f:(DataRow[_])=>Option[DataRow[_]])=>{
+//                 output match{
+//                   case Some(r:DataRow[_]) => f(r)
+//                   case _ => None
+//                 }
+//
+//               })
+//              (row_to_insert : @unchecked) match{
+//                case Some(r:DataRow[_]) => writer.insert_row(table_name, r)
+//                case None =>  {} //TODO maybe do some logging here of filtered rows?
+//              }
+//
+//            })
   }
 
   //TODO
