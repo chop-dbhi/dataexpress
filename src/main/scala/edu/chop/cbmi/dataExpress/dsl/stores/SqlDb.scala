@@ -21,16 +21,12 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package edu.chop.cbmi.dataExpress.dsl.stores
 
 import edu.chop.cbmi.dataExpress.backends.{SqlDialect, SqlBackendFactory, SqlBackend}
+import edu.chop.cbmi.dataExpress.dataModels._
+import edu.chop.cbmi.dataExpress.dataWriters.DataWriter
+import edu.chop.cbmi.dataExpress.dataWriters.sql.SqlOperationStatus
 
-/**
- * Created by IntelliJ IDEA.
- * User: masinoa
- * Date: 12/28/11
- * Time: 8:48 AM
- * To change this template use File | Settings | File Templates.
- */
 
-class SqlDb(val backend : SqlBackend, val schema : Option[String], val catalog : Option[String]) extends Store{
+class SqlDb(val backend : SqlBackend, val schema : Option[String], val catalog : Option[String]) extends Store with DataWriter{
 
   private var _unique_id : Any = backend.get_jdbcUri
 
@@ -49,6 +45,20 @@ class SqlDb(val backend : SqlBackend, val schema : Option[String], val catalog :
   override def save : Boolean = {
     if(!is_closed_?)backend.commit()
     else false
+  }
+
+  override def createTable(name:String, table:DataTable[_]) = {
+    createTable(name, table, table.dataTypes)
+  }
+
+  def createTable(name:String, table:DataTable[_], dataTypes:Seq[DataType]): Boolean = {
+        backend.createTable(name, table.columnNames.toList, dataTypes.toList, schema)
+  }
+  override def insertRow(tableName:String, row: DataRow[_]) = backend.insertRow(tableName, row, schema)
+
+  override def insertRows(name:String, table:DataTable[_]): Int = {
+    backend.batchInsert(name, table, schema)
+
   }
 
   override def set_unique_id(id : Any) = {

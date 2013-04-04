@@ -92,6 +92,7 @@ class FixedDimensionTransformableTable(private val table: DataTable[_]) extends 
 }
 
 case class AlterDataTable(table: TransformableDataTable) extends TransformableDataTable(){
+case class AlterDataTable(table: TransformableDataTable) extends TransformableDataTable(){
   val _transformers = table._transformers
   var _final_column_names: List[String] = table._final_column_names
   var _final_data_types: Option[List[DataType]] = table._final_data_types
