@@ -20,7 +20,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package edu.chop.cbmi.dataExpress.dsl.statements
 
-import edu.chop.cbmi.dataExpress.dsl.stores.{SqlDb, Store}
+import edu.chop.cbmi.dataExpress.dsl.stores.{Store}
 import edu.chop.cbmi.dataExpress.dataModels.{DataType, DataRow}
 import edu.chop.cbmi.dataExpress.dsl._
 

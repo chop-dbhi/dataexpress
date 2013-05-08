@@ -66,6 +66,7 @@ object ETL {
     }catch{
       //TODO should there be rollback or option to rollback here?
       case e:Exception => {
+        //TODO should do some logging here
         throw new java.lang.RuntimeException(e.getMessage())
         false
       }

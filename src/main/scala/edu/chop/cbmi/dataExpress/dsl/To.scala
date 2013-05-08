@@ -26,6 +26,7 @@ import stores.{SqlDb, Store}
 import edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation
 import edu.chop.cbmi.dataExpress.dataWriters.DataWriter
 import edu.chop.cbmi.dataExpress.dataModels.{DataTable, DataRow, DataType}
+import scala.collection.mutable.{ListBuffer}
 
 /**
  * Created by IntelliJ IDEA.
@@ -58,38 +59,72 @@ case class ToFromRow(target : Store, row : DataRow[_]) extends To(target) {
 }
 
 case class ToFromTable(target : Store, source_table : TransformableDataTable) extends To(target) {
+  private val CREATE_MODE = 'create
+  private val APPEND_MODE = 'append
+  private val DEFAULT_BATCH_SIZE = 50
+  //private val OVERWRITE_MODE = 'overwrite
+
+  private def writeToSqlTable(table_name: String, s: SqlDb, mode:Symbol) : Boolean = {
+    val schema = s.schema
+    val catalog = s.catalog.getOrElse(null)
+    val col_names = source_table._final_column_names
+
+    mode match{
+      case CREATE_MODE => {
+        val data_types = source_table._final_data_types match{
+           case Some(l:List[DataType]) => l
+           case _ => source_table.data_table match {
+             case (st: SqlRelation[_]) => st.dataTypes.toList
+             case _ => throw new Exception("dataTypes must be provided to create_table for SqlDb and DataTable that is not of type SqlRelation")
+           }
+         }
+        //TODO note the createTable currently forces a drop table
+         s.backend.createTable(table_name, col_names, data_types, schema)
+         writeToSqlTable(table_name, s, APPEND_MODE)
+       }
+       case APPEND_MODE => {
+         val writer = DataWriter(s.backend, schema, catalog)
+         if(source_table._transformers.isEmpty){
+           val writer = DataWriter(s.backend, schema, catalog)
+           //just insert the table wholesale
+           writer.insert_rows(table_name, source_table.data_table).operation_succeeded_?
+         }else{
+           val buffer = new ListBuffer[DataRow[_]]()
+
+           //fold left over all rows so we can accumulate an AND'ed boolean to know if all batch inserts succeeded
+           val status = (true /: source_table.data_table){(b,next_row) =>
+              //transform row
+             (Some(next_row).asInstanceOf[Option[DataRow[_]]] /: source_table._transformers){ (output, f) =>
+               output match{
+                 case Some(r:DataRow[_]) => f(r)
+                 case _ => None
+               }
+             }match{
+               //add row to buffer if not filtered
+               case Some(r) => buffer += r
+               case _ => {} //TODO maybe log filtered rows?
+             }
+             if(buffer.length % DEFAULT_BATCH_SIZE == 0){
+               //batch insert the buffer
+               val success = writer.insert_rows(table_name, buffer, col_names, schema).operation_succeeded_?
+               //TODO if !success log failure, rollback or some such actions
+               buffer.clear
+               b && success
+             }else b
+           }//end fold left
+           //flush buffer if not empty
+           if(buffer.length != 0){
+             //batch insert the buffer
+             status && (writer.insert_rows(table_name, buffer, col_names, schema).operation_succeeded_?)
+           }else status
+         }
+       }
+     }
+  }
 
   def create(table_name : String) = {
     target match {
-          case (s:SqlDb) => {
-            val schema = s.schema
-            val catalog = s.catalog.getOrElse(null)
-            val data_types = source_table._final_data_types match{
-              case Some(l:List[DataType]) => l
-              case _ => source_table.data_table match {
-                case (st: SqlRelation[_]) => st.dataTypes.toList
-                case _ => throw new Exception("dataTypes must be provided to create_table for SqlDb and DataTable that is not of type SqlRelation")
-              }
-            }
-            val col_names = source_table._final_column_names
-            s.backend.createTable(table_name, col_names, data_types, schema)
-            val writer = DataWriter(s.backend, schema, catalog)
-            source_table.data_table.foreach((next_row:DataRow[_])=>{
-              val row_to_insert =
-               (Some(next_row).asInstanceOf[Option[DataRow[_]]] /: source_table._transformers)((output:Option[DataRow[_]], f:(DataRow[_])=>Option[DataRow[_]])=>{
-                 output match{
-                   case Some(r:DataRow[_]) => f(r)
-                   case _ => None
-                 }
-
-               })
-              (row_to_insert : @unchecked) match{
-                case Some(r:DataRow[_]) => writer.insert_row(table_name, r)
-                case None =>  {} //TODO maybe do some logging here of filtered rows?
-              }
-
-            })
-          }
+          case (s:SqlDb) => writeToSqlTable(table_name, s, CREATE_MODE)
           //case (s:ExcelStore) =>
           //case (s:csvStore) =>
           case _ => throw UnsupportedStoreType(target, "create_table")
@@ -97,7 +132,12 @@ case class ToFromTable(target : Store, source_table : TransformableDataTable) ex
   }
 
   //TODO
-  def append(table_name : String) = throw new Exception("not implemented yet")
+  def append(table_name : String) = {
+    target match{
+      case (s: SqlDb) => writeToSqlTable(table_name, s, APPEND_MODE)
+      case _ => throw UnsupportedStoreType(target, "append_table")
+    }
+  }
 
   //TODO
   //def overwrite(table_name : String)

@@ -378,6 +378,24 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
   }
 
   /**
+   * Perform a batch insert into a table. '''This is the preferred insertion method for large
+   * insert operations'''
+   *
+   * @param tableName The name of the table to do the insert
+   * @param rows An interable over [[edu.chop.cbmi.dataExpress.dataModels.DataRow]] that holds the data for the insert
+   * @param columnNames List[String] of the column names
+   * @param schemaName The schema where the table is located
+   * Assumes all rows have the same length and column names
+   */
+  def batchInsertRows(tableName:String, rows:Iterator[DataRow[_]], columnNames: List[String], schemaName:Option[String] = None):Int = {
+    if(!rows.isEmpty){
+      val sqlStatement = sqlDialect.insertRecord(tableName, columnNames, schemaName)
+      val statement = statementCache.getStatement(sqlStatement)
+      executeBatch(statement, rows, 50, {dr:DataRow[_] => dr})
+    }else -1
+  }
+
+  /**
    * Update existing table rows. In order to allow specificity,
    * the <code>filter</code> parameter is a set of (`columnName`, `value`) tuples. These tuples
    *  get converted into the `WHERE` clause. For example:

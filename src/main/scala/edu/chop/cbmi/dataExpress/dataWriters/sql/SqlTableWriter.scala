@@ -71,6 +71,11 @@ case class SqlTableWriter(val backend : SqlBackend, val schema : Option[String] 
     SqlOperationStatus(true)
   }
 
+  def insert_rows(table_name: String, rows: Iterable[DataRow[_]], columnNames: List[String], schemaName:Option[String]=None) = {
+    val result = backend.batchInsertRows(table_name, rows.iterator, columnNames, schemaName)
+    if(result == -1)SqlOperationStatus(false) else SqlOperationStatus(true)
+  }
+
 
   /**
    * @param f A function that takes a column_name : String and returns the value for that column
@@ -88,7 +93,7 @@ case class SqlTableWriter(val backend : SqlBackend, val schema : Option[String] 
     val new_row = ListBuffer.empty[(String,T)]
     column_names(table_name).foreach((name:String)=>{
       (f(name) : @unchecked) match{
-        case Some(t:T) => new_row += name->t
+        case Some(t) => new_row += name->t.asInstanceOf[T]
         case None => {} //row was filtered
       }
     })
