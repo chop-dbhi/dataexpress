@@ -20,12 +20,10 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package edu.chop.cbmi.dataExpress.dsl
 
-import edu.chop.cbmi.dataExpress.dsl.ETL._
 import exceptions.UnsupportedStoreType
-import stores.{SqlDb, Store}
-import edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation
+import edu.chop.cbmi.dataExpress.dsl.stores.{FileStore, SqlDb, Store}
 import edu.chop.cbmi.dataExpress.dataWriters.DataWriter
-import edu.chop.cbmi.dataExpress.dataModels.{DataTable, DataRow, DataType}
+import edu.chop.cbmi.dataExpress.dataModels.{SeqColumnNames, DataRow, DataType}
 import scala.collection.mutable.{ListBuffer}
 
 /**
@@ -42,6 +40,16 @@ abstract class To(target : Store) {
 
 case class ToFromRow(target : Store, row : DataRow[_]) extends To(target) {
 
+  def append() = {
+    target match {
+      case (fs: FileStore)=>{
+        val writer = DataWriter(fs.fb, row.column_names)
+        writer.insert_row("",row)
+      }
+      case _ => throw UnsupportedStoreType(target, "insert_row")
+    }
+  }
+
   def append(table_name : String) = {
     target match {
       case (s: SqlDb) => {
@@ -51,7 +59,6 @@ case class ToFromRow(target : Store, row : DataRow[_]) extends To(target) {
         writer.insert_row(table_name, row)
       }
       //case (s:ExcelStore) =>
-      //case (s: csvStore) =>
       case _ => throw UnsupportedStoreType(target, "insert_row")
 
     }
@@ -64,39 +71,46 @@ case class ToFromTable(target : Store, source_table : TransformableDataTable) ex
   private val DEFAULT_BATCH_SIZE = 50
   //private val OVERWRITE_MODE = 'overwrite
 
-  private def writeToSqlTable(table_name: String, s: SqlDb, mode:Symbol) : Boolean = {
-    val schema = s.schema
-    val catalog = s.catalog.getOrElse(null)
+  private def writeToTarget(table_name: String, mode:Symbol) : Boolean = {
     val col_names = source_table._final_column_names
 
     mode match{
       case CREATE_MODE => {
         val data_types = source_table._final_data_types match{
            case Some(l:List[DataType]) => l
-           case _ => source_table.data_table match {
-             case (st: SqlRelation[_]) => st.dataTypes.toList
-             case _ => throw new Exception("dataTypes must be provided to create_table for SqlDb and DataTable that is not of type SqlRelation")
-           }
+           case _ => source_table.data_table.dataTypes.toList
          }
-        //TODO note the createTable currently forces a drop table
-         s.backend.createTable(table_name, col_names, data_types, schema)
-         writeToSqlTable(table_name, s, APPEND_MODE)
-       }
+        target match{
+          //TODO note the createTable method in Sql backend currently forces a drop table
+          case s: SqlDb => s.backend.createTable(table_name, col_names, data_types, s.schema)
+          case fs: FileStore => {
+            fs.fb.delete()
+            fs.fb.makeNewFile()
+            if(fs.writeHeaderOnCreate){
+              fs.fb.writeHeader(DataRow(col_names.map{cn => (cn,cn)}: _*))
+            }
+          }
+          case _ => throw UnsupportedStoreType(target, "writeToTarget")
+        }//end target match
+         writeToTarget(table_name, APPEND_MODE)
+       } //end CREATE_MODE
        case APPEND_MODE => {
-         val writer = DataWriter(s.backend, schema, catalog)
+         val writer = target match{
+           case s:SqlDb => DataWriter(s.backend, s.schema, s.catalog.getOrElse(null))
+           case fs: FileStore => DataWriter(fs.fb, col_names)
+         }
          if(source_table._transformers.isEmpty){
-           val writer = DataWriter(s.backend, schema, catalog)
            //just insert the table wholesale
            writer.insert_rows(table_name, source_table.data_table).operation_succeeded_?
          }else{
-           val buffer = new ListBuffer[DataRow[_]]()
+           val buffer = new ListBuffer[DataRow[Any]]()
 
            //fold left over all rows so we can accumulate an AND'ed boolean to know if all batch inserts succeeded
            val status = (true /: source_table.data_table){(b,next_row) =>
               //transform row
-             (Some(next_row).asInstanceOf[Option[DataRow[_]]] /: source_table._transformers){ (output, f) =>
+             (Some(next_row).asInstanceOf[Option[DataRow[Any]]] /: source_table._transformers){ (output, f) =>
                output match{
-                 case Some(r:DataRow[_]) => f(r)
+                 case Some(r:DataRow[Any]) => f(r)
                  case _ => None
                }
              }match{
@@ -106,7 +120,7 @@ case class ToFromTable(target : Store, source_table : TransformableDataTable) ex
              }
              if(buffer.length % DEFAULT_BATCH_SIZE == 0){
                //batch insert the buffer
-               val success = writer.insert_rows(table_name, buffer, col_names, schema).operation_succeeded_?
+               val success = writer.insert_rows(table_name, buffer.toList).operation_succeeded_?
                //TODO if !success log failure, rollback or some such actions
                buffer.clear
                b && success
@@ -115,31 +129,28 @@ case class ToFromTable(target : Store, source_table : TransformableDataTable) ex
            //flush buffer if not empty
            if(buffer.length != 0){
              //batch insert the buffer
-             status && (writer.insert_rows(table_name, buffer, col_names, schema).operation_succeeded_?)
+             status && (writer.insert_rows(table_name, buffer).operation_succeeded_?)
            }else status
          }
-       }
-     }
+       } //end APPEND_MODE
+     } //end mode match
   }
 
-  def create(table_name : String) = {
-    target match {
-          case (s:SqlDb) => writeToSqlTable(table_name, s, CREATE_MODE)
-          //case (s:ExcelStore) =>
-          //case (s:csvStore) =>
-          case _ => throw UnsupportedStoreType(target, "create_table")
-        }
-  }
+  def create(table_name : String) = writeToTarget(table_name, CREATE_MODE)
 
-  //TODO
-  def append(table_name : String) = {
+  def append(table_name : String) = writeToTarget(table_name, APPEND_MODE)
+
+  def create() = {
     target match{
-      case (s: SqlDb) => writeToSqlTable(table_name, s, APPEND_MODE)
-      case _ => throw UnsupportedStoreType(target, "append_table")
+      case (s:FileStore) => writeToTarget("", CREATE_MODE)
+      case _ => throw UnsupportedStoreType(target, "To.create(). Try create table_name?")
     }
   }
 
-  //TODO
-  //def overwrite(table_name : String)
-
+  def append() = {
+    target match{
+      case (s:FileStore) => writeToTarget("", APPEND_MODE)
+      case _ => throw UnsupportedStoreType(target, "To.append(). Try append table_name?")
+    }
+  }
 }

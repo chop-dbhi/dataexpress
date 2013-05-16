@@ -112,9 +112,9 @@ trait SqlDialect {
       val i = j + 1
       meta.getColumnType(i) match {
         //TODO: Add BIGINT support!
-        case java.sql.Types.INTEGER => IntegerDataType()
-        case java.sql.Types.SMALLINT => SmallIntegerDataType()
-        case java.sql.Types.TINYINT => TinyIntegerDataType()
+        case java.sql.Types.INTEGER => IntegerDataType
+        case java.sql.Types.SMALLINT => SmallIntegerDataType
+        case java.sql.Types.TINYINT => TinyIntegerDataType
         case java.sql.Types.FLOAT => {
           val precision = meta.getPrecision(i)
           FloatDataType(precision)
@@ -137,21 +137,21 @@ trait SqlDialect {
           DateTimeDataType(tzSupport)
         }
         case -101 => DateTimeDataType(true) //-101 = jdbc: TIME STAMP WITH TIME ZONE
-        case java.sql.Types.DATE => DateDataType()
+        case java.sql.Types.DATE => DateDataType
         case java.sql.Types.TIME => {
           val tzSupport = meta.getColumnTypeName(i).toUpperCase.contains("WITH TIME ZONE")
           TimeDataType(tzSupport)
         }
-        case java.sql.Types.LONGVARCHAR | java.sql.Types.CLOB => TextDataType()
-        case java.sql.Types.LONGVARBINARY | java.sql.Types.BLOB | java.sql.Types.BINARY => BigBinaryDataType()
-        case java.sql.Types.BOOLEAN => BooleanDataType()
+        case java.sql.Types.LONGVARCHAR | java.sql.Types.CLOB => TextDataType
+        case java.sql.Types.LONGVARBINARY | java.sql.Types.BLOB | java.sql.Types.BINARY => BigBinaryDataType
+        case java.sql.Types.BOOLEAN => BooleanDataType
         // JDBC Spec suggests that portable code should represent the BIT type as
         // a smallInt: http://download.oracle.com/javase/6/docs/technotes/guides/jdbc/getstart/mapping.html#999005
         //Postgres maps Boolean to Bit and so data such as 't' for true are failing on the attempted storage as integer
         //values with this one:
         //case java.sql.Types.BIT                               => SmallIntegerDataType()
         //Using this instead so that we can handle the variations on a BIT datatype on a DBMS to DBMS basis
-        case java.sql.Types.BIT => BitDataType()
+        case java.sql.Types.BIT => BitDataType
         case _ => {
           throw new RuntimeException("Can't map JDBC type to a known DataExpress type " +
             meta.getColumnType(i) + " for column " + meta.getColumnLabel(i))

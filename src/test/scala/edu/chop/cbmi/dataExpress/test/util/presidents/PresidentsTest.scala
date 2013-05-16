@@ -26,6 +26,8 @@ trait PresidentsTest {
 
   def default_president_count = SQLStatements.default_president_list().length
 
+  def default_president_ids = SQLStatements.default_president_list().map{tpl => tpl._1}
+
   def default_ttp_count = {
     val t = SQLStatements.default_president_list() filter {
       l =>

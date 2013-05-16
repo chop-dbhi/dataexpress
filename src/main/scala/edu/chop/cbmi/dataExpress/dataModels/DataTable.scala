@@ -81,6 +81,12 @@ abstract class DataTable[+T](val column_names_generator: ColumnNameGenerator) ex
   lazy val column_names = column_names_generator.generate_column_names()
 
   /**
+   * provides the DataType of each column
+   * @return
+   */
+  def dataTypes() : Seq[DataType]
+
+  /**
    * @param name name of column
    * @return boolean corresponding to existence of the column in this table
    */
@@ -166,5 +172,5 @@ object DataTable {
     SqlRelation(SqlQueryPackage(dataStore,query,bindVars))
   }
 
-  def apply(fb : FileBackend, cng: ColumnNameGenerator) = FileTable(fb,cng)
+  def apply(fileStore : FileBackend, cng: ColumnNameGenerator) = FileTable(fileStore, cng)
 }

@@ -100,13 +100,13 @@ class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatcher
     val tableName = "presidents"
     db.createTable(tableName = tableName, 
                    columnNames = columnNames,
-                   dataTypes = List(IntegerDataType(),
+                   dataTypes = List(IntegerDataType,
                                    CharacterDataType(100,false),
                                   CharacterDataType(100,false),
-                                  DateDataType(),
-                                  DateDataType(),
-                                  DateDataType(),
-                                  DateDataType()))
+                                  DateDataType,
+                                  DateDataType,
+                                  DateDataType,
+                                  DateDataType))
                                   
 
                                   

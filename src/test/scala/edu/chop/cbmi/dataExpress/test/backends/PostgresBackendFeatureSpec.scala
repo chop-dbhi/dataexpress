@@ -105,7 +105,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     val columnNames:List[String]              =     List("carid","carnumber","carmake","carmodel")
 
-    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
+    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType,CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
 
     val verifyTableStatement:String           =     "SELECT count(1) as count FROM pg_tables WHERE tablename = " + "'" + tableName + "'" +  " and schemaname = " + "'" + dbSchema.get  + "'"
 
@@ -650,7 +650,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     val columnNames:List[String]              =     List("carid","number","make","model")
 
-    val dataTypes                             =     List( CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
+    val dataTypes                             =     List( CharacterDataType(20,columnFixedWidth),IntegerDataType,CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
@@ -834,7 +834,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     val columnNames:List[String]              =     List("carid","number","make","model")
 
-    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
+    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType,CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
 
     val verifyTableStatement:String           =     "SELECT tablename FROM pg_tables WHERE tablename = " + "'" + tableName + "'" +  " and schemaname = " + "'" + dbSchema.get  + "'"
 
@@ -892,7 +892,7 @@ class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sho
 
     val columnNames:List[String]              =     List("carid","number","make","model")
 
-    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
+    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType,CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
 
     val verifyTableStatement:String           =     "SELECT count(1) as count FROM pg_tables WHERE tablename = " + "'" + tableName + "'" +  " and schemaname = " + "'" + dbSchema.get  + "'"
 

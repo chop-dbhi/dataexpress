@@ -34,28 +34,32 @@ import scala.language.implicitConversions
  * To change this template use File | Settings | File Templates.
  */
 
+class Message
+case class InformationMessage(msg:String) extends Message
+case object ExecutionOffMessage extends Message
+case class ErrorMessage(ex:Exception, msg:String) extends Message
+
 object ETL {
 
   private val registered_stores = scala.collection.mutable.Map.empty[Any,Store]
- // private val user_store_names = scala.collection.mutable.Map.empty[String, Any]
 
-  def execute[Q](on: Boolean, do_cleanup: Boolean = true)(code: => Q): Option[Q] = {
+  def execute[Q](on: Boolean, do_cleanup: Boolean = true)(code: => Q): Either[Q,Message] = {
     if (on) {
       try {
-        val r = Some(code)
+        val r = Left(code)
         r
       }
         catch {
           case ex : Exception => {
-            "execute exception %s".format(println(ex.getMessage))
-            None
+            val msg = "ERROR: execute exception %s".format(ex.getMessage)
+            println(msg)
+            Right(ErrorMessage(ex,msg))
           }
-          case _:Throwable => None
         }
       finally {
         if(do_cleanup)cleanup()
       }
-    } else None
+    } else Right(ExecutionOffMessage)
   }
 
   def commit_on_success (stores_to_commit : Store*)(code: => Any) : Boolean = {

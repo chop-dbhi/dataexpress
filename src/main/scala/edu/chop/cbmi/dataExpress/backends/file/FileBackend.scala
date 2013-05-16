@@ -1,8 +1,8 @@
 package edu.chop.cbmi.dataExpress.backends.file
 
 import java.io.{FileWriter, BufferedWriter, PrintWriter, File}
-import scala.io.Source
-import edu.chop.cbmi.dataExpress.dataModels.DataRow
+import scala.io.{BufferedSource, Source}
+import edu.chop.cbmi.dataExpress.dataModels.{ColumnNameGenerator, DataType, DataRow}
 
 /**
  * Created with IntelliJ IDEA.
@@ -18,6 +18,11 @@ class WriteModeException(wm: WriteMode, msg: String) extends Exception(msg)
 
 abstract class FileBackend(val file: File) {
   //ABSTRACT STUFF
+
+  def writeHeader(hr: DataRow[String]) : Unit
+
+  def dataTypes() : Seq[DataType]
+
   def read() : Iterator[DataRow[_]]
 
   def write(rows: Iterator[DataRow[_]], writeMode: WriteMode) : Boolean
@@ -25,9 +30,18 @@ abstract class FileBackend(val file: File) {
   def write(row: DataRow[_], writeMode: WriteMode) : Boolean
 
   //CONCRETE STUFF
-  lazy val source = Source.fromFile(file)
+  private var source: Option[BufferedSource] = None
+  def open() = {
+    close
+    val ns = Source.fromFile(file)
+    source = Some(ns)
+    ns
+  }
 
-  def delete() = if(file.exists())file.delete
+  def delete() = {
+    close
+    if(file.exists())file.delete
+  }
 
   def ensureParentDirs() = if(!file.getParentFile.exists())file.getParentFile.mkdirs()
 
@@ -37,6 +51,23 @@ abstract class FileBackend(val file: File) {
     file.createNewFile()
   }
 
-  def close() = source.close()
+  def close() = {
+    source match{
+      case Some(s) => s.close
+      case _=> {}
+    }
+    source = None
+    true
+  }
+
+  def is_open_? = source match{
+    case Some(s) => {
+      if(s.isEmpty){
+        close
+        false
+      }else true
+    }
+    case _ => false
+  }
 
 }

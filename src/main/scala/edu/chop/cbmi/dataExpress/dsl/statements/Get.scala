@@ -20,7 +20,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package edu.chop.cbmi.dataExpress.dsl.statements
 
-import edu.chop.cbmi.dataExpress.dsl.stores.{SqlDb, Store}
+import edu.chop.cbmi.dataExpress.dsl.stores.{FileStore, SqlDb, Store}
 import edu.chop.cbmi.dataExpress.dsl.exceptions.UnsupportedStoreType
 import edu.chop.cbmi.dataExpress.dataModels.{DataRow, DataTable}
 import edu.chop.cbmi.dataExpress.dsl.From
@@ -60,4 +60,5 @@ class GetFromTable(table_name : String) extends GetFrom{
 class GetSelect {
   def query(q : String) : GetFromQuery = new GetFromQuery(q)
   def table(table_name : String) : GetFromTable = new GetFromTable(table_name)
+  def from(source : Store) = From(source).get_values.data_table
 }

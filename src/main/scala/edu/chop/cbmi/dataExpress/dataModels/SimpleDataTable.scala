@@ -16,7 +16,11 @@ case class SimpleDataTable[+T] private[dataModels](override val column_names_gen
   require((true /: data)((b: Boolean, l: Seq[_]) => b && l.length == data(0).length),
     println("All elements in data must be of equal length"))
   private val  iterator = SimpleDataIterator(column_names, data)
-  
+
+  lazy val dataTypes = {
+    Seq[DataType]()
+  }
+
    /**
    * @param idx index of desired table row
    * @return DataRow[Option[T]] containing the elements of row idx wrapped in an Option

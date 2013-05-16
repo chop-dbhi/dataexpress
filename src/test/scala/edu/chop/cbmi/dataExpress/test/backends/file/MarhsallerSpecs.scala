@@ -2,9 +2,19 @@ package edu.chop.cbmi.dataExpress.test.backends.file
 
 import org.scalatest.{BeforeAndAfter, GivenWhenThen, FunSpec}
 import org.scalatest.matchers.ShouldMatchers
-import edu.chop.cbmi.dataExpress.backends.file.{CustomMarshaller, StaticMarshaller, DelimiterMarshaller}
-import edu.chop.cbmi.dataExpress.dataModels.{ColumnNameGenerator, DataRow, SeqColumnNames}
+import edu.chop.cbmi.dataExpress.backends.file._
+import edu.chop.cbmi.dataExpress.dataModels._
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._
+import edu.chop.cbmi.dataExpress.backends.file.DelimiterMarshaller
+import scala.Some
+import edu.chop.cbmi.dataExpress.backends.file.CustomMarshaller
+import edu.chop.cbmi.dataExpress.backends.file.StaticMarshaller
+import edu.chop.cbmi.dataExpress.backends.file.DelimiterMarshaller
+import scala.Some
+import edu.chop.cbmi.dataExpress.backends.file.DoubleDelimiterMarshaller
+import edu.chop.cbmi.dataExpress.backends.file.StaticMarshaller
+import edu.chop.cbmi.dataExpress.dataModels.SeqColumnNames
+import edu.chop.cbmi.dataExpress.dataModels.sql.TextDataType
 
 /**
  * Created with IntelliJ IDEA.
@@ -52,6 +62,29 @@ class MarhsallerSpecs extends FunSpec with GivenWhenThen with ShouldMatchers wit
 
   }
 
+  describe("A Typed Marshaller"){
+    it("converts value delimited data to DataRows[TYPE]"){
+      val numbers = List("1,2,3", "6,7.0,")
+      val mar = DoubleDelimiterMarshaller(",",SeqColumnNames(Seq("A","B","C")))
+      val rows = numbers.map{line => mar.unmarshall(line)}
+      rows.length should equal(numbers.length)
+      (0 /: rows){(idx, row) =>
+        val rowSum = (0.0/:row){(s,o) =>
+          o.as[Double] match{
+            case Some(n) => s + n
+            case _ => s
+          }
+        }
+        val lineSum = (0.0 /: numbers(idx).split(",")){(s,ns)=>
+          if(ns.trim.length>0) s + ns.trim.toDouble
+          else s
+        }
+        rowSum should equal(lineSum)
+        idx + 1
+      }
+    }
+  }
+
   describe("A Static Marshaller"){
     val f = fixture(STATIC)
     it("simply stores each line as the single column in a data row"){
@@ -75,7 +108,11 @@ class MarhsallerSpecs extends FunSpec with GivenWhenThen with ShouldMatchers wit
       dr(cng.generate_column_names().head).asu[String].toLowerCase
     }
 
-    val cm = CustomMarshaller(cg, unmarsh(cg) _, marsh(cg) _ )
+    def types(cn:String) : DataType = {
+      TextDataType
+    }
+
+    val cm = new CustomMarshaller(cg, unmarsh(cg) _, marsh(cg) _ , types )
 
     it("should convert lines to DataRows with whatever the custom unmarsh function does"){
       val rows = f.content.map{line => cm.unmarshall(line)}

@@ -115,7 +115,7 @@ sealed case class SqlRelation[+T] private[dataModels](private val sql_query_pack
 
   lazy private val sqlMeta = sql_query_package.meta
   lazy private val columnCount = sql_query_package.columnCount
-  lazy val dataTypes = sql_query_package.dataTypes
+  lazy val dataTypes: Seq[DataType] = sql_query_package.dataTypes
   lazy private val query_package = SqlQueryPackage(sql_query_package.dataStore, sql_query_package.query, sql_query_package.bindVars)
   lazy private val iterator = SqlRelationIterator(query_package)
   

@@ -100,16 +100,16 @@ case object MySqlDialect extends SqlDialect {
 
   def toSqlString(dataType: DataType): String = {
     dataType match {
-      case IntegerDataType()                                => "INTEGER"
-      case SmallIntegerDataType()                           => "SMALLINT"
+      case IntegerDataType                                => "INTEGER"
+      case SmallIntegerDataType                           => "SMALLINT"
       //TODO: Remove blatant Postgresql hack for lack of tinyint support below
-      case TinyIntegerDataType()                            => "SMALLINT"
+      case TinyIntegerDataType                            => "SMALLINT"
       case FloatDataType(p)                                 => {
         if (p <= 53)    "FLOAT(%d)".format(p)
         else            "FLOAT(53)"
       }
       case DecimalDataType(p, s)                            => "DECIMAL(%d,%d)".format(p, s)
-      case DateDataType()                                   => "DATE"
+      case DateDataType                                   => "DATE"
       //case DateTimeDataType(true)                           => "TIMESTAMP WITH TIME ZONE"
       //MySql does not have TIME STAMP WITH TIMEZONE
       //Must run off   jdbcCompliantTruncation for these to work by setting jdbcCompliantTruncation=false
@@ -134,10 +134,10 @@ case object MySqlDialect extends SqlDialect {
         }
         else "VARCHAR(%d)".format(length)
       }
-      case TextDataType()                                   => "TEXT"
-      case BigBinaryDataType()                              => "BLOB"
-      case BooleanDataType()                                => "BOOLEAN"
-      case BitDataType()                                    => "BIT"
+      case TextDataType                                   => "TEXT"
+      case BigBinaryDataType                              => "BLOB"
+      case BooleanDataType                                => "BOOLEAN"
+      case BitDataType                                    => "BIT"
       case _                                                => ""
     }
   }

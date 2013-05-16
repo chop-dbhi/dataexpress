@@ -56,7 +56,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val tableName = "cars_deba_a"
     val columnFixedWidth: Boolean = false
     val columnNames: List[String] = List("carid", "carnumber", "carmake", "carmodel")
-    val dataTypes = List(CharacterDataType(20, columnFixedWidth), IntegerDataType(), CharacterDataType(20, columnFixedWidth), CharacterDataType(20, columnFixedWidth))
+    val dataTypes = List(CharacterDataType(20, columnFixedWidth), IntegerDataType, CharacterDataType(20, columnFixedWidth), CharacterDataType(20, columnFixedWidth))
     val verifyTableStatement: String = "SELECT COUNT(*) as 'count' FROM sqlite_master WHERE tbl_name = '%s'".format(tableName)
     val backend = new SqLiteBackend(f.props)
     val cascade: Boolean = true
@@ -394,7 +394,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val tableName                             =     "cars_deba_b"
     val columnFixedWidth:Boolean              =     false
     val columnNames:List[String]              =     List("carid","carnumber","carmake","carmodel")
-    val dataTypes                             =     List( CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
+    val dataTypes                             =     List( CharacterDataType(20,columnFixedWidth),IntegerDataType,CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
@@ -507,7 +507,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val columnFixedWidth = false
     val columnNames = List("carid","carnumber","carmake","carmodel")
     val dataTypes  = List(CharacterDataType(20,columnFixedWidth),
-    					  IntegerDataType(),
+    					  IntegerDataType,
     					  CharacterDataType(20,columnFixedWidth),
     					  CharacterDataType(20,columnFixedWidth))
     val verifyTableStatement: String = "SELECT COUNT(*) as 'count' FROM sqlite_master WHERE tbl_name = '%s'".format(tableName)
@@ -541,7 +541,7 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val columnFixedWidth = false
     val columnNames = List("carid", "carnumber", "carmake", "carmodel")
     val dataTypes = List(CharacterDataType(20, columnFixedWidth),
-    				     IntegerDataType(), 
+    				     IntegerDataType,
     				     CharacterDataType(20, columnFixedWidth), 
     				     CharacterDataType(20, columnFixedWidth))
     val verifyTableStatement = "SELECT COUNT(*) as 'count' FROM sqlite_master WHERE tbl_name = '%s'".format(tableName)

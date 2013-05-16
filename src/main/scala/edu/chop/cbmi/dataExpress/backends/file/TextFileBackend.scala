@@ -10,13 +10,22 @@ import scala.io.Source
  * Date: 5/8/13
  * Time: 1:21 PM
  */
-case class TextFileBackend(override val file: File, cng: ColumnNameGenerator, marshaller: Marshaller, skipLines : Int = 0, encoding: String="UTF-8") extends FileBackend(file){
+case class TextFileBackend(override val file: File, marshaller: Marshaller, readSkipLines : Int = 0, encoding: String="UTF-8") extends FileBackend(file){
+
+  def dataTypes() = marshaller.dataTypes()
+
+  def writeHeader(hr: DataRow[String]) = {
+    printToFile{pw =>
+      pw.println(marshaller.marshallHeader(hr))
+    }
+  }
 
   def read() : Iterator[DataRow[_]] ={
-    TextIterator(source.getLines().drop(skipLines), marshaller)
+    TextIterator(open.getLines().drop(readSkipLines), marshaller)
   }
 
   def write(rows: Iterator[DataRow[_]], writeMode: WriteMode) : Boolean = {
+    close
     writeMode match{
       case Overwrite => {
         printToFile{ pw =>
@@ -67,9 +76,9 @@ case class TextIterator(lineIterator: Iterator[String], parser : Marshaller) ext
  override def next() = parser.unmarshall(lineIterator.next)
 }
 
-case class HeadearRowColumnNames(file: File, delimiter: String = ",", encoding: String="UTF-8") extends ColumnNameGenerator{
+case class HeaderRowColumnNames(file: File, delimiter: String = ",", encoding: String="UTF-8") extends ColumnNameGenerator{
 
-  lazy private val columnNames = {
+  private def columnNames = {
     val source = Source.fromFile(file, encoding)
     val iter = source.getLines()
     val names = if(iter.isEmpty)Seq.empty[String]

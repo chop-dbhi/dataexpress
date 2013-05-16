@@ -15,6 +15,8 @@ import edu.chop.cbmi.dataExpress.dataModels.RichOption._
 sealed case class FileTable private[dataModels](private val be: FileBackend, cng: ColumnNameGenerator)
   extends DataTable[Any](cng){
 
+  lazy val dataTypes = be.dataTypes()
+
   lazy private val iterator = be.read()
 
   override def next() = iterator.next()
@@ -22,17 +24,17 @@ sealed case class FileTable private[dataModels](private val be: FileBackend, cng
   override def hasNext() = iterator.hasNext
 
   override def col(name: String) = if(hasColumn(name)){
-    def f(item:Any) = if(item==null) None else Some(item)
+    def f(item:Option[Any]) = item
     FileTableColumn[Option[Any]](be,name, f)
   }else throw ColumnDoesNotExist(name)
 
   override def col_as[G](name:String)(implicit m: Manifest[G]) = if(hasColumn(name)){
-    def f(a:Any) = if(a==null)None else Some(a).as[G]
+    def f(a:Option[Any]) = a.as[G]
     FileTableColumn[Option[G]](be, name, f)
   } else throw ColumnDoesNotExist(name)
 
   override def col_asu[G](name: String)(implicit m: Manifest[G]) = if(hasColumn(name)){
-    def f(a:Any) = if(a==null)None.asu[G] else Some(a).asu[G]
+    def f(a:Option[Any]) = a.asu[G]
     FileTableColumn[G](be, name, f)
   }else throw ColumnDoesNotExist(name)
 }

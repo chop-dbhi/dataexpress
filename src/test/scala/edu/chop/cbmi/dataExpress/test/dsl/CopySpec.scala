@@ -10,7 +10,6 @@ package edu.chop.cbmi.dataExpress.test.dsl
 
 import edu.chop.cbmi.dataExpress.dsl.ETL._
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._
-import edu.chop.cbmi.dataExpress.backends.SqlBackend
 import edu.chop.cbmi.dataExpress.dsl.{ETL}
 import java.sql.Date
 import edu.chop.cbmi.dataExpress.dsl.stores.{SqlDb}
@@ -19,7 +18,6 @@ import edu.chop.cbmi.dataExpress.dataModels.{DataRow, DataTable}
 import edu.chop.cbmi.dataExpress.test.util.presidents._
 import edu.chop.cbmi.dataExpress.test.util.presidents.{PresidentsSpecWithSourceTarget}
 import edu.chop.cbmi.dataExpress.test.util.presidents.SQLStatements.potus_data_row
-import edu.chop.cbmi.dataExpress.test.util.TestProps
 
 
 
@@ -94,7 +92,7 @@ class CopySpec extends PresidentsSpecWithSourceTarget {
           }, (i:Int)=>i/100)
 
           copy table PRESIDENTS from source_db alter {table =>
-            table set_data_types(IntegerDataType(), CharacterDataType(20, false))
+            table set_data_types(IntegerDataType, CharacterDataType(20, false))
             table set_column_names("id", "name")
             table set_row_values {row =>
               val collapsed_name = row.last_name.asu[String] + ", " + row.first_name.asu[String]
@@ -141,7 +139,7 @@ class CopySpec extends PresidentsSpecWithSourceTarget {
           AssertionOps.query_and_count(TTP_FIVE, target_backend) should equal(2*default_president_count)
 
         }
-      } should equal(Some(true))
+      } should equal(Left(true))
 
       AssertionOps.execute_assertions()
     }
