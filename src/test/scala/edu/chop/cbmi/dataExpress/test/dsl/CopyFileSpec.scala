@@ -118,6 +118,12 @@ class CopyFileSpec extends PresidentsSpecWithSourceTarget{
         And("it's content is that of db table")
         (get from fs1).length should equal(default_president_count)
 
+        When("copying from a file to a db")
+        //test magic marhsaller and copying to db
+        register store FileStore(TextFileBackend(fileOne, f.cng), f.cng) as "fileStoreMagic"
+        copy from "fileStoreMagic" to source create PRESIDENTS_COPY
+        (get table PRESIDENTS_COPY from source).length should equal(default_president_count)
+
         When("using create from another file, a file is again created")
         copy from fs1 to fs2 create
 

@@ -31,7 +31,7 @@ class MarhsallerSpecs extends FunSpec with GivenWhenThen with ShouldMatchers wit
 
   def fixture(kind:Symbol) = {
     new {
-      val content = List("Bob,249,M","Jane Doe,3430,F","Mike R.,,M","Steve,83839,")
+      val content = List("Bob,249,M","Jane Doe,3430,F","Mike R.,,M","Steve,83839,",",,",",83,")
       val cng = SeqColumnNames(Seq("Name","ID","Gender"))
       val marshaller = kind match{
         case DELIMITER => DelimiterMarshaller(",",cng)

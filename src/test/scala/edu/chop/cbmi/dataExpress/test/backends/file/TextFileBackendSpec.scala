@@ -35,7 +35,7 @@ class TextFileBackendSpec extends FunSpec with GivenWhenThen with ShouldMatchers
       val content = List("Bob,249,M","Jane Doe,3430,F","Mike R.,,M","Steve,83839,")
       val cng = SeqColumnNames(colNames)
       val marshaller = DelimiterMarshaller(",",cng)
-      val backend = TextFileBackend(file1, marshaller)
+      val backend = TextFileBackend(file1, cng) //will use MagicMarshaller
       val backendWithHeader = TextFileBackend(file2, marshaller,1)
       val rows = {
         val cg = SeqColumnNames(colNames)

@@ -10,7 +10,27 @@ import scala.io.Source
  * Date: 5/8/13
  * Time: 1:21 PM
  */
-case class TextFileBackend(override val file: File, marshaller: Marshaller, readSkipLines : Int = 0, encoding: String="UTF-8") extends FileBackend(file){
+
+object TextFileBackend{
+  def apply(file:File, cng:ColumnNameGenerator, readSkipLines : Int, options: MagicOptions, encoding: String) : TextFileBackend =
+    new TextFileBackend(file, MagicMarshaller(file, Some(cng), options), readSkipLines, encoding )
+
+  def apply(file: File, cng: ColumnNameGenerator) : TextFileBackend = cng match{
+    case hrc: HeaderRowColumnNames => TextFileBackend(file, MagicMarshaller(file, Some(cng), new MagicOptions), 1, "UTF-8")
+    case _ => TextFileBackend(file, MagicMarshaller(file, Some(cng), new MagicOptions), 0, "UTF-8")
+  }
+
+  def apply(file:File) : TextFileBackend= new TextFileBackend(file, MagicMarshaller(file), 1, "UTF-8")
+
+  def apply(file: File, marshaller: Marshaller, readSkipLines: Int, encoding: String ) : TextFileBackend =
+    new TextFileBackend(file,marshaller, readSkipLines, encoding)
+
+  def apply(file: File, marshaller: Marshaller, readSkipLines: Int): TextFileBackend = new TextFileBackend(file, marshaller, readSkipLines, "UTF-8")
+
+  def apply(file: File, marshaller: Marshaller) : TextFileBackend= new TextFileBackend(file, marshaller, 0, "UTF-8")
+}
+
+class TextFileBackend(override val file: File, marshaller: Marshaller, readSkipLines : Int, encoding: String) extends FileBackend(file){
 
   def dataTypes() = marshaller.dataTypes()
 
@@ -77,15 +97,14 @@ case class TextIterator(lineIterator: Iterator[String], parser : Marshaller) ext
 }
 
 case class HeaderRowColumnNames(file: File, delimiter: String = ",", encoding: String="UTF-8") extends ColumnNameGenerator{
-
+  private lazy val unr = s"$delimiter".r
+  private lazy val expandedDelimiter = s" $delimiter "
   private def columnNames = {
     val source = Source.fromFile(file, encoding)
     val iter = source.getLines()
     val names = if(iter.isEmpty)Seq.empty[String]
     else{
-      val header = iter.next()
-      header.split(delimiter).toSeq
-
+      unr.split(unr.replaceAllIn(iter.next, expandedDelimiter)).map{s => s.trim}.toSeq
     }
     source.close()
     names

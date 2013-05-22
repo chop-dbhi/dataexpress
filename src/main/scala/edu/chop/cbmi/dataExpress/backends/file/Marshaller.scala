@@ -35,18 +35,19 @@ case class DelimiterCustomMarshaller(delimiter: String, cng: ColumnNameGenerator
                                 unmarshaller: (Array[Option[String]])=>Array[Any])
                                 extends Marshaller(cng){
 
+  private lazy val unr = s"$delimiter".r
+  private lazy val expandedDelimiter = s" $delimiter "
+
   def dataTypes() = col_names.toList.map{x => TextDataType}
 
   def unmarshall(line : String) = {
-    val items: Array[Option[String]] = line.split(delimiter).map{s=>
+    val items: Array[Option[String]] = unr.split(unr.replaceAllIn(line,expandedDelimiter)).map{s=>
       val ts = s.trim
       if(ts.length==0)None
       else Some(ts)
     }
-    val paddedItems = if(items.length==col_names.length-1)(items.toList.:+(None)).toArray else items
-    val rowEntries = col_names.zip(unmarshaller(paddedItems))
+    val rowEntries = col_names.zip(unmarshaller(items))
     DataRow(rowEntries: _*)
-    //if the last entry is missing eg row ends with delimiter then padd with None
   }
 
   def marshall(row: DataRow[_]) = {
@@ -64,17 +65,18 @@ case class DelimiterCustomMarshaller(delimiter: String, cng: ColumnNameGenerator
 
 case class DelimiterMarshaller(delimiter: String, cng: ColumnNameGenerator) extends Marshaller(cng){
 
+  private lazy val unr = s"$delimiter".r
+  private lazy val expandedDelimiter = s" $delimiter "
+
   def dataTypes() = col_names.toList.map{x => TextDataType}
 
   def unmarshall(line:String) = {
-    val items: Array[String] = line.split(delimiter).map{s=>
+    val items: Array[String] = unr.split(unr.replaceAllIn(line,expandedDelimiter)).map{s=>
       val ts = s.trim
       if(ts.length==0)null
       else ts
     }
-    //if the last entry is missing eg row ends with delimiter then padd with None
-    val paddedItems = if(items.length==col_names.length-1)(items.toList.:+(null)).toArray else items
-    val rowEntries = col_names.zip(paddedItems)
+    val rowEntries = col_names.zip(items)
     DataRow(rowEntries: _*)
   }
 
@@ -92,16 +94,16 @@ case class DelimiterMarshaller(delimiter: String, cng: ColumnNameGenerator) exte
 }
 
 abstract class TypedDelimiterMarshaller[TYPE](delimiter: String, cng: ColumnNameGenerator, f: (String)=> TYPE) extends Marshaller(cng){
+  private lazy val unr = s"$delimiter".r
+  private lazy val expandedDelimiter = s" $delimiter "
 
   def unmarshall(line:String) = {
-    val items: List[Option[TYPE]] = line.split(delimiter).map{s=>
+    val items: List[Option[TYPE]] = unr.split(unr.replaceAllIn(line,expandedDelimiter)).map{s=>
       val ts = s.trim
       if(ts.length==0)None
       else Some(f(ts))
     }.toList
-    //if the last entry is missing eg row ends with delimiter then pad with emptyValue
-    val paddedItems = if(items.length==col_names.length-1)(items.toList.:+(None)) else items
-    val rowEntries = col_names.zip(paddedItems.map{item=>
+    val rowEntries = col_names.zip(items.map{item=>
       item match{
         case Some(i) => i
         case _ => null
@@ -155,8 +157,3 @@ case class StaticMarshaller(cng:ColumnNameGenerator) extends Marshaller(cng){
 
 
 }
-
-//TODO create these "fancy" marshallers
-//case class SmartMarshaller -> should attempt to infer types
-//case class RegexParser(cng: ColumnNameGenerator, rx:
-
