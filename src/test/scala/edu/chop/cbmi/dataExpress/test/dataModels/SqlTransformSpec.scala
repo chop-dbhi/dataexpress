@@ -4,7 +4,7 @@ import edu.chop.cbmi.dataExpress.dataModels.DataRow
 import edu.chop.cbmi.dataExpress.dataModels.DataTable
 import edu.chop.cbmi.dataExpress.dataModels.RichOption.optionToRichOption
 import edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation
-import edu.chop.cbmi.dataExpress.dataModels.sql.SqlTransform
+import edu.chop.cbmi.dataExpress.dataModels.TransformedDataTable
 import edu.chop.cbmi.dataExpress.test.util.presidents._
 import edu.chop.cbmi.dataExpress.test.util.presidents.PresidentsSpecWithSourceTarget
 
@@ -19,7 +19,7 @@ class SqlTransformSpec extends PresidentsSpecWithSourceTarget {
     	  val sr:SqlRelation[Any] = DataTable(source_backend, query)
     	  sr.hasColumn("first_name") should equal(true)
       
-    	  val tf = SqlTransform(sr){dr:DataRow[_] => DataRow(("name", "%s %s".format(dr.first_name.asu[String], dr.last_name.asu[String])))}
+    	  val tf = new TransformedDataTable(sr){dr:DataRow[_] => DataRow(("name", "%s %s".format(dr.first_name.asu[String], dr.last_name.asu[String])))}
     	  When("columnNames is called, the first transform should run to populate metadata")
     	  tf.columnNames(0) should be("name")
     	  tf.next.name.asu[String] should be("George Washington")
