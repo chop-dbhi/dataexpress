@@ -15,6 +15,8 @@ trait Store {
 
   def createTable(name:String, table:DataTable[_]) : Boolean
 
+  def tableForName(name:String) : DataTable[_]
+
   def insertRow(tableName : String, row : DataRow[_]) : Boolean
 
   def insertRow(tableName : String, f : (String)=>Option[_]) : Boolean
