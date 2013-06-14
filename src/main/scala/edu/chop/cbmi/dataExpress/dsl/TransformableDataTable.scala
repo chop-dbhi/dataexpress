@@ -31,81 +31,80 @@ import edu.chop.cbmi.dataExpress.dataModels.{DataRow, DataType, DataTable}
  * To change this template use File | Settings | File Templates.
  */
 
-abstract class TransformableDataTable() {
-
-  val _transformers : scala.collection.mutable.ListBuffer[(DataRow[_]) => Option[DataRow[_]]]
-  var _final_column_names : List[String]
-  var _final_data_types: Option[List[DataType]]
-
-  def data_table() : DataTable[_]
-
-  def transform_rows(f: (DataRow[_]) => DataRow[_]): TransformableDataTable = {
-    def wrapped_transform(transform: (DataRow[_]) => DataRow[_])(row: DataRow[_]) = Some(f(row))
-    _transformers += wrapped_transform(f) _
-    this
-  }
-
-  def filter_rows(f: (DataRow[_]) => Boolean): TransformableDataTable = {
-    def wrapped_filter(filtration: (DataRow[_]) => Boolean)(row: DataRow[_]) = if (filtration(row)) Some(row) else None
-    _transformers += wrapped_filter(f) _
-    this
-  }
-
-}
-
-class FixedDimensionTransformableTable(private val table: DataTable[_]) extends TransformableDataTable() {
-
-  val _transformers = scala.collection.mutable.ListBuffer.empty[(DataRow[_]) => Option[DataRow[_]]]
-  var _final_column_names: List[String] = table.columnNames.toList
-  var _final_data_types: Option[List[DataType]] = None
-
-  def data_table() = table
-
-  private def update_column_names(names: String*): FixedDimensionTransformableTable = {
-    _final_column_names = names.toList
-    transform_rows((dr: DataRow[_]) => {
-      val items = dr.columnNames.zipWithIndex.sortWith((t1: (String, Int), t2: (String, Int)) => {
-        t1._2 < t2._2
-      }).map((t: (String, Int)) => {
-        names(t._2) -> dr(t._1).getOrElse(null)
-      })
-      DataRow(items: _*)
-    })
-    this
-  }
-
-  def change_column_names(old_to_new: (String, String)*): FixedDimensionTransformableTable = {
-    val old_names = old_to_new map {
-      _._1
-    }
-    val name_map = old_to_new.toMap
-
-    val temp = _final_column_names map {
-      name =>
-        if (old_names.contains(name)) name_map(name) else name
-    }
-    update_column_names(temp: _*)
-  }
-
-  def alter() = new AlterDataTable(this)
-
-}
-
-case class AlterDataTable(table: TransformableDataTable) extends TransformableDataTable(){
-case class AlterDataTable(table: TransformableDataTable) extends TransformableDataTable(){
-  val _transformers = table._transformers
-  var _final_column_names: List[String] = table._final_column_names
-  var _final_data_types: Option[List[DataType]] = table._final_data_types
-
-  def data_table() = table.data_table()
-
-  def with_column_names(names: String*): AlterDataTable = {
-    _final_column_names = names.toList
-    this
-  }
-
-  def with_data_types(data_type: DataType*): AlterDataTable = {
-    _final_data_types = Some(data_type.toList)
-    this
-  }
-}
+//abstract class TransformableDataTable() {
+//
+//  val _transformers : scala.collection.mutable.ListBuffer[(DataRow[_]) => Option[DataRow[_]]]
+//  var _final_column_names : List[String]
+//  var _final_data_types: Option[List[DataType]]
+//
+//  def data_table() : DataTable[_]
+//
+//  def transform_rows(f: (DataRow[_]) => DataRow[_]): TransformableDataTable = {
+//    def wrapped_transform(transform: (DataRow[_]) => DataRow[_])(row: DataRow[_]) = Some(f(row))
+//    _transformers += wrapped_transform(f) _
+//    this
+//  }
+//
+//  def filter_rows(f: (DataRow[_]) => Boolean): TransformableDataTable = {
+//    def wrapped_filter(filtration: (DataRow[_]) => Boolean)(row: DataRow[_]) = if (filtration(row)) Some(row) else None
+//    _transformers += wrapped_filter(f) _
+//    this
+//  }
+//
+//}
+//
+//class FixedDimensionTransformableTable(private val table: DataTable[_]) extends TransformableDataTable() {
+//
+//  val _transformers = scala.collection.mutable.ListBuffer.empty[(DataRow[_]) => Option[DataRow[_]]]
+//  var _final_column_names: List[String] = table.columnNames.toList
+//  var _final_data_types: Option[List[DataType]] = None
+//
+//  def data_table() = table
+//
+//  private def update_column_names(names: String*): FixedDimensionTransformableTable = {
+//    _final_column_names = names.toList
+//    transform_rows((dr: DataRow[_]) => {
+//      val items = dr.columnNames.zipWithIndex.sortWith((t1: (String, Int), t2: (String, Int)) => {
+//        t1._2 < t2._2
+//      }).map((t: (String, Int)) => {
+//        names(t._2) -> dr(t._1).getOrElse(null)
+//      })
+//      DataRow(items: _*)
+//    })
+//    this
+//  }
+//
+//  def change_column_names(old_to_new: (String, String)*): FixedDimensionTransformableTable = {
+//    val old_names = old_to_new map {
+//      _._1
+//    }
+//    val name_map = old_to_new.toMap
+//
+//    val temp = _final_column_names map {
+//      name =>
+//        if (old_names.contains(name)) name_map(name) else name
+//    }
+//    update_column_names(temp: _*)
+//  }
+//
+//  def alter() = new AlterDataTable(this)
+//
+//}
+//
+//case class AlterDataTable(table: TransformableDataTable) extends TransformableDataTable(){
+//  val _transformers = table._transformers
+//  var _final_column_names: List[String] = table._final_column_names
+//  var _final_data_types: Option[List[DataType]] = table._final_data_types
+//
+//  def data_table() = table.data_table()
+//
+//  def with_column_names(names: String*): AlterDataTable = {
+//    _final_column_names = names.toList
+//    this
+//  }
+//
+//  def with_data_types(data_type: DataType*): AlterDataTable = {
+//    _final_data_types = Some(data_type.toList)
+//    this
+//  }
+//}
