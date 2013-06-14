@@ -114,7 +114,7 @@ object ETL {
   def new_row(column_name_value_pair : (String,_)*) = DataRow(column_name_value_pair: _*)
 
   //Implicits
-  implicit def dataTable2FixedDimDataTable(dt : DataTable[_]) = new FixedDimensionTransformableTable(dt)
+  //implicit def dataTable2FixedDimDataTable(dt : DataTable[_]) = new FixedDimensionTransformableTable(dt)
 
   implicit def string2Store(name: String) = registered_stores.get(name) match {
     case Some(s:Store) =>s
