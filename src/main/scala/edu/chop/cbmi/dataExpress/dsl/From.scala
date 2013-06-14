@@ -20,9 +20,8 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package edu.chop.cbmi.dataExpress.dsl
 
-import edu.chop.cbmi.dataExpress.dsl.ETL._
-import exceptions.UnsupportedStoreType
-import stores.{SqlDb, Store}
+import edu.chop.cbmi.dataExpress.dsl.exceptions.{UnsupportedStoreType}
+import edu.chop.cbmi.dataExpress.dsl.stores.{FileStore, SqlDb, Store}
 import edu.chop.cbmi.dataExpress.dataModels.{DataTable}
 import edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation
 
@@ -52,6 +51,11 @@ case class From private[dsl](private val store : Store) {
   def query(q: String, bindvars : Seq[Option[Any]] = Seq.empty[Option[Any]]): DataTable[_] = store match {
     case (s:SqlDb) => SqlRelation(q,bindvars, s.backend) //new FixedDimensionTransformableTable(DataTable(s.backend, q, bindvars))
     case _ => throw UnsupportedStoreType(store, "query")
+  }
+
+  def get_values() = store match{
+    case (s: FileStore) => new FixedDimensionTransformableTable(DataTable(s.fb, s.cng))
+    case _ => throw UnsupportedStoreType(store, "get_values")
   }
 
 }

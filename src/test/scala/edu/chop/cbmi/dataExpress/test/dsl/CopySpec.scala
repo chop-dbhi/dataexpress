@@ -10,7 +10,6 @@ package edu.chop.cbmi.dataExpress.test.dsl
 
 import edu.chop.cbmi.dataExpress.dsl.ETL._
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._
-import edu.chop.cbmi.dataExpress.backends.SqlBackend
 import edu.chop.cbmi.dataExpress.dsl.{ETL}
 import java.sql.Date
 import edu.chop.cbmi.dataExpress.dsl.stores.{SqlDb}
@@ -19,7 +18,6 @@ import edu.chop.cbmi.dataExpress.dataModels.{DataRow, DataTable}
 import edu.chop.cbmi.dataExpress.test.util.presidents._
 import edu.chop.cbmi.dataExpress.test.util.presidents.{PresidentsSpecWithSourceTarget}
 import edu.chop.cbmi.dataExpress.test.util.presidents.SQLStatements.potus_data_row
-import edu.chop.cbmi.dataExpress.test.util.TestProps
 
 
 
@@ -39,6 +37,8 @@ class CopySpec extends PresidentsSpecWithSourceTarget {
   val PRES_COLLAPSED_NAMES = add_known_table("pres_collapsed_names")
   val TTP_TWO = add_known_table("ttp_two")
   val TTP_THREE = add_known_table("ttp_three")
+  val TTP_FOUR = add_known_table("ttp_four")
+  val TTP_FIVE = add_known_table("ttp_five")
 
   describe("CopyFromTable"){
     it("should copy tables"){
@@ -92,7 +92,7 @@ class CopySpec extends PresidentsSpecWithSourceTarget {
           }, (i:Int)=>i/100)
 
           copy table PRESIDENTS from source_db alter {table =>
-            table set_data_types(IntegerDataType(), CharacterDataType(20, false))
+            table set_data_types(IntegerDataType, CharacterDataType(20, false))
             table set_column_names("id", "name")
             table set_row_values {row =>
               val collapsed_name = row.last_name.asu[String] + ", " + row.first_name.asu[String]
@@ -128,8 +128,18 @@ class CopySpec extends PresidentsSpecWithSourceTarget {
           copy query bindable_statement using_bind_vars 2 from source_db to target_db create TTP_THREE
           BackendOps.add_table_name(target_backend, TTP_THREE)
           add_compare_table_assertion(TTP_THREE, ttp_map)
+
+          copy table UPPER_PRES_COPY from source_db to target_db create TTP_FOUR
+          val sql_statement2 = """select * from %s""".format(PRESIDENTS)
+          copy query sql_statement2 from source_db to target_db append TTP_FOUR
+          AssertionOps.query_and_count(TTP_FOUR, target_backend) should equal(2*default_president_count)
+
+          copy table UPPER_PRES_COPY from source_db to target_db create TTP_FIVE
+          copy table PRESIDENTS from source_db to target_db append TTP_FIVE
+          AssertionOps.query_and_count(TTP_FIVE, target_backend) should equal(2*default_president_count)
+
         }
-      } should equal(Some(true))
+      } should equal(Left(true))
 
       AssertionOps.execute_assertions()
     }

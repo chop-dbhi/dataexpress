@@ -17,7 +17,6 @@ import edu.chop.cbmi.dataExpress.dataModels._
 import edu.chop.cbmi.dataExpress.dataModels.sql._
 import edu.chop.cbmi.dataExpress.test.util.TestProps
 import edu.chop.cbmi.dataExpress.test.util.cars.dataSetup.backends.MySqlDataSetup
-import edu.chop.cbmi.dataExpress.test.util.TestProps$
 import scala.language.reflectiveCalls
 
 class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
@@ -86,7 +85,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     val tableName = "cars_deba_a"
     val columnFixedWidth: Boolean = false
     val columnNames: List[String] = List("carid", "carnumber", "carmake", "carmodel")
-    val dataTypes = List(CharacterDataType(20, columnFixedWidth), IntegerDataType(), CharacterDataType(20, columnFixedWidth), CharacterDataType(20, columnFixedWidth))
+    val dataTypes = List(CharacterDataType(20, columnFixedWidth), IntegerDataType, CharacterDataType(20, columnFixedWidth), CharacterDataType(20, columnFixedWidth))
     val verifyTableStatement: String = "SELECT COUNT(*) as 'count' FROM information_schema.tables WHERE table_name = " + "'" + tableName + "'" + " and table_schema = " + "'" + dbSchema.get + "'"
     val backend = new MySqlBackend(f.props)
     val cascade: Boolean = true
@@ -613,7 +612,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
 
     val columnNames:List[String]              =     List("carid","carnumber","carmake","carmodel")
 
-    val dataTypes                             =     List( CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
+    val dataTypes                             =     List( CharacterDataType(20,columnFixedWidth),IntegerDataType,CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
@@ -793,7 +792,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
 
     val columnNames:List[String]              =     List("carid","carnumber","carmake","carmodel")
 
-    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
+    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType,CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
 
     val verifyTableStatement:String           =     "SELECT count(1) as 'count' FROM information_schema.tables WHERE table_name = " + "'" + tableName + "'" +  " and table_schema = " + "'" + dbSchema.get  + "'"
 
@@ -854,7 +853,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
 
     val columnNames:List[String]              =     List("carid","carnumber","carmake","carmodel")
 
-    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
+    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType,CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
 
     val verifyTableStatement:String           =     "SELECT COUNT(1) as 'count' FROM information_schema.tables WHERE table_name = " + "'" + tableName + "'" +  " and table_schema = " + "'" + dbSchema.get  + "'"
 

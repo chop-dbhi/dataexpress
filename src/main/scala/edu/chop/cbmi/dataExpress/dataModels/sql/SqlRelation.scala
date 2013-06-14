@@ -25,13 +25,14 @@ trait SqlMetadata extends Metadata {
   val resultSetMetadata:java.sql.ResultSetMetaData
 }
 
-sealed case class SqlRelation[+T](query:String, bindVars:Seq[Option[_]],  backend:SqlBackend) extends DataTable[T] with SqlMetadata{
-  	override lazy val columnNames:Seq[String] = (1 to columnCount).map{resultSetMetadata.getColumnLabel(_)}.toSeq
+sealed case class SqlRelation[+T] private[dataModels](query:String, bindVars:Seq[Option[_]],  backend:SqlBackend) extends DataTable[T] with SqlMetadata{
+  override lazy val columnNames:Seq[String] = (1 to columnCount).map{resultSetMetadata.getColumnLabel(_)}.toSeq
 	override lazy val dataTypes:Seq[DataType] = backend.sqlDialect.mapDataTypes(columnNames,resultSetMetadata)
 	override lazy val columnCount:Int = resultSetMetadata.getColumnCount()
 	override lazy val resultSetMetadata = resultSet.getMetaData()
 	lazy private val resultSet = backend.executeQuery(query, bindVars)
 	lazy private val iterator = SqlRelationIterator(this)
+
   
   override def next() = iterator.next()
   

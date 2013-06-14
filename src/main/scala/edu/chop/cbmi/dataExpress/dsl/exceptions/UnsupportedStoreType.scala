@@ -21,6 +21,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package edu.chop.cbmi.dataExpress.dsl.exceptions
 
 import edu.chop.cbmi.dataExpress.dsl.stores.Store
+import edu.chop.cbmi.dataExpress.backends.file.FileBackend
 
 /**
  * Created by IntelliJ IDEA.
@@ -33,3 +34,5 @@ import edu.chop.cbmi.dataExpress.dsl.stores.Store
 case class UnsupportedStoreType(store:Store, operation : String) extends Exception("Store type " + store.getClass.getName + " in method "+operation){
 
 }
+
+case class UnsupportedFileBackend(fb:FileBackend) extends Exception

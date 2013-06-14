@@ -106,13 +106,13 @@ case object OracleSqlDialect extends SqlDialect {
 
   def toSqlString(dataType: DataType): String = {
     dataType match {
-      case IntegerDataType()                                          => "INTEGER"
-      case SmallIntegerDataType()                                     => "SMALLINT"
+      case IntegerDataType                                          => "INTEGER"
+      case SmallIntegerDataType                                     => "SMALLINT"
       //TODO: Remove blatant Postgresql hack for lack of tinyint support below
-      case TinyIntegerDataType()                                      => "SMALLINT"
+      case TinyIntegerDataType                                      => "SMALLINT"
       case FloatDataType(p)                                           => "FLOAT"
       case DecimalDataType(p, s)                                      => "DECIMAL(%d,%d)".format(p, s)
-      case DateDataType()                                             => "DATE"
+      case DateDataType                                             => "DATE"
       case DateTimeDataType(true)                                     => "TIMESTAMP WITH TIME ZONE"
       case DateTimeDataType(false)                                    => "TIMESTAMP"
       case TimeDataType(true)                                         => "TIME WITH TIME ZONE"
@@ -121,10 +121,10 @@ case object OracleSqlDialect extends SqlDialect {
         if (fixed) "CHAR(%d)".format(length)
         else "VARCHAR(%d)".format(length)
       }
-      case TextDataType()                                             => "CLOB"
-      case BigBinaryDataType()                                        => "BLOB"
-      case BooleanDataType()                                          => "NUMBER(1,0)"
-      case BitDataType()                                              => "NUMBER(1,0)"
+      case TextDataType                                             => "CLOB"
+      case BigBinaryDataType                                        => "BLOB"
+      case BooleanDataType                                          => "NUMBER(1,0)"
+      case BitDataType                                              => "NUMBER(1,0)"
       case _                                                          => ""
     }
   }

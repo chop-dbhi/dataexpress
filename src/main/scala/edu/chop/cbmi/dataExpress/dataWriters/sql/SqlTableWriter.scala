@@ -24,7 +24,7 @@ import edu.chop.cbmi.dataExpress.backends.SqlBackend
 import edu.chop.cbmi.dataExpress.exceptions.TableDoesNotExist
 import collection.mutable.ListBuffer
 import edu.chop.cbmi.dataExpress.dataModels.{DataType, DataTable, DataRow}
-import edu.chop.cbmi.dataExpress.dataWriters.DataWriter
+import edu.chop.cbmi.dataExpress.dataWriters.{Updater, DataWriter}
 
 /**
  * Created by IntelliJ IDEA.
@@ -41,7 +41,7 @@ object SqlTableWriter{
 }
 
 case class SqlTableWriter(val backend : SqlBackend, val schema : Option[String] = None, val catalog : String = null)
-  extends DataWriter{
+  extends DataWriter with Updater{
 
   private def column_names(table_name : String) = {
     val rs = backend.connection.getMetaData.getColumns(catalog, schema.getOrElse(null), table_name, null)
@@ -65,10 +65,15 @@ case class SqlTableWriter(val backend : SqlBackend, val schema : Option[String] 
    * @param table A DataTable whose column names match columns in the target table, not all columns are required
    * @return SqlOperationsStatus contains status and primary keys for each row
    */
-  def insert_rows[T](table_name: String, table: DataTable[T]) = {
+  override def insert_rows[T](table_name: String, table: DataTable[T]) = {
     //TODO for logging it would help to know how many rows were inserted
     val result = backend.batchInsert(table_name, table, schema)
     SqlOperationStatus(true)
+  }
+
+  override def insert_rows[T](table_name: String, rows: Iterable[DataRow[T]]) = {
+    val result = backend.batchInsertRows(table_name, rows.iterator, column_names(table_name), schema)
+    if(result == -1)SqlOperationStatus(false) else SqlOperationStatus(true)
   }
 
 
@@ -88,7 +93,7 @@ case class SqlTableWriter(val backend : SqlBackend, val schema : Option[String] 
     val new_row = ListBuffer.empty[(String,T)]
     column_names(table_name).foreach((name:String)=>{
       (f(name) : @unchecked) match{
-        case Some(t:T) => new_row += name -> t
+        case Some(t) => new_row += name->t.asInstanceOf[T]
         case None => {} //row was filtered
       }
     })

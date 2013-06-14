@@ -1,7 +1,7 @@
 Considerably more information is available at the DataExpress website:
 http://dataexpress.research.chop.edu/
 
-Compiling from source: The source code includes an SBT build.sbt configuration allowing either Maven or SBT to be used for building. 
+Compiling from source: The source code includes an SBT build.sbt configuration allowing for building.
 
 All  commands assume you are working in the dataexpress root directory, here ~/dataexpress) 
 
@@ -15,10 +15,10 @@ All  commands assume you are working in the dataexpress root directory, here ~/d
 4. To test current source code:
     $sbt test
 
-5. To package WITHOUT dependencies
+5. To package WITHOUT dependencies:
     $sbt package
 
-6. To package WITH dependencies (does not include Scala library, to do so in ~/dataexpress/build.sbt set assembleArtifact in packageScala := true
+6. To package WITH dependencies (does not include Scala library, to do so in ~/dataexpress/build.sbt set assembleArtifact in packageScala := true):
     $sbt assembly
 
 7. To create scaladocs

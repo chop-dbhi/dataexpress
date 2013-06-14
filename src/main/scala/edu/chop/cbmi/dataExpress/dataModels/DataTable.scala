@@ -6,6 +6,8 @@ import edu.chop.cbmi.dataExpress.backends.SqlBackend
 import edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation
 import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
 import scala.language.dynamics
+import edu.chop.cbmi.dataExpress.backends.file.FileBackend
+import edu.chop.cbmi.dataExpress.dataModels.file.FileTable
 
 /**
  * Ensures a common set of Metadata traits across any classes that implement this trait. Specific implementations are
@@ -73,6 +75,12 @@ abstract class DataTable[+T] extends Iterator[DataRow[T]] with Dynamic with Meta
 
 
   /**
+   * provides the DataType of each column
+   * @return
+   */
+  def dataTypes() : Seq[DataType]
+
+  /**
    * @param name name of column
    * @return boolean corresponding to existence of the column in this table
    */
@@ -117,26 +125,28 @@ object DataTable {
     val alphabet = "abcdefghijklmnopqrstuvwxyz"
     "a" * (i / 26) + alphabet(i % 26)
   }
-  
+
   /** Convenience method for creating empty tables */
   def empty = apply(Seq.empty[String], Seq.empty[Nothing])
-  
+
+  def apply[T](): SimpleDataTable[Nothing] = empty
+
   /**
    * Creates a [[edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable]] using an in-memory data structure
-   * 
+   *
    * @param columnNames The names of the columns
    * @param row A set of {{{Seq}}} objects, each representing a row
-   * 
+   *
    * @return A simple data table that holds all data in memory
    */
   def apply[T](columnNames: Seq[String], row: Seq[T]*): SimpleDataTable[T] = {
     val rows = List(row: _*)
     SimpleDataTable(columnNames)(rows)
   }
-  
+
   /**
    * Creates a [[edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable]] using an in-memory data structure with auto-generated column names
-   * 
+   *
    * @param row A set of {{{Seq}}} objects, each representing a row
    */
     def apply[T](row: Seq[T]*): SimpleDataTable[T] = {
@@ -146,16 +156,15 @@ object DataTable {
 
   /**
    * Creates a [[edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation]]
-   * 
+   *
    * @param dataStore An open [[edu.chop.cbmi.dataExpress.backend.SqlBackend]] ready to accept queries
    * @param query A SQL query that returns results
-   * @param bindVars (optional) set of values to bind to placeholder variables 
+   * @param bindVars (optional) set of values to bind to placeholder variables
    */
   //TODO Should this really be here in a generic package? Seems like you would want SQLRelation to emit a data table.
   def apply(dataStore:SqlBackend, query:String, bindVars:Seq[Option[_]] = Seq.empty[Option[_]]) = {
     SqlRelation(query, bindVars, dataStore)
   }
-  
-  //TODO create a simple apply() method that calls .empty so this behaves like List()
 
+  def apply(fileStore : FileBackend, cng: ColumnNameGenerator) = FileTable(fileStore, cng)
 }

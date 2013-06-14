@@ -79,7 +79,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val tableName = "cars_deba_a"
     val columnFixedWidth: Boolean = false
     val columnNames: List[String] = List("carid", "carnumber", "carmake", "carmodel")
-    val dataTypes = List(CharacterDataType(20, columnFixedWidth), IntegerDataType(), CharacterDataType(20, columnFixedWidth), CharacterDataType(20, columnFixedWidth))
+    val dataTypes = List(CharacterDataType(20, columnFixedWidth), IntegerDataType, CharacterDataType(20, columnFixedWidth), CharacterDataType(20, columnFixedWidth))
     val verifyTableStatement: String =
       "SELECT count(*) as count FROM dba_tables WHERE upper(table_name) = '%s' AND upper(owner) = '%s'".format(tableName.toUpperCase(), targetDbUserName.toUpperCase())
 
@@ -574,7 +574,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     val columnNames:List[String]              =     List("carid","carnumber","carmake","carmodel")
 
-    val dataTypes                             =     List( CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
+    val dataTypes                             =     List( CharacterDataType(20,columnFixedWidth),IntegerDataType,CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
                                                           CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth),
@@ -732,7 +732,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     val columnNames:List[String]              =     List("carid","carnumber","carmake","carmodel")
 
-    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType(),CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
+    val dataTypes                             =     List(CharacterDataType(20,columnFixedWidth),IntegerDataType,CharacterDataType(20,columnFixedWidth),CharacterDataType(20,columnFixedWidth))
 
     val verifyTableStatement:String           =     "SELECT table_name FROM user_tables WHERE table_name = " + "'" + tableName   + "'"
 
@@ -786,7 +786,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val columnFixedWidth: Boolean = false
     val columnNames: List[String] = List("carid", "carnumber", "carmake", "carmodel")
     val dataTypes = List(CharacterDataType(20, columnFixedWidth),
-    					 IntegerDataType(), 
+    					 IntegerDataType,
     					 CharacterDataType(20, columnFixedWidth),
     					 CharacterDataType(20, columnFixedWidth))
 

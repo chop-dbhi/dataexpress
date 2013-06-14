@@ -20,8 +20,8 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 package edu.chop.cbmi.dataExpress.dsl.statements
 
-import edu.chop.cbmi.dataExpress.dsl.stores.{SqlDb, Store}
-import edu.chop.cbmi.dataExpress.dataModels.{DataTable, DataType, DataRow, TransformedDataTable}
+import edu.chop.cbmi.dataExpress.dsl.stores.{Store}
+import edu.chop.cbmi.dataExpress.dataModels.{DataType, DataRow}
 import edu.chop.cbmi.dataExpress.dsl._
 
 /**
@@ -122,9 +122,15 @@ class CopyFromQuery(query : String, source : Store, bind_vars : Seq[Option[Any]]
   lazy protected val _table = From(source).query(query, bind_vars)
 }
 
+class CopyFromSource(source: Store) extends CopyFrom{
+  lazy protected val _table = From(source).get_values
+}
+
 class CopySelect {
   def table(table_name : String) : CopyFromTablePre = new CopyFromTablePre(table_name)
 
   def query(q : String) : CopyFromQueryPre = new CopyFromQueryPre(q)
+
+  def from(source: Store) : CopyFromSource = new CopyFromSource(source)
 }
 

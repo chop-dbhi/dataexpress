@@ -26,6 +26,8 @@ trait PresidentsTest {
 
   def default_president_count = SQLStatements.default_president_list().length
 
+  def default_president_ids = SQLStatements.default_president_list().map{tpl => tpl._1}
+
   def default_ttp_count = {
     val t = SQLStatements.default_president_list() filter {
       l =>
@@ -147,12 +149,18 @@ abstract class PresidentsFeatureSpecWithSourceTarget extends PresidentsFeatureSp
                                   map_id_func: (Int) => Int = (i: Int) => i,
                                   source: SqlBackend = source_backend) = {
     AssertionOps.assertion_functions += (() => {
-      DataTable(source, """select * from %s.%s""".format(
-        source.sqlDialect.quoteIdentifier(schema.getOrElse(null)), source.sqlDialect.quoteIdentifier(table_name))) foreach {
+      //NOTE: WITH THE CHANGE OF DATATABLE TO AN ITERATOR, TAKING THE LENGTH CAUSES THE TABLE TO BE EMPTY
+      val table_length = DataTable(source, """select * from %s.%s""".format(
+        source.sqlDialect.quoteIdentifier(schema.getOrElse(null)), source.sqlDialect.quoteIdentifier(table_name))).length
+      if(table_length != compare_to.size)fail(s"len(DataTable(${table_name})==${table_length} != len(compare_to)=${compare_to.size}")
+      val table = DataTable(source, """select * from %s.%s""".format(
+        source.sqlDialect.quoteIdentifier(schema.getOrElse(null)), source.sqlDialect.quoteIdentifier(table_name)))
+
+      table foreach {
         row =>
           compare_to.get(map_id_func(row.id.asu[Int])) match {
-            case None => assert(false)
             case Some(other_row) => comparator(row, other_row)
+            case None => fail(s"could not find key ${map_id_func(row.id.asu[Int])}")
           }
       }
     })
@@ -237,12 +245,18 @@ abstract class PresidentsSpecWithSourceTarget extends PresidentsSpec {
                                   map_id_func: (Int) => Int = (i: Int) => i,
                                   source: SqlBackend = source_backend) = {
     AssertionOps.assertion_functions += (() => {
-      DataTable(source, """select * from %s.%s""".format(
-        source.sqlDialect.quoteIdentifier(schema.getOrElse(null)), source.sqlDialect.quoteIdentifier(table_name))) foreach {
+      //NOTE: WITH THE CHANGE OF DATATABLE TO AN ITERATOR, TAKING THE LENGTH CAUSES THE TABLE TO BE EMPTY
+      val table_length = DataTable(source, """select * from %s.%s""".format(
+        source.sqlDialect.quoteIdentifier(schema.getOrElse(null)), source.sqlDialect.quoteIdentifier(table_name))).length
+      if(table_length != compare_to.size)fail(s"len(DataTable(${table_name})==${table_length} != len(compare_to)=${compare_to.size}")
+      val table = DataTable(source, """select * from %s.%s""".format(
+        source.sqlDialect.quoteIdentifier(schema.getOrElse(null)), source.sqlDialect.quoteIdentifier(table_name)))
+
+       table foreach {
         row =>
           compare_to.get(map_id_func(row.id.asu[Int])) match {
-            case None => assert(false)
             case Some(other_row) => comparator(row, other_row)
+            case None => fail(s"could not find key ${map_id_func(row.id.asu[Int])}")
           }
       }
     })

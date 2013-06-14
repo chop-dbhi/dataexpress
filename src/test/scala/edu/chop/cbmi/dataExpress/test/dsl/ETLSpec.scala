@@ -3,7 +3,7 @@ package edu.chop.cbmi.dataExpress.test.dsl
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{BeforeAndAfter, GivenWhenThen, Spec}
 import edu.chop.cbmi.dataExpress.test.util.TestProps
-import edu.chop.cbmi.dataExpress.dsl.ETL
+import edu.chop.cbmi.dataExpress.dsl.{ExecutionOffMessage, ETL}
 import edu.chop.cbmi.dataExpress.dsl.ETL._
 import edu.chop.cbmi.dataExpress.dsl.stores.{Store, SqlDb}
 import org.junit.runner.RunWith
@@ -45,7 +45,7 @@ class ETLSpec extends FunSpec with GivenWhenThen with ShouldMatchers with Before
         x = 1
         val y = 2
         x + y
-      } should equal(Some(3))
+      } should equal(Left(3))
       x should equal(1)
     }
 
@@ -53,7 +53,7 @@ class ETLSpec extends FunSpec with GivenWhenThen with ShouldMatchers with Before
       var x = 1
       ETL.execute(false){
         x = 2
-      } should equal(None)
+      } should equal(Right(ExecutionOffMessage))
       x should equal(1)
     }
 

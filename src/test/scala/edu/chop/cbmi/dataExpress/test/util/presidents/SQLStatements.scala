@@ -104,7 +104,7 @@ object SQLStatements {
     case (bs:POSTGRES) =>"""CREATE TABLE "%s"."presidents"
                                 (id serial NOT NULL,
                                  first_name character varying(20),
-                                 last_name character varying(50),
+                                 last_name character varying(20),
                                  num_terms integer NOT NULL DEFAULT 1,
                                  dob date,
                                  CONSTRAINT pk PRIMARY KEY (id)
@@ -115,7 +115,7 @@ object SQLStatements {
     case (bs:MYSQL) => """CREATE TABLE `%s`.`presidents` (
           	`id` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
           	`first_name` varchar(20),
-          	`last_name` varchar(50),
+          	`last_name` varchar(20),
           	`num_terms` SMALLINT UNSIGNED NOT NULL DEFAULT '1',
           	`dob` date,
           	PRIMARY KEY (`id`)

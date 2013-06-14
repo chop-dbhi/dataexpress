@@ -14,13 +14,16 @@ case class SimpleDataTable[+T](columnNames: Seq[String])(private val data: Seq[S
   require(data.length > 0, println("data cannot be empty"))
   require(columnNames.length == data(0).length, println("generate_column_names.length must equal data(0).length"))
   require((true /: data)((b: Boolean, l: Seq[_]) => b && l.length == data(0).length),
-    println("All elements in data must be of equal length"))
-  private val  iterator = SimpleDataIterator(columnNames, data)
+   println("All elements in data must be of equal length"))
+
+  private val iterator = SimpleDataIterator(columnNames, data)
   val columnCount = columnNames.length
-  //TODO: simple table needs to get its house in order here and actually report DataExpress Types
-  val dataTypes = Seq()
+  lazy val dataTypes = {
+    Seq[DataType]()
+  }
   
   
+
    /**
    * @param idx index of desired table row
    * @return DataRow[Option[T]] containing the elements of row idx wrapped in an Option
