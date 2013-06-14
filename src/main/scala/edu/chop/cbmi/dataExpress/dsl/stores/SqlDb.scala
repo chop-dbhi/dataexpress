@@ -24,6 +24,7 @@ import edu.chop.cbmi.dataExpress.backends.{SqlDialect, SqlBackendFactory, SqlBac
 import edu.chop.cbmi.dataExpress.dataModels._
 import edu.chop.cbmi.dataExpress.dataWriters.DataWriter
 import edu.chop.cbmi.dataExpress.dataWriters.sql.SqlOperationStatus
+import sql.SqlRelation
 
 
 class SqlDb(val backend : SqlBackend, val schema : Option[String], val catalog : Option[String]) extends Store with DataWriter{
@@ -45,6 +46,10 @@ class SqlDb(val backend : SqlBackend, val schema : Option[String], val catalog :
   override def save : Boolean = {
     if(!is_closed_?)backend.commit()
     else false
+  }
+
+  override def tableForName(name: String) = {
+    SqlRelation(backend.sqlDialect.singleTableSelect(name), Seq(), backend)
   }
 
   override def createTable(name:String, table:DataTable[_]) = {
