@@ -88,7 +88,7 @@ case class SqlTableWriter(val backend : SqlBackend, val schema : Option[String] 
     val new_row = ListBuffer.empty[(String,T)]
     column_names(table_name).foreach((name:String)=>{
       (f(name) : @unchecked) match{
-        case Some(t:T) => new_row += name->t
+        case Some(t:T) => new_row += name -> t
         case None => {} //row was filtered
       }
     })
