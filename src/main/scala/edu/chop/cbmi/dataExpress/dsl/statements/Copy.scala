@@ -21,7 +21,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package edu.chop.cbmi.dataExpress.dsl.statements
 
 import edu.chop.cbmi.dataExpress.dsl.stores.{SqlDb, Store}
-import edu.chop.cbmi.dataExpress.dataModels.{DataType, DataRow}
+import edu.chop.cbmi.dataExpress.dataModels.{DataTable, DataType, DataRow, TransformedDataTable}
 import edu.chop.cbmi.dataExpress.dsl._
 
 /**
@@ -40,25 +40,25 @@ trait Transformer[T<:Transformer[T]] {
 
   self: T =>
 
-  def table() : TransformableDataTable
+  def table() : DataTable[T]
 
   def filter(f:(DataRow[_])=>Boolean) : T = {
-    table.filter_rows(f)
+    table().filterRows(f)
     this
   }
 
   def transform(f : (DataRow[_])=>DataRow[_]) : T = {
-    table.transform_rows(f)
+    new TransformedDataTable(table())(f)
     this
   }
 
-  def to(target : Store) : ToFromTable = ToFromTable(target, table)
+  def to(target : Store) : ToFromTable = ToFromTable(target, table())
 }
 
 trait CopyFromGeneric extends Transformer[CopyFromGeneric]
 
 abstract class CopyFrom extends CopyFromGeneric {
-  protected val _table : FixedDimensionTransformableTable
+  protected val _table : DataTable[_]
 
   def table() = _table
 
@@ -72,11 +72,11 @@ abstract class CopyFrom extends CopyFromGeneric {
   }
 }
 
-class CopyFromAlterFinal(val transform_table : TransformableDataTable) extends CopyFromGeneric{
+class CopyFromAlterFinal(val transform_table : DataTable[_]) extends CopyFromGeneric{
   def table() = transform_table
 }
 
-class CopyFromAlter(transform_table : TransformableDataTable) extends CopyFromGeneric{
+class CopyFromAlter(transform_table : DataTable[_]) extends CopyFromGeneric{
 
   private val _table = new AlterDataTable(transform_table)
 
