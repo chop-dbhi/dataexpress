@@ -53,7 +53,7 @@ class GetFromQuery(query : String) extends GetFrom{
 }
 
 class GetFromTable(table_name : String) extends GetFrom{
-  def from(source : Store) = From(source).get_table(table_name).data_table
+  def from(source : Store) = From(source).get_table(table_name)
 }
 
 
