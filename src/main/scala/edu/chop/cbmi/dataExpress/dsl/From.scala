@@ -24,6 +24,7 @@ import edu.chop.cbmi.dataExpress.dsl.ETL._
 import exceptions.UnsupportedStoreType
 import stores.{SqlDb, Store}
 import edu.chop.cbmi.dataExpress.dataModels.{DataTable}
+import edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation
 
 /**
  * Created by IntelliJ IDEA.
@@ -35,20 +36,21 @@ import edu.chop.cbmi.dataExpress.dataModels.{DataTable}
 
 case class From private[dsl](private val store : Store) {
 
-  def get_table(table_name: String): FixedDimensionTransformableTable = store match {
-    case (s: SqlDb) => {
-      val query = s.schema match {
-        case None => """SELECT * FROM %s""".format(s.backend.sqlDialect.quoteIdentifier(table_name))
-        case Some(sch) => """SELECT * FROM %s.%s""".format(
-          s.backend.sqlDialect.quoteIdentifier(sch),s.backend.sqlDialect.quoteIdentifier(table_name))
-      }
-      new FixedDimensionTransformableTable(DataTable(s.backend, query))
-    }
-    case _ => throw UnsupportedStoreType(store, "get_table")
-  }
+  def get_table(table_name: String): DataTable[_] = store.tableForName(table_name)
+//    store match
+//    case (s: SqlDb) => {
+//      val query = s.schema match {
+//        case None => """SELECT * FROM %s""".format(s.backend.sqlDialect.quoteIdentifier(table_name))
+//        case Some(sch) => """SELECT * FROM %s.%s""".format(
+//          s.backend.sqlDialect.quoteIdentifier(sch),s.backend.sqlDialect.quoteIdentifier(table_name))
+//      }
+//      new FixedDimensionTransformableTable(DataTable(s.backend, query))
+//    }
+//    case _ => throw UnsupportedStoreType(store, "get_table")
+  //}
 
-  def query(q: String, bindvars : Seq[Option[Any]] = Seq.empty[Option[Any]]): FixedDimensionTransformableTable = store match {
-    case (s:SqlDb) => new FixedDimensionTransformableTable(DataTable(s.backend, q, bindvars))
+  def query(q: String, bindvars : Seq[Option[Any]] = Seq.empty[Option[Any]]): DataTable[_] = store match {
+    case (s:SqlDb) => SqlRelation(q,bindvars, s.backend) //new FixedDimensionTransformableTable(DataTable(s.backend, q, bindvars))
     case _ => throw UnsupportedStoreType(store, "query")
   }
 
