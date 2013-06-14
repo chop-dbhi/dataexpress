@@ -36,7 +36,7 @@ case class DataRow[+T] (columnNames : Seq[String])(private val data : Seq[Option
    */
   override def apply(idx : Int) = data(idx)
 
-  override def iterator() = data.iterator
+  override def iterator = data.iterator
 
   override def length = data.length
 
@@ -82,14 +82,14 @@ abstract class DataTable[+T] extends Iterator[DataRow[T]] with Dynamic with Meta
    * @param name name of column
    * @return an iterable collection of Option[T] of the elements in the column wrapped in an Option
    */
-  //def col(name: String) : Iterator[Option[T]]
+  def col(name: String) : Iterator[Option[T]]
 
   /**
    * @param G the desired return type
    * @param name the name of the column
    * @return an iterable collection of Option[G] of the elements in the column cast to type G wrapped in an Option
    */
-  //def col_as[G](name: String)(implicit m: Manifest[G]): Iterator[Option[G]]
+  def col_as[G](name: String)(implicit m: Manifest[G]): Iterator[Option[G]]
 
   /**
    * @param G the desired return type
@@ -97,13 +97,13 @@ abstract class DataTable[+T] extends Iterator[DataRow[T]] with Dynamic with Meta
    * @return an iterable collection of Option[G] of the elements in the column cast to type G
    * Note this method will likely fail if null instances exist in the column
    */
-  //def col_asu[G](name: String)(implicit m: Manifest[G]): Iterator[G]
+  def col_asu[G](name: String)(implicit m: Manifest[G]): Iterator[G]
+
 
   def selectDynamic(name: String) = {
     if(hasColumn(name)) {this.col(name)}
     else throw ColumnDoesNotExist(name)
   }
-
 
   override def toString() : String = "DataTable[" + (columnNames.head /: columnNames.tail) { (s1,s2) => s1 + ", " + s2} + "]"
 }
