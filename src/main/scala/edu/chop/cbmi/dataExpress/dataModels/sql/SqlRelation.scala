@@ -7,7 +7,7 @@ import collection.Seq
 import edu.chop.cbmi.dataExpress.dataModels._
 import java.sql.{ResultSetMetaData, ResultSet}
 import scala.language.dynamics
-
+import scala.reflect.Manifest
 
 
 //TODO: Maybe use this?
@@ -46,17 +46,21 @@ sealed case class SqlRelation[+T](query:String, bindVars:Seq[Option[_]],  backen
       else throw ColumnDoesNotExist(name)
 	}
 
-  override def col_as[G](name: String)(implicit m: Manifest[G]) = {
+  override def col_as[G](name: String)(implicit m: Manifest[G]): Iterator[Option[G]] = {
     if(hasColumn(name)) SqlRelation(sub_query(name), bindVars, backend).map{r:DataRow[G] => r(0).as[G]}
     else throw ColumnDoesNotExist(name)
   }
 
-  override def col_asu[G](name: String)(implicit m: Manifest[G]) = {
-    if(hasColumn(name)) SqlRelation(sub_query(name), bindVars, backend).map{r:DataRow[_] => r(0).asu[G]}
+  override def col_asu[G](name: String)(implicit m: Manifest[G]): Iterator[Option[G]] = {
+    if(hasColumn(name)) SqlRelation(sub_query(name), bindVars, backend).map{r:DataRow[_] => Some(r(0).asu[G])}
     else throw ColumnDoesNotExist(name)
 	}
+
+  override def filterRows(f:DataRow[_] => Boolean): DataTable[T] = {
+    this.filterRows(f)
+  }
  
-  case class SqlRelationIterator[+T] (val sqlRelation : SqlRelation[T]) extends Iterator[DataRow[T]] {
+  case class SqlRelationIterator[+T] (sqlRelation : SqlRelation[T]) extends Iterator[DataRow[T]] {
 
     lazy private val column_names = sqlRelation.columnNames
     lazy private val column_count = sqlRelation.columnCount
@@ -64,7 +68,7 @@ sealed case class SqlRelation[+T](query:String, bindVars:Seq[Option[_]],  backen
     protected var more_rows = false
     
     
-  override def hasNext() = {
+  override def hasNext = {
     if (!cursor_advanced) {
       cursor_advanced = true
       more_rows = sqlRelation.resultSet.next()
@@ -97,12 +101,6 @@ sealed case class SqlRelation[+T](query:String, bindVars:Seq[Option[_]],  backen
     def generate_next():DataRow[T] = {
       val row = (1 to column_count) map (next_item_in_column(_))
       val dr = DataRow(column_names)(row map ((x: Any) => if (x == null) None else Some(x.asInstanceOf[T])))
-      //This may not be the best spot to perform this operation, but it should suffice for the current implementation
-      //TODO As the above comment suggests, this seems a bad place for this. Probably, what's needed is a custom SqlDataRow imlpementation
-      //TODO refactor so that if possible, the Iterator is responsible for closing statements
-      /*if(!hasNext()) {
-        result_set.close()
-      }*/
       dr
     }
   }
