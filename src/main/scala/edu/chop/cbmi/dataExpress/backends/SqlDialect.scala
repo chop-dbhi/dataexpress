@@ -31,6 +31,12 @@ trait SqlDialect {
    */
   def createTable(name: String, columns: List[(String, DataType)], schemaName: Option[String]): String
 
+  def singleTableSelect(name: String, schemaName: Option[String]=None) = {
+    val quotedSchemaPrefix = if (schemaName.isEmpty) "" else quoteIdentifier(schemaName.get) + "."
+
+    """SELECT * FROM %s""".format(quotedSchemaPrefix + name)
+  }
+
   /**
    * Returns a complete `DROP TABLE` SQL Statement
    *
