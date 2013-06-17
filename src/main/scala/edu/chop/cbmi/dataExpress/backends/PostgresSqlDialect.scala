@@ -120,6 +120,7 @@ case object PostgresSqlDialect extends SqlDialect {
   def toSqlString(dataType: DataType): String = {
     dataType match {
       case IntegerDataType                  => "INTEGER"
+      case BigIntegerDataType               => "BIGINT"
       case SmallIntegerDataType             => "SMALLINT"
       //TODO: Remove blatant Postgresql hack for lack of tinyint support below
       case TinyIntegerDataType              => "SMALLINT"

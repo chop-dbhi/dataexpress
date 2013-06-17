@@ -6,6 +6,7 @@ import edu.chop.cbmi.dataExpress.dataModels.DataType
 case object TinyIntegerDataType extends DataType
 case object SmallIntegerDataType extends DataType
 case object IntegerDataType extends DataType
+case object BigIntegerDataType extends DataType
 case class FloatDataType(precision: Int) extends DataType
 case class DecimalDataType(precision: Int, scale: Int) extends DataType
 

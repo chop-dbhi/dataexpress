@@ -112,6 +112,7 @@ trait SqlDialect {
       val i = j + 1
       meta.getColumnType(i) match {
         //TODO: Add BIGINT support!
+        case java.sql.Types.BIGINT => BigIntegerDataType
         case java.sql.Types.INTEGER => IntegerDataType
         case java.sql.Types.SMALLINT => SmallIntegerDataType
         case java.sql.Types.TINYINT => TinyIntegerDataType
