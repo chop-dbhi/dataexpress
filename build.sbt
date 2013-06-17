@@ -8,7 +8,7 @@ assemblySettings
 
 name := "DataExpress"
 
-version := "0.9.1.1"
+version := "0.9.1.2"
 
 organization := "edu.chop.cbmi"
 
