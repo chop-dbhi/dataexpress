@@ -25,7 +25,6 @@ trait SqlBackendProvider {
 object SqlBackendFactory{
 	
   val sqlBackendProviderLoader = ServiceLoader.load[SqlBackendProvider](classOf[SqlBackendProvider])
-  private val included_backends = List("postgresql", "mysql", "sqlite", "oracle")
   private val included_backends = List("postgresql", "mysql", "sqlite", "oracle", "sqlserver")
 
   private def load_included_bakcend(db_type: String, connection_properties: Properties, sqlDialect: SqlDialect = null,
