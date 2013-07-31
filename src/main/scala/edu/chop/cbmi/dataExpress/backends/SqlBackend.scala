@@ -149,7 +149,11 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
 
     if (props.stringPropertyNames().contains("jdbcUri")) {
       jdbcUri = props.getProperty("jdbcUri")
-      val connectProps = new Properties(props)
+      val connectProps = new Properties()
+
+      //Oracle discourages this, but people apparently do it in this case: http://stackoverflow.com/a/2004900/576145
+      connectProps.putAll(props)
+
       connectProps.remove("jdbcUri")
       connection = dr.connect(jdbcUri, connectProps)
       connection.setAutoCommit(false)
