@@ -2,24 +2,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>edu.chop.cbmi.dataExpress.dataModels.sql</title>
+          <title>sql - edu.chop.cbmi.dataExpress.dataModels.sql</title>
+          <meta name="description" content="sql - edu.chop.cbmi.dataExpress.dataModels.sql" />
+          <meta name="keywords" content="sql edu.chop.cbmi.dataExpress.dataModels.sql" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../../../../lib/template.css" />
-      <script type="text/javascript" src="../../../../../../lib/jquery.js"></script>
+      <link href="../../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../../lib/jquery.js" id="jquery-js"></script>
       <script type="text/javascript" src="../../../../../../lib/jquery-ui.js"></script>
       <script type="text/javascript" src="../../../../../../lib/template.js"></script>
       <script type="text/javascript" src="../../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../../index.html';
+            var hash = 'edu.chop.cbmi.dataExpress.dataModels.sql.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+        <body class="value">
       <div id="definition">
         <img src="../../../../../../lib/package_big.png" />
-        <p id="owner"><a name="edu" class="extype" href="../../../../../package.html">edu</a>.<a name="edu.chop" class="extype" href="../../../../package.html">chop</a>.<a name="edu.chop.cbmi" class="extype" href="../../../package.html">cbmi</a>.<a name="edu.chop.cbmi.dataExpress" class="extype" href="../../package.html">dataExpress</a>.<a name="edu.chop.cbmi.dataExpress.dataModels" class="extype" href="../package.html">dataModels</a></p>
+        <p id="owner"><a href="../../../../../package.html" class="extype" name="edu">edu</a>.<a href="../../../../package.html" class="extype" name="edu.chop">chop</a>.<a href="../../../package.html" class="extype" name="edu.chop.cbmi">cbmi</a>.<a href="../../package.html" class="extype" name="edu.chop.cbmi.dataExpress">dataExpress</a>.<a href="../package.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels">dataModels</a></p>
         <h1>sql</h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">package</span>
@@ -29,11 +44,11 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"></div>
-    
+          <div id="comment" class="fullcommenttop"></div>
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
         
         
         <div id="visbl">
@@ -46,45 +61,10 @@
         <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.BigBinaryDataType" data-isabs="false">
-      <a id="BigBinaryDataType:BigBinaryDataType"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="BigBinaryDataType.html"><span class="name">BigBinaryDataType</span></a><span class="params">()</span><span class="result"> extends DataType with Product with Serializable</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.BitDataType" data-isabs="false">
-      <a id="BitDataType:BitDataType"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="BitDataType.html"><span class="name">BitDataType</span></a><span class="params">()</span><span class="result"> extends DataType with Product with Serializable</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.BooleanDataType" data-isabs="false">
-      <a id="BooleanDataType:BooleanDataType"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="BooleanDataType.html"><span class="name">BooleanDataType</span></a><span class="params">()</span><span class="result"> extends DataType with Product with Serializable</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.CharacterDataType" data-isabs="false">
+              <ol><li name="edu.chop.cbmi.dataExpress.dataModels.sql.CharacterDataType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="CharacterDataTypeextendsDataTypewithProductwithSerializable"></a>
       <a id="CharacterDataType:CharacterDataType"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -92,23 +72,12 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="CharacterDataType.html"><span class="name">CharacterDataType</span></a><span class="params">(<span name="length">length: Int</span>, <span name="fixedWidth">fixedWidth: Boolean</span>)</span><span class="result"> extends DataType with Product with Serializable</span>
+        <a href="CharacterDataType.html"><span class="name">CharacterDataType</span></a><span class="params">(<span name="length">length: <span class="extype" name="scala.Int">Int</span></span>, <span name="fixedWidth">fixedWidth: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result"> extends <a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.DateDataType" data-isabs="false">
-      <a id="DateDataType:DateDataType"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="DateDataType.html"><span class="name">DateDataType</span></a><span class="params">()</span><span class="result"> extends DataType with Product with Serializable</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.DateTimeDataType" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.DateTimeDataType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DateTimeDataTypeextendsDataTypewithProductwithSerializable"></a>
       <a id="DateTimeDataType:DateTimeDataType"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -116,11 +85,12 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="DateTimeDataType.html"><span class="name">DateTimeDataType</span></a><span class="params">(<span name="withZone">withZone: Boolean</span>)</span><span class="result"> extends DataType with Product with Serializable</span>
+        <a href="DateTimeDataType.html"><span class="name">DateTimeDataType</span></a><span class="params">(<span name="withZone">withZone: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result"> extends <a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.DecimalDataType" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.DecimalDataType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DecimalDataTypeextendsDataTypewithProductwithSerializable"></a>
       <a id="DecimalDataType:DecimalDataType"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -128,11 +98,12 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="DecimalDataType.html"><span class="name">DecimalDataType</span></a><span class="params">(<span name="precision">precision: Int</span>, <span name="scale">scale: Int</span>)</span><span class="result"> extends DataType with Product with Serializable</span>
+        <a href="DecimalDataType.html"><span class="name">DecimalDataType</span></a><span class="params">(<span name="precision">precision: <span class="extype" name="scala.Int">Int</span></span>, <span name="scale">scale: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.FloatDataType" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.FloatDataType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FloatDataTypeextendsDataTypewithProductwithSerializable"></a>
       <a id="FloatDataType:FloatDataType"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -140,48 +111,26 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="FloatDataType.html"><span class="name">FloatDataType</span></a><span class="params">(<span name="precision">precision: Int</span>)</span><span class="result"> extends DataType with Product with Serializable</span>
+        <a href="FloatDataType.html"><span class="name">FloatDataType</span></a><span class="params">(<span name="precision">precision: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result"> extends <a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.IntegerDataType" data-isabs="false">
-      <a id="IntegerDataType:IntegerDataType"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="IntegerDataType.html"><span class="name">IntegerDataType</span></a><span class="params">()</span><span class="result"> extends DataType with Product with Serializable</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SmallIntegerDataType" data-isabs="false">
-      <a id="SmallIntegerDataType:SmallIntegerDataType"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="SmallIntegerDataType.html"><span class="name">SmallIntegerDataType</span></a><span class="params">()</span><span class="result"> extends DataType with Product with Serializable</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlIterator" data-isabs="true">
-      <a id="SqlIterator:SqlIterator[T]"></a>
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlIterator" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SqlIterator[+T]extendsIterator[T]"></a>
+      <a id="SqlIterator[+T]:SqlIterator[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
-        <span class="kind">case class</span>
+        <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="SqlIterator.html"><span class="name">SqlIterator</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="params">(<span name="sql_query_package">sql_query_package: SqlQueryPackage</span>)</span><span class="result"> extends Iterator[T] with Product with Serializable</span>
+        <a href="SqlIterator.html"><span class="name">SqlIterator</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <span class="extype" name="scala.Iterator">Iterator</span>[<span class="extype" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlIterator.T">T</span>]</span>
       </span>
       </h4>
-      <p class="comment cmt">Specialized scala.collection.Iterator that handles the peculiarities of dealing with a JDBC ResultSet
+      <p class="comment cmt">Specialized <span class="extype" name="scala.collection.Iterator">scala.collection.Iterator</span> that handles the peculiarities of dealing with a JDBC ResultSet
 </p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqlQueryPackageextendsColumnNameGeneratorwithProductwithSerializable"></a>
       <a id="SqlQueryPackage:SqlQueryPackage"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -189,49 +138,40 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="SqlQueryPackage.html"><span class="name">SqlQueryPackage</span></a><span class="params">(<span name="dataStore">dataStore: SqlBackend</span>, <span name="query">query: String</span>, <span name="bindVars">bindVars: Seq[Option[_]]</span>)</span><span class="result"> extends ColumnNameGenerator with Product with Serializable</span>
+        <a href="SqlQueryPackage.html"><span class="name">SqlQueryPackage</span></a><span class="params">(<span name="dataStore">dataStore: <a href="../../backends/SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">SqlBackend</a></span>, <span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bindVars">bindVars: <span class="extype" name="scala.collection.Seq">Seq</span>[<span class="extype" name="scala.Option">Option</span>[_]]</span>)</span><span class="result"> extends <a href="../ColumnNameGenerator.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator">ColumnNameGenerator</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">Wrapper for queries that produce a JDBC ResultSet
 </p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation" data-isabs="false">
-      <a id="SqlRelation:SqlRelation[T]"></a>
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqlRelation[+T]extendsDataTable[T]withProductwithSerializable"></a>
+      <a id="SqlRelation[+T]:SqlRelation[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">sealed </span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="SqlRelation.html"><span class="name">SqlRelation</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="params">(<span name="sql_query_package">sql_query_package: SqlQueryPackage</span>)</span><span class="result"> extends DataTable[T] with Product with Serializable</span>
+        <a href="SqlRelation.html"><span class="name">SqlRelation</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="../DataTable.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataTable">DataTable</a>[<span class="extype" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation.T">T</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      <p class="comment cmt">A <a name="edu.chop.cbmi.dataExpress.dataModels.DataTable" class="extype" href="../DataTable.html">DataTable</a> that represents a SQL relation (either a table or
+      <p class="comment cmt">A <a href="../DataTable.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataTable">edu.chop.cbmi.dataExpress.dataModels.DataTable</a> that represents a SQL relation (either a table or
 the complete result of a query).</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelationColumn" data-isabs="false">
-      <a id="SqlRelationColumn:SqlRelationColumn[G]"></a>
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelationColumn" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqlRelationColumn[G]extendsIterator[G]withProductwithSerializable"></a>
+      <a id="SqlRelationColumn[G]:SqlRelationColumn[G]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="SqlRelationColumn.html"><span class="name">SqlRelationColumn</span></a><span class="tparams">[<span name="G">G</span>]</span><span class="params">(<span name="sql_query_package">sql_query_package: SqlQueryPackage</span>, <span name="f">f: (Any) ⇒ G</span>)</span><span class="result"> extends Iterator[G] with Product with Serializable</span>
+        <a href="SqlRelationColumn.html"><span class="name">SqlRelationColumn</span></a><span class="tparams">[<span name="G">G</span>]</span><span class="result"> extends <span class="extype" name="scala.Iterator">Iterator</span>[<span class="extype" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelationColumn.G">G</span>] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.TextDataType" data-isabs="false">
-      <a id="TextDataType:TextDataType"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">case class</span>
-      </span>
-      <span class="symbol">
-        <a href="TextDataType.html"><span class="name">TextDataType</span></a><span class="params">()</span><span class="result"> extends DataType with Product with Serializable</span>
-      </span>
-      </h4>
-      
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.TimeDataType" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.TimeDataType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TimeDataTypeextendsDataTypewithProductwithSerializable"></a>
       <a id="TimeDataType:TimeDataType"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -239,19 +179,131 @@ the complete result of a query).</p>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="TimeDataType.html"><span class="name">TimeDataType</span></a><span class="params">(<span name="withZone">withZone: Boolean</span>)</span><span class="result"> extends DataType with Product with Serializable</span>
+        <a href="TimeDataType.html"><span class="name">TimeDataType</span></a><span class="params">(<span name="withZone">withZone: <span class="extype" name="scala.Boolean">Boolean</span></span>)</span><span class="result"> extends <a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.TinyIntegerDataType" data-isabs="false">
+    </li></ol>
+            </div>
+
+        
+
+        <div id="values" class="values members">
+              <h3>Value Members</h3>
+              <ol><li name="edu.chop.cbmi.dataExpress.dataModels.sql.BigBinaryDataType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BigBinaryDataType"></a>
+      <a id="BigBinaryDataType:BigBinaryDataType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="BigBinaryDataType$.html"><span class="name">BigBinaryDataType</span></a><span class="result"> extends <a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.BigIntegerDataType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BigIntegerDataType"></a>
+      <a id="BigIntegerDataType:BigIntegerDataType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="BigIntegerDataType$.html"><span class="name">BigIntegerDataType</span></a><span class="result"> extends <a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.BitDataType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BitDataType"></a>
+      <a id="BitDataType:BitDataType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="BitDataType$.html"><span class="name">BitDataType</span></a><span class="result"> extends <a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.BooleanDataType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="BooleanDataType"></a>
+      <a id="BooleanDataType:BooleanDataType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="BooleanDataType$.html"><span class="name">BooleanDataType</span></a><span class="result"> extends <a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.DateDataType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DateDataType"></a>
+      <a id="DateDataType:DateDataType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="DateDataType$.html"><span class="name">DateDataType</span></a><span class="result"> extends <a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.IntegerDataType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="IntegerDataType"></a>
+      <a id="IntegerDataType:IntegerDataType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="IntegerDataType$.html"><span class="name">IntegerDataType</span></a><span class="result"> extends <a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SmallIntegerDataType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SmallIntegerDataType"></a>
+      <a id="SmallIntegerDataType:SmallIntegerDataType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SmallIntegerDataType$.html"><span class="name">SmallIntegerDataType</span></a><span class="result"> extends <a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.TextDataType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TextDataType"></a>
+      <a id="TextDataType:TextDataType"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="TextDataType$.html"><span class="name">TextDataType</span></a><span class="result"> extends <a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.TinyIntegerDataType" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="TinyIntegerDataType"></a>
       <a id="TinyIntegerDataType:TinyIntegerDataType"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
-        <span class="kind">case class</span>
+        <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="TinyIntegerDataType.html"><span class="name">TinyIntegerDataType</span></a><span class="params">()</span><span class="result"> extends DataType with Product with Serializable</span>
+        <a href="TinyIntegerDataType$.html"><span class="name">TinyIntegerDataType</span></a><span class="result"> extends <a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -261,12 +313,18 @@ the complete result of a query).</p>
         
 
         
-
-        
         </div>
 
         <div id="inheritedMembers">
         
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
         </div>
 
       </div>

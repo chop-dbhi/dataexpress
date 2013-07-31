@@ -2,52 +2,79 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage</title>
+          <title>SqlQueryPackage - edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage</title>
+          <meta name="description" content="SqlQueryPackage - edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage" />
+          <meta name="keywords" content="SqlQueryPackage edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../../../../lib/template.css" />
-      <script type="text/javascript" src="../../../../../../lib/jquery.js"></script>
+      <link href="../../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../../lib/jquery.js" id="jquery-js"></script>
       <script type="text/javascript" src="../../../../../../lib/jquery-ui.js"></script>
       <script type="text/javascript" src="../../../../../../lib/template.js"></script>
       <script type="text/javascript" src="../../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../../index.html';
+            var hash = 'edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="type">
+        <body class="type">
       <div id="definition">
         <img src="../../../../../../lib/class_big.png" />
-        <p id="owner"><a name="edu" class="extype" href="../../../../../package.html">edu</a>.<a name="edu.chop" class="extype" href="../../../../package.html">chop</a>.<a name="edu.chop.cbmi" class="extype" href="../../../package.html">cbmi</a>.<a name="edu.chop.cbmi.dataExpress" class="extype" href="../../package.html">dataExpress</a>.<a name="edu.chop.cbmi.dataExpress.dataModels" class="extype" href="../package.html">dataModels</a>.<a name="edu.chop.cbmi.dataExpress.dataModels.sql" class="extype" href="package.html">sql</a></p>
+        <p id="owner"><a href="../../../../../package.html" class="extype" name="edu">edu</a>.<a href="../../../../package.html" class="extype" name="edu.chop">chop</a>.<a href="../../../package.html" class="extype" name="edu.chop.cbmi">cbmi</a>.<a href="../../package.html" class="extype" name="edu.chop.cbmi.dataExpress">dataExpress</a>.<a href="../package.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels">dataModels</a>.<a href="package.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.sql">sql</a></p>
         <h1>SqlQueryPackage</h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <span class="name">SqlQueryPackage</span><span class="params">(<span name="dataStore">dataStore: <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="../../backends/SqlBackend.html">SqlBackend</a></span>, <span name="query">query: String</span>, <span name="bindVars">bindVars: <span name="scala.collection.Seq" class="extype">Seq</span>[Option[_]]</span>)</span><span class="result"> extends <a name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator" class="extype" href="../ColumnNameGenerator.html">ColumnNameGenerator</a> with <span name="scala.Product" class="extype">Product</span> with <span name="scala.Serializable" class="extype">Serializable</span></span>
+        <span class="name">SqlQueryPackage</span><span class="params">(<span name="dataStore">dataStore: <a href="../../backends/SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">SqlBackend</a></span>, <span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bindVars">bindVars: <span class="extype" name="scala.collection.Seq">Seq</span>[<span class="extype" name="scala.Option">Option</span>[_]]</span>)</span><span class="result"> extends <a href="../ColumnNameGenerator.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator">ColumnNameGenerator</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Wrapper for queries that produce a JDBC ResultSet
-</p></div><dl class="paramcmts block"><dt class="param">dataStore</dt><dd class="cmt"><p>A <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="../../backends/SqlBackend.html">SqlBackend</a> with an open connection, ready for queries</p></dd><dt class="param">query</dt><dd class="cmt"><p>A string representation of a SQL query, optionally with placeholder values for bind variables</p></dd><dt class="param">bindVars</dt><dd class="cmt"><p>An optional set of values to be bound when making a prepared statement</p></dd></dl><div class="toggleContainer block">
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Wrapper for queries that produce a JDBC ResultSet
+</p></div><dl class="paramcmts block"><dt class="param">dataStore</dt><dd class="cmt"><p>A <a href="../../backends/SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">edu.chop.cbmi.dataExpress.backends.SqlBackend</a> with an open connection, ready for queries</p></dd><dt class="param">query</dt><dd class="cmt"><p>A string representation of a SQL query, optionally with placeholder values for bind variables</p></dd><dt class="param">bindVars</dt><dd class="cmt"><p>An optional set of values to be bound when making a prepared statement</p></dd></dl><div class="toggleContainer block">
           <span class="toggle">Linear Supertypes</span>
-          <div class="superTypes hiddenContent"><span name="scala.Serializable" class="extype">Serializable</span>, <span name="java.io.Serializable" class="extype">Serializable</span>, <span name="scala.Product" class="extype">Product</span>, <span name="scala.Equals" class="extype">Equals</span>, <a name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator" class="extype" href="../ColumnNameGenerator.html">ColumnNameGenerator</a>, AnyRef, <span name="scala.Any" class="extype">Any</span></div>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.Serializable">Serializable</span>, <span class="extype" name="java.io.Serializable">Serializable</span>, <span class="extype" name="scala.Product">Product</span>, <span class="extype" name="scala.Equals">Equals</span>, <a href="../ColumnNameGenerator.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator">ColumnNameGenerator</a>, <span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
         </div></div>
-    
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
         <div id="order">
               <span class="filtertype">Ordering</span>
-              <ol><li class="alpha in"><span>Alphabetic</span></li><li class="inherit out"><span>By inheritance</span></li></ol>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
             </div>
         <div id="ancestors">
-              <span class="filtertype">Inherited</span>
-              <ol><li class="hideall out"><span>Hide All</span></li>
-              <li class="showall in"><span>Show all</span></li></ol>
-              <ol id="linearization"><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage" class="in"><span>SqlQueryPackage</span></li><li name="scala.Serializable" class="in"><span>Serializable</span></li><li name="java.io.Serializable" class="in"><span>Serializable</span></li><li name="scala.Product" class="in"><span>Product</span></li><li name="scala.Equals" class="in"><span>Equals</span></li><li name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator" class="in"><span>ColumnNameGenerator</span></li><li name="scala.AnyRef" class="in"><span>AnyRef</span></li><li name="scala.Any" class="in"><span>Any</span></li></ol>
-            </div>
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage"><span>SqlQueryPackage</span></li><li class="in" name="scala.Serializable"><span>Serializable</span></li><li class="in" name="java.io.Serializable"><span>Serializable</span></li><li class="in" name="scala.Product"><span>Product</span></li><li class="in" name="scala.Equals"><span>Equals</span></li><li class="in" name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator"><span>ColumnNameGenerator</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
             <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
@@ -56,20 +83,21 @@
 
       <div id="template">
         <div id="allMembers">
-        <div class="members" id="constructors">
+        <div id="constructors" class="members">
               <h3>Instance Constructors</h3>
-              <ol><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#this" data-isabs="false">
-      <a id="this:SqlQueryPackage"></a>
+              <ol><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#&lt;init&gt;" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="&lt;init&gt;(dataStore:edu.chop.cbmi.dataExpress.backends.SqlBackend,query:String,bindVars:Seq[Option[_]]):edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage"></a>
+      <a id="&lt;init&gt;:SqlQueryPackage"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">new</span>
       </span>
       <span class="symbol">
-        <span class="name">SqlQueryPackage</span><span class="params">(<span name="dataStore">dataStore: <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="../../backends/SqlBackend.html">SqlBackend</a></span>, <span name="query">query: String</span>, <span name="bindVars">bindVars: <span name="scala.collection.Seq" class="extype">Seq</span>[Option[_]]</span>)</span>
+        <span class="name">SqlQueryPackage</span><span class="params">(<span name="dataStore">dataStore: <a href="../../backends/SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">SqlBackend</a></span>, <span name="query">query: <span class="extype" name="scala.Predef.String">String</span></span>, <span name="bindVars">bindVars: <span class="extype" name="scala.collection.Seq">Seq</span>[<span class="extype" name="scala.Option">Option</span>[_]]</span>)</span>
       </span>
       </h4>
-      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">dataStore</dt><dd class="cmt"><p>A <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="../../backends/SqlBackend.html">SqlBackend</a> with an open connection, ready for queries</p></dd><dt class="param">query</dt><dd class="cmt"><p>A string representation of a SQL query, optionally with placeholder values for bind variables</p></dd><dt class="param">bindVars</dt><dd class="cmt"><p>An optional set of values to be bound when making a prepared statement</p></dd></dl></div>
+      <p class="shortcomment cmt"></p><div class="fullcomment"><div class="comment cmt"></div><dl class="paramcmts block"><dt class="param">dataStore</dt><dd class="cmt"><p>A <a href="../../backends/SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">edu.chop.cbmi.dataExpress.backends.SqlBackend</a> with an open connection, ready for queries</p></dd><dt class="param">query</dt><dd class="cmt"><p>A string representation of a SQL query, optionally with placeholder values for bind variables</p></dd><dt class="param">bindVars</dt><dd class="cmt"><p>An optional set of values to be bound when making a prepared statement</p></dd></dl></div>
     </li></ol>
             </div>
 
@@ -77,9 +105,10 @@
 
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="scala.AnyRef#!=" data-isabs="false">
+              <ol><li name="scala.AnyRef#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:AnyRef):Boolean"></a>
       <a id="!=(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -87,11 +116,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.Any#!=" data-isabs="false">
+    </li><li name="scala.Any#!=" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="!=(x$1:Any):Boolean"></a>
       <a id="!=(Any):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -99,11 +129,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name" title="gt4s: $bang$eq">!=</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span title="gt4s: $bang$eq" class="name">!=</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef###" data-isabs="false">
+    </li><li name="scala.AnyRef###" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="##():Int"></a>
       <a id="##():Int"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -111,11 +142,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name" title="gt4s: $hash$hash">##</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+        <span title="gt4s: $hash$hash" class="name">##</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#==" data-isabs="false">
+    </li><li name="scala.AnyRef#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:AnyRef):Boolean"></a>
       <a id="==(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -123,11 +155,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.Any#==" data-isabs="false">
+    </li><li name="scala.Any#==" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="==(x$1:Any):Boolean"></a>
       <a id="==(Any):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -135,11 +168,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name" title="gt4s: $eq$eq">==</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span title="gt4s: $eq$eq" class="name">==</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Any">Any</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="scala.Any#asInstanceOf" data-isabs="false">
+    </li><li name="scala.Any#asInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="asInstanceOf[T0]:T0"></a>
       <a id="asInstanceOf[T0]:T0"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -147,11 +181,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: T0</span>
+        <span class="name">asInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Any.asInstanceOf.T0">T0</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#bindVars" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#bindVars" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="bindVars:Seq[Option[_]]"></a>
       <a id="bindVars:Seq[Option[_]]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -159,23 +194,12 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">bindVars</span><span class="result">: <span name="scala.collection.Seq" class="extype">Seq</span>[Option[_]]</span>
+        <span class="name">bindVars</span><span class="result">: <span class="extype" name="scala.collection.Seq">Seq</span>[<span class="extype" name="scala.Option">Option</span>[_]]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">An optional set of values to be bound when making a prepared statement</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#canEqual" data-isabs="false">
-      <a id="canEqual(Any):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">canEqual</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage" class="extype" href="">SqlQueryPackage</a> → Equals</dd></dl></div>
-    </li><li visbl="prt" name="scala.AnyRef#clone" data-isabs="false">
+    </li><li name="scala.AnyRef#clone" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="clone():Object"></a>
       <a id="clone():AnyRef"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -183,14 +207,15 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">clone</span><span class="params">()</span><span class="result">: AnyRef</span>
+        <span class="name">clone</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<span class="extype" name="java.lang">java.lang</span>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#columnCount" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#columnCount" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="columnCount():Int"></a>
       <a id="columnCount():Int"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -198,11 +223,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">columnCount</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
+        <span class="name">columnCount</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Int">Int</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#columnNames" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#columnNames" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="columnNames():Seq[String]"></a>
       <a id="columnNames():Seq[String]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -210,11 +236,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">columnNames</span><span class="params">()</span><span class="result">: <span name="scala.collection.Seq" class="extype">Seq</span>[String]</span>
+        <span class="name">columnNames</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.collection.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#dataStore" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#dataStore" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="dataStore:edu.chop.cbmi.dataExpress.backends.SqlBackend"></a>
       <a id="dataStore:SqlBackend"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -222,11 +249,12 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">dataStore</span><span class="result">: <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="../../backends/SqlBackend.html">SqlBackend</a></span>
+        <span class="name">dataStore</span><span class="result">: <a href="../../backends/SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">SqlBackend</a></span>
       </span>
       </h4>
-      <p class="shortcomment cmt">A <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="../../backends/SqlBackend.html">SqlBackend</a> with an open connection, ready for queries</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#dataTypes" data-isabs="false">
+      <p class="shortcomment cmt">A <a href="../../backends/SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">edu.chop.cbmi.dataExpress.backends.SqlBackend</a> with an open connection, ready for queries</p>
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#dataTypes" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="dataTypes():Seq[edu.chop.cbmi.dataExpress.dataModels.DataType]"></a>
       <a id="dataTypes():Seq[DataType]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -234,11 +262,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">dataTypes</span><span class="params">()</span><span class="result">: <span name="scala.collection.Seq" class="extype">Seq</span>[<a name="edu.chop.cbmi.dataExpress.dataModels.DataType" class="extype" href="../DataType.html">DataType</a>]</span>
+        <span class="name">dataTypes</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.collection.Seq">Seq</span>[<a href="../DataType.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataType">DataType</a>]</span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="scala.AnyRef#eq" data-isabs="false">
+    </li><li name="scala.AnyRef#eq" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="eq(x$1:AnyRef):Boolean"></a>
       <a id="eq(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -246,23 +275,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span class="name">eq</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#equals" data-isabs="false">
-      <a id="equals(Any):Boolean"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">equals</span><span class="params">(<span name="arg0">arg0: <span name="scala.Any" class="extype">Any</span></span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage" class="extype" href="">SqlQueryPackage</a> → Equals → AnyRef → Any</dd></dl></div>
-    </li><li visbl="prt" name="scala.AnyRef#finalize" data-isabs="false">
+    </li><li name="scala.AnyRef#finalize" visbl="prt" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="finalize():Unit"></a>
       <a id="finalize():Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -270,14 +288,15 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">finalize</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<a name="java.lang" class="extype" href="../../../../../../java/lang/package.html">lang</a>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
+      <div class="fullcomment"><dl class="attributes block"> <dt>Attributes</dt><dd>protected[<span class="extype" name="java.lang">java.lang</span>] </dd><dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#generate_column_names" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#generate_column_names" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="generate_column_names():Seq[String]"></a>
       <a id="generate_column_names():Seq[String]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -285,36 +304,26 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">generate_column_names</span><span class="params">()</span><span class="result">: <span name="scala.collection.Seq" class="extype">Seq</span>[String]</span>
+        <span class="name">generate_column_names</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.collection.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>
       </span>
       </h4>
       <p class="shortcomment cmt">method to generate column_names.</p><div class="fullcomment"><div class="comment cmt"><p>method to generate column_names.
-</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage" class="extype" href="">SqlQueryPackage</a> → <a name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator" class="extype" href="../ColumnNameGenerator.html">ColumnNameGenerator</a></dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#getClass" data-isabs="false">
-      <a id="getClass():java.lang.Class[_]"></a>
+</p></div><dl class="attributes block"> <dt>Definition Classes</dt><dd><a href="" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage">SqlQueryPackage</a> → <a href="../ColumnNameGenerator.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator">ColumnNameGenerator</a></dd></dl></div>
+    </li><li name="scala.AnyRef#getClass" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="getClass():Class[_]"></a>
+      <a id="getClass():Class[_]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">getClass</span><span class="params">()</span><span class="result">: java.lang.Class[_]</span>
+        <span class="name">getClass</span><span class="params">()</span><span class="result">: <span class="extype" name="java.lang.Class">Class</span>[_]</span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#hashCode" data-isabs="false">
-      <a id="hashCode():Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">hashCode</span><span class="params">()</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage" class="extype" href="">SqlQueryPackage</a> → AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="scala.Any#isInstanceOf" data-isabs="false">
+    </li><li name="scala.Any#isInstanceOf" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="isInstanceOf[T0]:Boolean"></a>
       <a id="isInstanceOf[T0]:Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -322,11 +331,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span class="name">isInstanceOf</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Any</dd></dl></div>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#meta" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#meta" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="meta():java.sql.ResultSetMetaData"></a>
       <a id="meta():ResultSetMetaData"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -334,11 +344,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">meta</span><span class="params">()</span><span class="result">: <span name="java.sql.ResultSetMetaData" class="extype">ResultSetMetaData</span></span>
+        <span class="name">meta</span><span class="params">()</span><span class="result">: <span class="extype" name="java.sql.ResultSetMetaData">ResultSetMetaData</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="scala.AnyRef#ne" data-isabs="false">
+    </li><li name="scala.AnyRef#ne" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="ne(x$1:AnyRef):Boolean"></a>
       <a id="ne(AnyRef):Boolean"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -346,11 +357,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: AnyRef</span>)</span><span class="result">: <span name="scala.Boolean" class="extype">Boolean</span></span>
+        <span class="name">ne</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.AnyRef">AnyRef</span></span>)</span><span class="result">: <span class="extype" name="scala.Boolean">Boolean</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#notify" data-isabs="false">
+    </li><li name="scala.AnyRef#notify" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notify():Unit"></a>
       <a id="notify():Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -358,11 +370,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notify</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">notify</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#notifyAll" data-isabs="false">
+    </li><li name="scala.AnyRef#notifyAll" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="notifyAll():Unit"></a>
       <a id="notifyAll():Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -370,59 +383,12 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">notifyAll</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#productArity" data-isabs="false">
-      <a id="productArity:Int"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">productArity</span><span class="result">: <span name="scala.Int" class="extype">Int</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage" class="extype" href="">SqlQueryPackage</a> → Product</dd></dl></div>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#productElement" data-isabs="false">
-      <a id="productElement(Int):Any"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">productElement</span><span class="params">(<span name="arg0">arg0: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Any" class="extype">Any</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage" class="extype" href="">SqlQueryPackage</a> → Product</dd></dl></div>
-    </li><li visbl="pub" name="scala.Product#productIterator" data-isabs="false">
-      <a id="productIterator:Iterator[Any]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">productIterator</span><span class="result">: Iterator[<span name="scala.Any" class="extype">Any</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Product</dd></dl></div>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#productPrefix" data-isabs="false">
-      <a id="productPrefix:String"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">productPrefix</span><span class="result">: <span name="java.lang.String" class="extype">String</span></span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage" class="extype" href="">SqlQueryPackage</a> → Product</dd></dl></div>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#query" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#query" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="query:String"></a>
       <a id="query:String"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -430,11 +396,12 @@
         <span class="kind">val</span>
       </span>
       <span class="symbol">
-        <span class="name">query</span><span class="result">: String</span>
+        <span class="name">query</span><span class="result">: <span class="extype" name="scala.Predef.String">String</span></span>
       </span>
       </h4>
       <p class="shortcomment cmt">A string representation of a SQL query, optionally with placeholder values for bind variables</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#resultSet" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#resultSet" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="resultSet():java.sql.ResultSet"></a>
       <a id="resultSet():ResultSet"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -442,35 +409,25 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">resultSet</span><span class="params">()</span><span class="result">: <span name="java.sql.ResultSet" class="extype">ResultSet</span></span>
+        <span class="name">resultSet</span><span class="params">()</span><span class="result">: <span class="extype" name="java.sql.ResultSet">ResultSet</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="scala.AnyRef#synchronized" data-isabs="false">
-      <a id="synchronized[T0](⇒ T0):T0"></a>
+    </li><li name="scala.AnyRef#synchronized" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="synchronized[T0](x$1:=&gt;T0):T0"></a>
+      <a id="synchronized[T0](⇒T0):T0"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">final </span>
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ T0</span>)</span><span class="result">: T0</span>
+        <span class="name">synchronized</span><span class="tparams">[<span name="T0">T0</span>]</span><span class="params">(<span name="arg0">arg0: ⇒ <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>)</span><span class="result">: <span class="extype" name="java.lang.AnyRef.synchronized.T0">T0</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd></dl></div>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage#toString" data-isabs="false">
-      <a id="toString():String"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name">toString</span><span class="params">()</span><span class="result">: String</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd><a name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlQueryPackage" class="extype" href="">SqlQueryPackage</a> → AnyRef → Any</dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait():Unit"></a>
       <a id="wait():Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -478,14 +435,15 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">()</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">wait</span><span class="params">()</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long,x$2:Int):Unit"></a>
       <a id="wait(Long,Int):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -493,14 +451,15 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>, <span name="arg1">arg1: <span name="scala.Int" class="extype">Int</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>, <span name="arg1">arg1: <span class="extype" name="scala.Int">Int</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
                 <span class="name">@throws</span><span class="args">()</span>
               
         </dd></dl></div>
-    </li><li visbl="pub" name="scala.AnyRef#wait" data-isabs="false">
+    </li><li name="scala.AnyRef#wait" visbl="pub" data-isabs="false" fullComment="yes" group="Ungrouped">
+      <a id="wait(x$1:Long):Unit"></a>
       <a id="wait(Long):Unit"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -508,7 +467,7 @@
         <span class="kind">def</span>
       </span>
       <span class="symbol">
-        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span name="scala.Long" class="extype">Long</span></span>)</span><span class="result">: <span name="scala.Unit" class="extype">Unit</span></span>
+        <span class="name">wait</span><span class="params">(<span name="arg0">arg0: <span class="extype" name="scala.Long">Long</span></span>)</span><span class="result">: <span class="extype" name="scala.Unit">Unit</span></span>
       </span>
       </h4>
       <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>AnyRef</dd><dt>Annotations</dt><dd>
@@ -518,42 +477,34 @@
     </li></ol>
             </div>
 
-        <div class="values members" id="values">
-              <h3>Deprecated Value Members</h3>
-              <ol><li visbl="pub" name="scala.Product#productElements" data-isabs="false">
-      <a id="productElements:Iterator[Any]"></a>
-      <h4 class="signature">
-      <span class="modifier_kind">
-        <span class="modifier"></span>
-        <span class="kind">def</span>
-      </span>
-      <span class="symbol">
-        <span class="name deprecated" title="Deprecated: (Since version 2.8.0) use productIterator instead">productElements</span><span class="result">: Iterator[<span name="scala.Any" class="extype">Any</span>]</span>
-      </span>
-      </h4>
-      <div class="fullcomment"><dl class="attributes block"> <dt>Definition Classes</dt><dd>Product</dd><dt>Annotations</dt><dd>
-                <span class="name">@deprecated</span>
-              
-        </dd><dt>Deprecated</dt><dd class="cmt"><p><i>(Since version 2.8.0)</i> use productIterator instead</p></dd></dl></div>
-    </li></ol>
-            </div>
+        
+
+        
         </div>
 
         <div id="inheritedMembers">
-        <div name="scala.Serializable" class="parent">
-              <h3>Inherited from <span name="scala.Serializable" class="extype">Serializable</span></h3>
-            </div><div name="java.io.Serializable" class="parent">
-              <h3>Inherited from <span name="java.io.Serializable" class="extype">Serializable</span></h3>
-            </div><div name="scala.Product" class="parent">
-              <h3>Inherited from <span name="scala.Product" class="extype">Product</span></h3>
-            </div><div name="scala.Equals" class="parent">
-              <h3>Inherited from <span name="scala.Equals" class="extype">Equals</span></h3>
-            </div><div name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator" class="parent">
-              <h3>Inherited from <a name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator" class="extype" href="../ColumnNameGenerator.html">ColumnNameGenerator</a></h3>
-            </div><div name="scala.AnyRef" class="parent">
-              <h3>Inherited from AnyRef</h3>
-            </div><div name="scala.Any" class="parent">
-              <h3>Inherited from <span name="scala.Any" class="extype">Any</span></h3>
+        <div class="parent" name="scala.Serializable">
+              <h3>Inherited from <span class="extype" name="scala.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="java.io.Serializable">
+              <h3>Inherited from <span class="extype" name="java.io.Serializable">Serializable</span></h3>
+            </div><div class="parent" name="scala.Product">
+              <h3>Inherited from <span class="extype" name="scala.Product">Product</span></h3>
+            </div><div class="parent" name="scala.Equals">
+              <h3>Inherited from <span class="extype" name="scala.Equals">Equals</span></h3>
+            </div><div class="parent" name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator">
+              <h3>Inherited from <a href="../ColumnNameGenerator.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator">ColumnNameGenerator</a></h3>
+            </div><div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
             </div>
         </div>
 

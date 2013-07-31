@@ -2,24 +2,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>edu.chop.cbmi.dataExpress.dataWriters.sql</title>
+          <title>sql - edu.chop.cbmi.dataExpress.dataWriters.sql</title>
+          <meta name="description" content="sql - edu.chop.cbmi.dataExpress.dataWriters.sql" />
+          <meta name="keywords" content="sql edu.chop.cbmi.dataExpress.dataWriters.sql" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../../../../lib/template.css" />
-      <script type="text/javascript" src="../../../../../../lib/jquery.js"></script>
+      <link href="../../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../../lib/jquery.js" id="jquery-js"></script>
       <script type="text/javascript" src="../../../../../../lib/jquery-ui.js"></script>
       <script type="text/javascript" src="../../../../../../lib/template.js"></script>
       <script type="text/javascript" src="../../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../../index.html';
+            var hash = 'edu.chop.cbmi.dataExpress.dataWriters.sql.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+        <body class="value">
       <div id="definition">
         <img src="../../../../../../lib/package_big.png" />
-        <p id="owner"><a name="edu" class="extype" href="../../../../../package.html">edu</a>.<a name="edu.chop" class="extype" href="../../../../package.html">chop</a>.<a name="edu.chop.cbmi" class="extype" href="../../../package.html">cbmi</a>.<a name="edu.chop.cbmi.dataExpress" class="extype" href="../../package.html">dataExpress</a>.<a name="edu.chop.cbmi.dataExpress.dataWriters" class="extype" href="../package.html">dataWriters</a></p>
+        <p id="owner"><a href="../../../../../package.html" class="extype" name="edu">edu</a>.<a href="../../../../package.html" class="extype" name="edu.chop">chop</a>.<a href="../../../package.html" class="extype" name="edu.chop.cbmi">cbmi</a>.<a href="../../package.html" class="extype" name="edu.chop.cbmi.dataExpress">dataExpress</a>.<a href="../package.html" class="extype" name="edu.chop.cbmi.dataExpress.dataWriters">dataWriters</a></p>
         <h1>sql</h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">package</span>
@@ -29,11 +44,11 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"></div>
-    
+          <div id="comment" class="fullcommenttop"></div>
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
         
         
         <div id="visbl">
@@ -46,9 +61,10 @@
         <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataWriters.sql.SqlOperationStatus" data-isabs="false">
+              <ol><li name="edu.chop.cbmi.dataExpress.dataWriters.sql.SqlOperationStatus" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqlOperationStatusextendsOperationStatuswithProductwithSerializable"></a>
       <a id="SqlOperationStatus:SqlOperationStatus"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -56,11 +72,12 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="SqlOperationStatus.html"><span class="name">SqlOperationStatus</span></a><span class="params">(<span name="succeed">succeed: Boolean</span>, <span name="returned_keys">returned_keys: edu.chop.cbmi.dataExpress.dataModels.DataRow[_]</span>)</span><span class="result"> extends OperationStatus with Product with Serializable</span>
+        <a href="SqlOperationStatus.html"><span class="name">SqlOperationStatus</span></a><span class="params">(<span name="succeed">succeed: <span class="extype" name="scala.Boolean">Boolean</span></span>, <span name="returned_keys">returned_keys: <a href="../../dataModels/DataRow.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataRow">DataRow</a>[_] = <span class="defval" name="edu.chop.cbmi.dataExpress.dataModels.DataRow.empty">...</span></span>)</span><span class="result"> extends <a href="../OperationStatus.html" class="extype" name="edu.chop.cbmi.dataExpress.dataWriters.OperationStatus">OperationStatus</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">Created by IntelliJ IDEA.</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataWriters.sql.SqlTableWriter" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataWriters.sql.SqlTableWriter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqlTableWriterextendsDataWriterwithUpdaterwithProductwithSerializable"></a>
       <a id="SqlTableWriter:SqlTableWriter"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -68,7 +85,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="SqlTableWriter.html"><span class="name">SqlTableWriter</span></a><span class="params">(<span name="backend">backend: SqlBackend</span>, <span name="schema">schema: Option[String]</span>, <span name="catalog">catalog: String</span>)</span><span class="result"> extends DataWriter with Product with Serializable</span>
+        <a href="SqlTableWriter.html"><span class="name">SqlTableWriter</span></a><span class="params">(<span name="backend">backend: <a href="../../backends/SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">SqlBackend</a></span>, <span name="schema">schema: <span class="extype" name="scala.Option">Option</span>[<span class="extype" name="scala.Predef.String">String</span>] = <span class="symbol">scala.None</span></span>, <span name="catalog">catalog: <span class="extype" name="scala.Predef.String">String</span> = <span class="symbol">null</span></span>)</span><span class="result"> extends <a href="../DataWriter.html" class="extype" name="edu.chop.cbmi.dataExpress.dataWriters.DataWriter">DataWriter</a> with <a href="../Updater.html" class="extype" name="edu.chop.cbmi.dataExpress.dataWriters.Updater">Updater</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -77,9 +94,10 @@
 
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataWriters.sql.SqlTableWriter" data-isabs="false">
+              <ol><li name="edu.chop.cbmi.dataExpress.dataWriters.sql.SqlTableWriter" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqlTableWriter"></a>
       <a id="SqlTableWriter:SqlTableWriter"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -87,7 +105,7 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="SqlTableWriter$.html"><span class="name">SqlTableWriter</span></a><span class="result"> extends Serializable</span>
+        <a href="SqlTableWriter$.html"><span class="name">SqlTableWriter</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">Created by IntelliJ IDEA.</p>
@@ -95,10 +113,20 @@
             </div>
 
         
+
+        
         </div>
 
         <div id="inheritedMembers">
         
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
         </div>
 
       </div>

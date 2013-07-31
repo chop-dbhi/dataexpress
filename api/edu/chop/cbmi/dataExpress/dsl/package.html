@@ -2,24 +2,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>edu.chop.cbmi.dataExpress.dsl</title>
+          <title>dsl - edu.chop.cbmi.dataExpress.dsl</title>
+          <meta name="description" content="dsl - edu.chop.cbmi.dataExpress.dsl" />
+          <meta name="keywords" content="dsl edu.chop.cbmi.dataExpress.dsl" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../../../lib/template.css" />
-      <script type="text/javascript" src="../../../../../lib/jquery.js"></script>
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../lib/jquery.js" id="jquery-js"></script>
       <script type="text/javascript" src="../../../../../lib/jquery-ui.js"></script>
       <script type="text/javascript" src="../../../../../lib/template.js"></script>
       <script type="text/javascript" src="../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'edu.chop.cbmi.dataExpress.dsl.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+        <body class="value">
       <div id="definition">
         <img src="../../../../../lib/package_big.png" />
-        <p id="owner"><a name="edu" class="extype" href="../../../../package.html">edu</a>.<a name="edu.chop" class="extype" href="../../../package.html">chop</a>.<a name="edu.chop.cbmi" class="extype" href="../../package.html">cbmi</a>.<a name="edu.chop.cbmi.dataExpress" class="extype" href="../package.html">dataExpress</a></p>
+        <p id="owner"><a href="../../../../package.html" class="extype" name="edu">edu</a>.<a href="../../../package.html" class="extype" name="edu.chop">chop</a>.<a href="../../package.html" class="extype" name="edu.chop.cbmi">cbmi</a>.<a href="../package.html" class="extype" name="edu.chop.cbmi.dataExpress">dataExpress</a></p>
         <h1>dsl</h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">package</span>
@@ -29,11 +44,11 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"></div>
-    
+          <div id="comment" class="fullcommenttop"></div>
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
         
         
         <div id="visbl">
@@ -46,9 +61,10 @@
         <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="edu.chop.cbmi.dataExpress.dsl.AlterDataTable" data-isabs="false">
+              <ol><li name="edu.chop.cbmi.dataExpress.dsl.AlterDataTable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="AlterDataTableextendsTransformableDataTablewithProductwithSerializable"></a>
       <a id="AlterDataTable:AlterDataTable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -56,11 +72,25 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="AlterDataTable.html"><span class="name">AlterDataTable</span></a><span class="params">(<span name="table">table: TransformableDataTable</span>)</span><span class="result"> extends TransformableDataTable with Product with Serializable</span>
+        <a href="AlterDataTable.html"><span class="name">AlterDataTable</span></a><span class="params">(<span name="table">table: <a href="TransformableDataTable.html" class="extype" name="edu.chop.cbmi.dataExpress.dsl.TransformableDataTable">TransformableDataTable</a></span>)</span><span class="result"> extends <a href="TransformableDataTable.html" class="extype" name="edu.chop.cbmi.dataExpress.dsl.TransformableDataTable">TransformableDataTable</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dsl.FixedDimensionTransformableTable" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dsl.ErrorMessage" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ErrorMessageextendsMessagewithProductwithSerializable"></a>
+      <a id="ErrorMessage:ErrorMessage"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="ErrorMessage.html"><span class="name">ErrorMessage</span></a><span class="params">(<span name="ex">ex: <span class="extype" name="scala.Exception">Exception</span></span>, <span name="msg">msg: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="Message.html" class="extype" name="edu.chop.cbmi.dataExpress.dsl.Message">Message</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="edu.chop.cbmi.dataExpress.dsl.FixedDimensionTransformableTable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FixedDimensionTransformableTableextendsTransformableDataTable"></a>
       <a id="FixedDimensionTransformableTable:FixedDimensionTransformableTable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -68,11 +98,12 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="FixedDimensionTransformableTable.html"><span class="name">FixedDimensionTransformableTable</span></a><span class="result"> extends TransformableDataTable</span>
+        <a href="FixedDimensionTransformableTable.html"><span class="name">FixedDimensionTransformableTable</span></a><span class="result"> extends <a href="TransformableDataTable.html" class="extype" name="edu.chop.cbmi.dataExpress.dsl.TransformableDataTable">TransformableDataTable</a></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dsl.From" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dsl.From" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="FromextendsProductwithSerializable"></a>
       <a id="From:From"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -80,11 +111,38 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="From.html"><span class="name">From</span></a><span class="params">(<span name="store">store: Store</span>)</span><span class="result"> extends Product with Serializable</span>
+        <a href="From.html"><span class="name">From</span></a><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">Created by IntelliJ IDEA.</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dsl.To" data-isabs="true">
+    </li><li name="edu.chop.cbmi.dataExpress.dsl.InformationMessage" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="InformationMessageextendsMessagewithProductwithSerializable"></a>
+      <a id="InformationMessage:InformationMessage"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">case class</span>
+      </span>
+      <span class="symbol">
+        <a href="InformationMessage.html"><span class="name">InformationMessage</span></a><span class="params">(<span name="msg">msg: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <a href="Message.html" class="extype" name="edu.chop.cbmi.dataExpress.dsl.Message">Message</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="edu.chop.cbmi.dataExpress.dsl.Message" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MessageextendsObject"></a>
+      <a id="Message:Message"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="Message.html"><span class="name">Message</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Created by IntelliJ IDEA.</p>
+    </li><li name="edu.chop.cbmi.dataExpress.dsl.To" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ToextendsObject"></a>
       <a id="To:To"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -92,11 +150,12 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="To.html"><span class="name">To</span></a><span class="result"> extends AnyRef</span>
+        <a href="To.html"><span class="name">To</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       <p class="comment cmt">Created by IntelliJ IDEA.</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dsl.ToFromRow" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dsl.ToFromRow" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ToFromRowextendsTowithProductwithSerializable"></a>
       <a id="ToFromRow:ToFromRow"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -104,11 +163,12 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="ToFromRow.html"><span class="name">ToFromRow</span></a><span class="params">(<span name="target">target: Store</span>, <span name="row">row: edu.chop.cbmi.dataExpress.dataModels.DataRow[_]</span>)</span><span class="result"> extends To with Product with Serializable</span>
+        <a href="ToFromRow.html"><span class="name">ToFromRow</span></a><span class="params">(<span name="target">target: <a href="stores/Store.html" class="extype" name="edu.chop.cbmi.dataExpress.dsl.stores.Store">Store</a></span>, <span name="row">row: <a href="../dataModels/DataRow.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataRow">DataRow</a>[_]</span>)</span><span class="result"> extends <a href="To.html" class="extype" name="edu.chop.cbmi.dataExpress.dsl.To">To</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dsl.ToFromTable" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dsl.ToFromTable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ToFromTableextendsTowithProductwithSerializable"></a>
       <a id="ToFromTable:ToFromTable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -116,11 +176,12 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="ToFromTable.html"><span class="name">ToFromTable</span></a><span class="params">(<span name="target">target: Store</span>, <span name="source_table">source_table: TransformableDataTable</span>)</span><span class="result"> extends To with Product with Serializable</span>
+        <a href="ToFromTable.html"><span class="name">ToFromTable</span></a><span class="params">(<span name="target">target: <a href="stores/Store.html" class="extype" name="edu.chop.cbmi.dataExpress.dsl.stores.Store">Store</a></span>, <span name="source_table">source_table: <a href="TransformableDataTable.html" class="extype" name="edu.chop.cbmi.dataExpress.dsl.TransformableDataTable">TransformableDataTable</a></span>)</span><span class="result"> extends <a href="To.html" class="extype" name="edu.chop.cbmi.dataExpress.dsl.To">To</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dsl.TransformableDataTable" data-isabs="true">
+    </li><li name="edu.chop.cbmi.dataExpress.dsl.TransformableDataTable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="TransformableDataTableextendsObject"></a>
       <a id="TransformableDataTable:TransformableDataTable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -128,7 +189,7 @@
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="TransformableDataTable.html"><span class="name">TransformableDataTable</span></a><span class="result"> extends AnyRef</span>
+        <a href="TransformableDataTable.html"><span class="name">TransformableDataTable</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       <p class="comment cmt">Created by IntelliJ IDEA.</p>
@@ -137,9 +198,10 @@
 
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="edu.chop.cbmi.dataExpress.dsl.ETL" data-isabs="false">
+              <ol><li name="edu.chop.cbmi.dataExpress.dsl.ETL" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ETL"></a>
       <a id="ETL:ETL"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -147,11 +209,25 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="ETL$.html"><span class="name">ETL</span></a><span class="result"> extends AnyRef</span>
+        <a href="ETL$.html"><span class="name">ETL</span></a>
       </span>
       </h4>
-      <p class="comment cmt">Created by IntelliJ IDEA.</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dsl.exceptions" data-isabs="false">
+      
+    </li><li name="edu.chop.cbmi.dataExpress.dsl.ExecutionOffMessage" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="ExecutionOffMessage"></a>
+      <a id="ExecutionOffMessage:ExecutionOffMessage"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="ExecutionOffMessage$.html"><span class="name">ExecutionOffMessage</span></a><span class="result"> extends <a href="Message.html" class="extype" name="edu.chop.cbmi.dataExpress.dsl.Message">Message</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="edu.chop.cbmi.dataExpress.dsl.exceptions" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="exceptions"></a>
       <a id="exceptions:exceptions"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -163,7 +239,8 @@
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dsl.statements" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dsl.statements" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="statements"></a>
       <a id="statements:statements"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -175,7 +252,8 @@
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dsl.stores" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dsl.stores" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="stores"></a>
       <a id="stores:stores"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -191,10 +269,20 @@
             </div>
 
         
+
+        
         </div>
 
         <div id="inheritedMembers">
         
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
         </div>
 
       </div>

@@ -2,24 +2,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>edu.chop.cbmi.dataExpress.backends</title>
+          <title>backends - edu.chop.cbmi.dataExpress.backends</title>
+          <meta name="description" content="backends - edu.chop.cbmi.dataExpress.backends" />
+          <meta name="keywords" content="backends edu.chop.cbmi.dataExpress.backends" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../../../lib/template.css" />
-      <script type="text/javascript" src="../../../../../lib/jquery.js"></script>
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../lib/jquery.js" id="jquery-js"></script>
       <script type="text/javascript" src="../../../../../lib/jquery-ui.js"></script>
       <script type="text/javascript" src="../../../../../lib/template.js"></script>
       <script type="text/javascript" src="../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'edu.chop.cbmi.dataExpress.backends.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+        <body class="value">
       <div id="definition">
         <img src="../../../../../lib/package_big.png" />
-        <p id="owner"><a name="edu" class="extype" href="../../../../package.html">edu</a>.<a name="edu.chop" class="extype" href="../../../package.html">chop</a>.<a name="edu.chop.cbmi" class="extype" href="../../package.html">cbmi</a>.<a name="edu.chop.cbmi.dataExpress" class="extype" href="../package.html">dataExpress</a></p>
+        <p id="owner"><a href="../../../../package.html" class="extype" name="edu">edu</a>.<a href="../../../package.html" class="extype" name="edu.chop">chop</a>.<a href="../../package.html" class="extype" name="edu.chop.cbmi">cbmi</a>.<a href="../package.html" class="extype" name="edu.chop.cbmi.dataExpress">dataExpress</a></p>
         <h1>backends</h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">package</span>
@@ -29,9 +44,9 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"><div class="comment cmt"><p>Provides database wrappers and connectivity for MySQL, Postgres, Oracle, and SQLite JDBC drivers.</p><h4>Overview</h4><p>The support for individual databases is broken out into several classes:</p><ul><li>A <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a> which is the wrapper around the various JDBC method calls</li><li>A <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a> that contains the database-specific SQL quirks and implementation details</li><li>A <a name="edu.chop.cbmi.dataExpress.backends.SqlBackendProvider" class="extype" href="SqlBackendProvider.html">SqlBackendProvider</a> (optional) that allows a third-party backend to be supplied outside DataExpress</li></ul><p>The SqlBackend for the corresponding database is the primary means of establishing a datsbase connection when using DataExpress.
-However, <b>It is important to note that it is generally easier, and safer to use the edu.chop.cbmi.dataExpress.backends.SqlBackendFactory to establish the necessary backend and set up the connection</b></p><p>In general the SQLDialect and BackendProvider are used as part of a SQLBackend, and not directly.</p><h4>Usage</h4><p>The <a name="edu.chop.cbmi.dataExpress.backends.SqlBackend" class="extype" href="SqlBackend.html">SqlBackend</a> requires properties to fully configure itself. Typically
-these are loaded from a file, but can also be supplied through a standard java.util.Properties object. The
+          <div id="comment" class="fullcommenttop"><div class="comment cmt"><p>Provides database wrappers and connectivity for MySQL, Postgres, Oracle, and SQLite JDBC drivers.</p><h4>Overview</h4><p>The support for individual databases is broken out into several classes:</p><ul><li>A <a href="SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">edu.chop.cbmi.dataExpress.backends.SqlBackend</a> which is the wrapper around the various JDBC method calls</li><li>A <a href="SqlDialect.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlDialect">edu.chop.cbmi.dataExpress.backends.SqlDialect</a> that contains the database-specific SQL quirks and implementation details</li><li>A <a href="SqlBackendProvider.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackendProvider">edu.chop.cbmi.dataExpress.backends.SqlBackendProvider</a> (optional) that allows a third-party backend to be supplied outside DataExpress</li></ul><p>The SqlBackend for the corresponding database is the primary means of establishing a datsbase connection when using DataExpress.
+However, <b>It is important to note that it is generally easier, and safer to use the <a href="SqlBackendFactory$.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackendFactory">edu.chop.cbmi.dataExpress.backends.SqlBackendFactory</a> to establish the necessary backend and set up the connection</b></p><p>In general the SQLDialect and BackendProvider are used as part of a SQLBackend, and not directly.</p><h4>Usage</h4><p>The <a href="SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">edu.chop.cbmi.dataExpress.backends.SqlBackend</a> requires properties to fully configure itself. Typically
+these are loaded from a file, but can also be supplied through a standard <span class="extype" name="java.util.Properties">java.util.Properties</span> object. The
 SQL backend has very simple requirements for properties files. They must contain the following keys:</p><ul><li><code><code><code>driverClassName</code></code></code>: The class name for the actual database driver</li><li><code><code><code>jdbcUri</code></code></code>: This is the URI required by the database driver. It is passed through directly to JDBC
    so you are free to specify schemas and other information here</li><li><code><code><code>username</code></code></code>: The username to authenticate against the database (not
   required for non-authenticated RDBMS systems such as SQLite)
@@ -40,8 +55,7 @@ requires specific connection configuration (e.g. to enable SSL for Postgres), th
 have been empirically determined by our testing given the narrow use cases for DataExpress. Where possible, we have made it possible
 for you to override these defaults in your own configuration file, however this is generally not recommended.
 </p></div><dl class="attributes block"> <div class="block">Example:
-                <ol><li class="cmt"><p></p><pre>
-scala&gt; <span class="kw">import</span> edu.chop.cbmi.dataExpress.backends._
+                <ol><li class="cmt"><p></p><pre>scala&gt; <span class="kw">import</span> edu.chop.cbmi.dataExpress.backends._
 <span class="kw">import</span> edu.chop.cbmi.dataExpress.backends._
 
 scala&gt; <span class="kw">val</span> backend = SqlBackendFactory <span class="lit">"src/test/resources/sqlite_test.properties"</span>
@@ -60,17 +74,39 @@ scala&gt; backend executeQuery <span class="lit">"select count(*) from de_test"<
 res4: java.sql.ResultSet = org.sqlite.RS@<span class="num">3</span>b070e76
 
 scala&gt; res4.getInt(<span class="num">1</span>)
-res5: <span class="std">Int</span> = <span class="num">0</span>
-</pre></li></ol>
+res5: <span class="std">Int</span> = <span class="num">0</span></pre></li></ol>
               </div><dt>Note</dt><dd><span class="cmt"><p>The SQL backends return jdbc ResultSets which are typically a little more &quot;low-level&quot; than what you would
-probably want for ETL purporses. The <a name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation" class="extype" href="../dataModels/sql/SqlRelation.html">SqlRelation</a> is a much more convenient object
-to use for ETL.</p></span></dd></dl></div>
-    
+probably want for ETL purporses. The <a href="../dataModels/sql/SqlRelation.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation">edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation</a> is a much more convenient object
+to use for ETL.</p></span></dd></dl><div class="toggleContainer block">
+          <span class="toggle">Linear Supertypes</span>
+          <div class="superTypes hiddenContent"><span class="extype" name="scala.AnyRef">AnyRef</span>, <span class="extype" name="scala.Any">Any</span></div>
+        </div></div>
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
-        
-        
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
+        <div id="order">
+              <span class="filtertype">Ordering</span>
+              <ol>
+                
+                <li class="alpha in"><span>Alphabetic</span></li>
+                <li class="inherit out"><span>By inheritance</span></li>
+              </ol>
+            </div>
+        <div id="ancestors">
+                <span class="filtertype">Inherited<br />
+                </span>
+                <ol id="linearization">
+                  <li class="in" name="edu.chop.cbmi.dataExpress.backends"><span>backends</span></li><li class="in" name="scala.AnyRef"><span>AnyRef</span></li><li class="in" name="scala.Any"><span>Any</span></li>
+                </ol>
+              </div><div id="ancestors">
+            <span class="filtertype"></span>
+            <ol>
+              <li class="hideall out"><span>Hide All</span></li>
+              <li class="showall in"><span>Show all</span></li>
+            </ol>
+            <a href="http://docs.scala-lang.org/overviews/scaladoc/usage.html#members" target="_blank">Learn more about member selection</a>
+          </div>
         <div id="visbl">
             <span class="filtertype">Visibility</span>
             <ol><li class="public in"><span>Public</span></li><li class="all out"><span>All</span></li></ol>
@@ -81,9 +117,10 @@ to use for ETL.</p></span></dd></dl></div>
         <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.MySqlBackend" data-isabs="false">
+              <ol><li name="edu.chop.cbmi.dataExpress.backends.MySqlBackend" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MySqlBackendextendsSqlBackend"></a>
       <a id="MySqlBackend:MySqlBackend"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -91,11 +128,12 @@ to use for ETL.</p></span></dd></dl></div>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="MySqlBackend.html"><span class="name">MySqlBackend</span></a><span class="result"> extends SqlBackend</span>
+        <a href="MySqlBackend.html"><span class="name">MySqlBackend</span></a><span class="result"> extends <a href="SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">SqlBackend</a></span>
       </span>
       </h4>
       <p class="comment cmt">Backend for accessing MySQL databases.</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.OracleBackend" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.backends.OracleBackend" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="OracleBackendextendsSqlBackend"></a>
       <a id="OracleBackend:OracleBackend"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -103,11 +141,12 @@ to use for ETL.</p></span></dd></dl></div>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="OracleBackend.html"><span class="name">OracleBackend</span></a><span class="result"> extends SqlBackend</span>
+        <a href="OracleBackend.html"><span class="name">OracleBackend</span></a><span class="result"> extends <a href="SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">SqlBackend</a></span>
       </span>
       </h4>
       <p class="comment cmt">Backend for accessing Oracle databases.</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.OracleServiceProvider" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.backends.OracleServiceProvider" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="OracleServiceProviderextendsSqlBackendProvider"></a>
       <a id="OracleServiceProvider:OracleServiceProvider"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -115,12 +154,13 @@ to use for ETL.</p></span></dd></dl></div>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="OracleServiceProvider.html"><span class="name">OracleServiceProvider</span></a><span class="result"> extends SqlBackendProvider</span>
+        <a href="OracleServiceProvider.html"><span class="name">OracleServiceProvider</span></a><span class="result"> extends <a href="SqlBackendProvider.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackendProvider">SqlBackendProvider</a></span>
       </span>
       </h4>
       <p class="comment cmt">Service provider class for Oracle that allows runtime class loading of the Oracle driver
 </p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.PostgresBackend" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.backends.PostgresBackend" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PostgresBackendextendsSqlBackend"></a>
       <a id="PostgresBackend:PostgresBackend"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -128,11 +168,12 @@ to use for ETL.</p></span></dd></dl></div>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="PostgresBackend.html"><span class="name">PostgresBackend</span></a><span class="result"> extends SqlBackend</span>
+        <a href="PostgresBackend.html"><span class="name">PostgresBackend</span></a><span class="result"> extends <a href="SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">SqlBackend</a></span>
       </span>
       </h4>
       <p class="comment cmt">Backend for accessing Postgres databases.</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqLiteBackend" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.backends.SqLiteBackend" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqLiteBackendextendsSqlBackend"></a>
       <a id="SqLiteBackend:SqLiteBackend"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -140,11 +181,12 @@ to use for ETL.</p></span></dd></dl></div>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="SqLiteBackend.html"><span class="name">SqLiteBackend</span></a><span class="result"> extends SqlBackend</span>
+        <a href="SqLiteBackend.html"><span class="name">SqLiteBackend</span></a><span class="result"> extends <a href="SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">SqlBackend</a></span>
       </span>
       </h4>
       <p class="comment cmt">Backend for accessing Sqlite databases.</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlBackend" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.backends.SqlBackend" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqlBackendextendsProductwithSerializable"></a>
       <a id="SqlBackend:SqlBackend"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -152,11 +194,12 @@ to use for ETL.</p></span></dd></dl></div>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="SqlBackend.html"><span class="name">SqlBackend</span></a><span class="params">(<span name="connectionProperties">connectionProperties: Properties</span>, <span name="sqlDialect">sqlDialect: SqlDialect</span>, <span name="driverClassName">driverClassName: String</span>)</span><span class="result"> extends Product with Serializable</span>
+        <a href="SqlBackend.html"><span class="name">SqlBackend</span></a><span class="params">(<span name="connectionProperties">connectionProperties: <span class="extype" name="java.util.Properties">Properties</span></span>, <span name="sqlDialect">sqlDialect: <a href="SqlDialect.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlDialect">SqlDialect</a></span>, <span name="driverClassName">driverClassName: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">Wrapper around JDBC that simplifies the mechanics of interacting with databases in an RDBMS-neutral way.</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlBackendProvider" data-isabs="true">
+    </li><li name="edu.chop.cbmi.dataExpress.backends.SqlBackendProvider" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SqlBackendProviderextendsObject"></a>
       <a id="SqlBackendProvider:SqlBackendProvider"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -164,12 +207,13 @@ to use for ETL.</p></span></dd></dl></div>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="SqlBackendProvider.html"><span class="name">SqlBackendProvider</span></a><span class="result"> extends AnyRef</span>
+        <a href="SqlBackendProvider.html"><span class="name">SqlBackendProvider</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       <p class="comment cmt">Provides a mechanism to get a SqlBackend by supplying the necessary parameters at runtime
 </p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlDialect" data-isabs="true">
+    </li><li name="edu.chop.cbmi.dataExpress.backends.SqlDialect" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="SqlDialectextendsObject"></a>
       <a id="SqlDialect:SqlDialect"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -177,11 +221,12 @@ to use for ETL.</p></span></dd></dl></div>
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="SqlDialect.html"><span class="name">SqlDialect</span></a><span class="result"> extends AnyRef</span>
+        <a href="SqlDialect.html"><span class="name">SqlDialect</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       <p class="comment cmt">This trait is to be used when constructing new SQL backends for DataExpress.</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlQueryCache" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.backends.SqlQueryCache" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqlQueryCacheextendsObject"></a>
       <a id="SqlQueryCache:SqlQueryCache"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -189,19 +234,46 @@ to use for ETL.</p></span></dd></dl></div>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="SqlQueryCache.html"><span class="name">SqlQueryCache</span></a><span class="result"> extends AnyRef</span>
+        <a href="SqlQueryCache.html"><span class="name">SqlQueryCache</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       <p class="comment cmt">While the JDBC spec encourages individual drivers to handle their own query cache,
 this behavior is not guaranteed.</p>
+    </li><li name="edu.chop.cbmi.dataExpress.backends.SqlServerBackend" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqlServerBackendextendsSqlBackend"></a>
+      <a id="SqlServerBackend:SqlServerBackend"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SqlServerBackend.html"><span class="name">SqlServerBackend</span></a><span class="result"> extends <a href="SqlBackend.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackend">SqlBackend</a></span>
+      </span>
+      </h4>
+      <p class="comment cmt">Backend for accessing SqlServer databases.</p>
+    </li><li name="edu.chop.cbmi.dataExpress.backends.SqlServerServiceProvider" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqlServerServiceProviderextendsSqlBackendProvider"></a>
+      <a id="SqlServerServiceProvider:SqlServerServiceProvider"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">class</span>
+      </span>
+      <span class="symbol">
+        <a href="SqlServerServiceProvider.html"><span class="name">SqlServerServiceProvider</span></a><span class="result"> extends <a href="SqlBackendProvider.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackendProvider">SqlBackendProvider</a></span>
+      </span>
+      </h4>
+      
     </li></ol>
             </div>
 
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.GenericSqlDialect" data-isabs="false">
+              <ol><li name="edu.chop.cbmi.dataExpress.backends.GenericSqlDialect" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="GenericSqlDialect"></a>
       <a id="GenericSqlDialect:GenericSqlDialect"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -209,11 +281,12 @@ this behavior is not guaranteed.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="GenericSqlDialect$.html"><span class="name">GenericSqlDialect</span></a><span class="result"> extends SqlDialect with Product with Serializable</span>
+        <a href="GenericSqlDialect$.html"><span class="name">GenericSqlDialect</span></a><span class="result"> extends <a href="SqlDialect.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlDialect">SqlDialect</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      <p class="comment cmt">This is a &quot;generic&quot; implementation of a <a name="edu.chop.cbmi.dataExpress.backends.SqlDialect" class="extype" href="SqlDialect.html">SqlDialect</a>.</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.MySqlDialect" data-isabs="false">
+      <p class="comment cmt">This is a &quot;generic&quot; implementation of a <a href="SqlDialect.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlDialect">edu.chop.cbmi.dataExpress.backends.SqlDialect</a>.</p>
+    </li><li name="edu.chop.cbmi.dataExpress.backends.MySqlDialect" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="MySqlDialect"></a>
       <a id="MySqlDialect:MySqlDialect"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -221,11 +294,12 @@ this behavior is not guaranteed.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="MySqlDialect$.html"><span class="name">MySqlDialect</span></a><span class="result"> extends SqlDialect with Product with Serializable</span>
+        <a href="MySqlDialect$.html"><span class="name">MySqlDialect</span></a><span class="result"> extends <a href="SqlDialect.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlDialect">SqlDialect</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">SQL dialect for MySQL</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.backends.OracleSqlDialect" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="OracleSqlDialect"></a>
       <a id="OracleSqlDialect:OracleSqlDialect"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -233,11 +307,12 @@ this behavior is not guaranteed.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="OracleSqlDialect$.html"><span class="name">OracleSqlDialect</span></a><span class="result"> extends SqlDialect with Product with Serializable</span>
+        <a href="OracleSqlDialect$.html"><span class="name">OracleSqlDialect</span></a><span class="result"> extends <a href="SqlDialect.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlDialect">SqlDialect</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">SQL dialect for Oracle</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.PostgresSqlDialect" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.backends.PostgresSqlDialect" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="PostgresSqlDialect"></a>
       <a id="PostgresSqlDialect:PostgresSqlDialect"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -245,11 +320,12 @@ this behavior is not guaranteed.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="PostgresSqlDialect$.html"><span class="name">PostgresSqlDialect</span></a><span class="result"> extends SqlDialect with Product with Serializable</span>
+        <a href="PostgresSqlDialect$.html"><span class="name">PostgresSqlDialect</span></a><span class="result"> extends <a href="SqlDialect.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlDialect">SqlDialect</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">SQL dialect for Postgres</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqLiteDialect" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.backends.SqLiteDialect" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqLiteDialect"></a>
       <a id="SqLiteDialect:SqLiteDialect"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -257,11 +333,12 @@ this behavior is not guaranteed.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="SqLiteDialect$.html"><span class="name">SqLiteDialect</span></a><span class="result"> extends SqlDialect with Product with Serializable</span>
+        <a href="SqLiteDialect$.html"><span class="name">SqLiteDialect</span></a><span class="result"> extends <a href="SqlDialect.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlDialect">SqlDialect</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">SQL dialect for SQLite</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlBackendFactory" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.backends.SqlBackendFactory" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqlBackendFactory"></a>
       <a id="SqlBackendFactory:SqlBackendFactory"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -269,11 +346,12 @@ this behavior is not guaranteed.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="SqlBackendFactory$.html"><span class="name">SqlBackendFactory</span></a><span class="result"> extends AnyRef</span>
+        <a href="SqlBackendFactory$.html"><span class="name">SqlBackendFactory</span></a>
       </span>
       </h4>
-      <p class="comment cmt">Factory for edu.chop.cbmi.dataExpress.backends.SqlBackendFactory</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.backends.SqlQueryCache" data-isabs="false">
+      <p class="comment cmt">Factory for <a href="SqlBackendFactory$.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlBackendFactory">edu.chop.cbmi.dataExpress.backends.SqlBackendFactory</a></p>
+    </li><li name="edu.chop.cbmi.dataExpress.backends.SqlQueryCache" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqlQueryCache"></a>
       <a id="SqlQueryCache:SqlQueryCache"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -281,18 +359,58 @@ this behavior is not guaranteed.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="SqlQueryCache$.html"><span class="name">SqlQueryCache</span></a><span class="result"> extends AnyRef</span>
+        <a href="SqlQueryCache$.html"><span class="name">SqlQueryCache</span></a>
       </span>
       </h4>
-      <p class="comment cmt">Factory for <a name="edu.chop.cbmi.dataExpress.backends.SqlQueryCache" class="extype" href="SqlQueryCache.html">SqlQueryCache</a> instances</p>
+      <p class="comment cmt">Factory for <a href="SqlQueryCache.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlQueryCache">edu.chop.cbmi.dataExpress.backends.SqlQueryCache</a> instances</p>
+    </li><li name="edu.chop.cbmi.dataExpress.backends.SqlServerSqlDialect" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SqlServerSqlDialect"></a>
+      <a id="SqlServerSqlDialect:SqlServerSqlDialect"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">object</span>
+      </span>
+      <span class="symbol">
+        <a href="SqlServerSqlDialect$.html"><span class="name">SqlServerSqlDialect</span></a><span class="result"> extends <a href="SqlDialect.html" class="extype" name="edu.chop.cbmi.dataExpress.backends.SqlDialect">SqlDialect</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
+      </span>
+      </h4>
+      
+    </li><li name="edu.chop.cbmi.dataExpress.backends.file" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="file"></a>
+      <a id="file:file"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="file/package.html"><span class="name">file</span></a>
+      </span>
+      </h4>
+      
     </li></ol>
             </div>
+
+        
 
         
         </div>
 
         <div id="inheritedMembers">
+        <div class="parent" name="scala.AnyRef">
+              <h3>Inherited from <span class="extype" name="scala.AnyRef">AnyRef</span></h3>
+            </div><div class="parent" name="scala.Any">
+              <h3>Inherited from <span class="extype" name="scala.Any">Any</span></h3>
+            </div>
         
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
         </div>
 
       </div>

@@ -2,24 +2,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>edu.chop.cbmi.dataExpress.logging</title>
+          <title>logging - edu.chop.cbmi.dataExpress.logging</title>
+          <meta name="description" content="logging - edu.chop.cbmi.dataExpress.logging" />
+          <meta name="keywords" content="logging edu.chop.cbmi.dataExpress.logging" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../../../lib/template.css" />
-      <script type="text/javascript" src="../../../../../lib/jquery.js"></script>
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../lib/jquery.js" id="jquery-js"></script>
       <script type="text/javascript" src="../../../../../lib/jquery-ui.js"></script>
       <script type="text/javascript" src="../../../../../lib/template.js"></script>
       <script type="text/javascript" src="../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'edu.chop.cbmi.dataExpress.logging.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+        <body class="value">
       <div id="definition">
         <img src="../../../../../lib/package_big.png" />
-        <p id="owner"><a name="edu" class="extype" href="../../../../package.html">edu</a>.<a name="edu.chop" class="extype" href="../../../package.html">chop</a>.<a name="edu.chop.cbmi" class="extype" href="../../package.html">cbmi</a>.<a name="edu.chop.cbmi.dataExpress" class="extype" href="../package.html">dataExpress</a></p>
+        <p id="owner"><a href="../../../../package.html" class="extype" name="edu">edu</a>.<a href="../../../package.html" class="extype" name="edu.chop">chop</a>.<a href="../../package.html" class="extype" name="edu.chop.cbmi">cbmi</a>.<a href="../package.html" class="extype" name="edu.chop.cbmi.dataExpress">dataExpress</a></p>
         <h1>logging</h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">package</span>
@@ -29,11 +44,11 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"></div>
-    
+          <div id="comment" class="fullcommenttop"></div>
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
         
         
         <div id="visbl">
@@ -46,9 +61,10 @@
         <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="edu.chop.cbmi.dataExpress.logging.Log" data-isabs="false">
+              <ol><li name="edu.chop.cbmi.dataExpress.logging.Log" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="LogextendsProductwithSerializable"></a>
       <a id="Log:Log"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -56,7 +72,7 @@
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="Log.html"><span class="name">Log</span></a><span class="params">(<span name="fileWriter">fileWriter: BufferedWriter</span>, <span name="logType">logType: String</span>)</span><span class="result"> extends Product with Serializable</span>
+        <a href="Log.html"><span class="name">Log</span></a><span class="params">(<span name="fileWriter">fileWriter: <span class="extype" name="java.io.BufferedWriter">BufferedWriter</span></span>, <span name="logType">logType: <span class="extype" name="scala.Predef.String">String</span></span>)</span><span class="result"> extends <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       <p class="comment cmt">Created by IntelliJ IDEA.</p>
@@ -65,9 +81,10 @@
 
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="edu.chop.cbmi.dataExpress.logging.Log" data-isabs="false">
+              <ol><li name="edu.chop.cbmi.dataExpress.logging.Log" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="Log"></a>
       <a id="Log:Log"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -75,7 +92,7 @@
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="Log$.html"><span class="name">Log</span></a><span class="result"> extends Serializable</span>
+        <a href="Log$.html"><span class="name">Log</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
@@ -83,10 +100,20 @@
             </div>
 
         
+
+        
         </div>
 
         <div id="inheritedMembers">
         
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
         </div>
 
       </div>

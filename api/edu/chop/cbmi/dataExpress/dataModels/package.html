@@ -2,24 +2,39 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <html>
         <head>
-          <title>edu.chop.cbmi.dataExpress.dataModels</title>
+          <title>dataModels - edu.chop.cbmi.dataExpress.dataModels</title>
+          <meta name="description" content="dataModels - edu.chop.cbmi.dataExpress.dataModels" />
+          <meta name="keywords" content="dataModels edu.chop.cbmi.dataExpress.dataModels" />
           <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
           
-      <link type="text/css" media="screen" rel="stylesheet" href="../../../../../lib/template.css" />
-      <script type="text/javascript" src="../../../../../lib/jquery.js"></script>
+      <link href="../../../../../lib/template.css" media="screen" type="text/css" rel="stylesheet" />
+      <link href="../../../../../lib/diagrams.css" media="screen" type="text/css" rel="stylesheet" id="diagrams-css" />
+      <script type="text/javascript" src="../../../../../lib/jquery.js" id="jquery-js"></script>
       <script type="text/javascript" src="../../../../../lib/jquery-ui.js"></script>
       <script type="text/javascript" src="../../../../../lib/template.js"></script>
       <script type="text/javascript" src="../../../../../lib/tools.tooltip.js"></script>
+      
+      <script type="text/javascript">
+         if(top === self) {
+            var url = '../../../../../index.html';
+            var hash = 'edu.chop.cbmi.dataExpress.dataModels.package';
+            var anchor = window.location.hash;
+            var anchor_opt = '';
+            if (anchor.length >= 1)
+              anchor_opt = '@' + anchor.substring(1);
+            window.location.href = url + '#' + hash + anchor_opt;
+         }
+   	  </script>
     
         </head>
-        <body onload="sh_highlightDocument('../lib/', '.min.js');" class="value">
+        <body class="value">
       <div id="definition">
         <img src="../../../../../lib/package_big.png" />
-        <p id="owner"><a name="edu" class="extype" href="../../../../package.html">edu</a>.<a name="edu.chop" class="extype" href="../../../package.html">chop</a>.<a name="edu.chop.cbmi" class="extype" href="../../package.html">cbmi</a>.<a name="edu.chop.cbmi.dataExpress" class="extype" href="../package.html">dataExpress</a></p>
+        <p id="owner"><a href="../../../../package.html" class="extype" name="edu">edu</a>.<a href="../../../package.html" class="extype" name="edu.chop">chop</a>.<a href="../../package.html" class="extype" name="edu.chop.cbmi">cbmi</a>.<a href="../package.html" class="extype" name="edu.chop.cbmi.dataExpress">dataExpress</a></p>
         <h1>dataModels</h1>
       </div>
 
-      <h4 class="signature" id="signature">
+      <h4 id="signature" class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">package</span>
@@ -29,11 +44,11 @@
       </span>
       </h4>
       
-      <div class="fullcommenttop" id="comment"></div>
-    
+          <div id="comment" class="fullcommenttop"></div>
+        
 
       <div id="mbrsel">
-        <div id="textfilter"><span class="pre"></span><span class="input"><input accesskey="/" type="text" /></span><span class="post"></span></div>
+        <div id="textfilter"><span class="pre"></span><span class="input"><input id="mbrsel-input" type="text" accesskey="/" /></span><span class="post"></span></div>
         
         
         <div id="visbl">
@@ -46,9 +61,10 @@
         <div id="allMembers">
         
 
-        <div class="types members" id="types">
+        <div id="types" class="types members">
               <h3>Type Members</h3>
-              <ol><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator" data-isabs="true">
+              <ol><li name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="ColumnNameGeneratorextendsObject"></a>
       <a id="ColumnNameGenerator:ColumnNameGenerator"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -56,37 +72,40 @@
         <span class="kind">trait</span>
       </span>
       <span class="symbol">
-        <a href="ColumnNameGenerator.html"><span class="name">ColumnNameGenerator</span></a><span class="result"> extends AnyRef</span>
+        <a href="ColumnNameGenerator.html"><span class="name">ColumnNameGenerator</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       <p class="comment cmt">When mapping column names to methods via Scala's dynamic trait, it is necessary to generate names that
 comply with Scala's rules.</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.DataRow" data-isabs="false">
-      <a id="DataRow:DataRow[T]"></a>
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.DataRow" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DataRow[+T]extendsSeq[Option[T]]withDynamicwithProductwithSerializable"></a>
+      <a id="DataRow[+T]:DataRow[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="DataRow.html"><span class="name">DataRow</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="params">(<span name="column_names">column_names: Seq[String]</span>, <span name="data">data: Seq[Option[T]]</span>)</span><span class="result"> extends Seq[Option[T]] with Dynamic with Product with Serializable</span>
+        <a href="DataRow.html"><span class="name">DataRow</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="params">(<span name="column_names">column_names: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="params">(<span name="data">data: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Option">Option</span>[<span class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataRow.T">T</span>]]</span>)</span><span class="result"> extends <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Option">Option</span>[<span class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataRow.T">T</span>]] with <span class="extype" name="scala.Dynamic">Dynamic</span> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      <p class="comment cmt">A Wrapper class that extends Seq[T] with scala.Dynamic to enable row element access using the column names with dot notation
+      <p class="comment cmt">A Wrapper class that extends Seq[T] with <span class="extype" name="scala.Dynamic">scala.Dynamic</span> to enable row element access using the column names with dot notation
 e.</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.DataTable" data-isabs="true">
-      <a id="DataTable:DataTable[T]"></a>
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.DataTable" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="DataTable[+T]extendsIterator[edu.chop.cbmi.dataExpress.dataModels.DataRow[T]]withDynamic"></a>
+      <a id="DataTable[+T]:DataTable[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier">abstract </span>
-        <span class="kind">case class</span>
+        <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DataTable.html"><span class="name">DataTable</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="params">(<span name="column_names_generator">column_names_generator: ColumnNameGenerator</span>)</span><span class="result"> extends Iterator[DataRow[T]] with Dynamic with Product with Serializable</span>
+        <a href="DataTable.html"><span class="name">DataTable</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <span class="extype" name="scala.Iterator">Iterator</span>[<a href="DataRow.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataRow">DataRow</a>[<span class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataTable.T">T</span>]] with <span class="extype" name="scala.Dynamic">Dynamic</span></span>
       </span>
       </h4>
       <p class="comment cmt">base class for other data representation classes organized as a 2-D table with column names.</p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.DataType" data-isabs="true">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.DataType" visbl="pub" data-isabs="true" fullComment="no" group="Ungrouped">
+      <a id="DataTypeextendsObject"></a>
       <a id="DataType:DataType"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -94,23 +113,25 @@ e.</p>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="DataType.html"><span class="name">DataType</span></a><span class="result"> extends AnyRef</span>
+        <a href="DataType.html"><span class="name">DataType</span></a><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.RichOption" data-isabs="false">
-      <a id="RichOption:RichOption[T]"></a>
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.RichOption" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RichOption[T]extendsObject"></a>
+      <a id="RichOption[T]:RichOption[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">class</span>
       </span>
       <span class="symbol">
-        <a href="RichOption.html"><span class="name">RichOption</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends AnyRef</span>
+        <a href="RichOption.html"><span class="name">RichOption</span></a><span class="tparams">[<span name="T">T</span>]</span><span class="result"> extends <span class="extype" name="scala.AnyRef">AnyRef</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.SeqColumnNames" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.SeqColumnNames" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SeqColumnNamesextendsColumnNameGeneratorwithProductwithSerializable"></a>
       <a id="SeqColumnNames:SeqColumnNames"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -118,31 +139,33 @@ e.</p>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="SeqColumnNames.html"><span class="name">SeqColumnNames</span></a><span class="params">(<span name="column_names">column_names: Seq[String]</span>)</span><span class="result"> extends ColumnNameGenerator with Product with Serializable</span>
+        <a href="SeqColumnNames.html"><span class="name">SeqColumnNames</span></a><span class="params">(<span name="column_names">column_names: <span class="extype" name="scala.Seq">Seq</span>[<span class="extype" name="scala.Predef.String">String</span>]</span>)</span><span class="result"> extends <a href="ColumnNameGenerator.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator">ColumnNameGenerator</a> with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable" data-isabs="false">
-      <a id="SimpleDataTable:SimpleDataTable[T]"></a>
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="SimpleDataTable[+T]extendsDataTable[T]withIterator[edu.chop.cbmi.dataExpress.dataModels.DataRow[T]]withProductwithSerializable"></a>
+      <a id="SimpleDataTable[+T]:SimpleDataTable[T]"></a>
       <h4 class="signature">
       <span class="modifier_kind">
         <span class="modifier"></span>
         <span class="kind">case class</span>
       </span>
       <span class="symbol">
-        <a href="SimpleDataTable.html"><span class="name">SimpleDataTable</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="params">(<span name="column_names_generator">column_names_generator: ColumnNameGenerator</span>, <span name="data">data: Seq[Seq[T]]</span>)</span><span class="result"> extends DataTable[T] with Iterator[DataRow[T]] with Product with Serializable</span>
+        <a href="SimpleDataTable.html"><span class="name">SimpleDataTable</span></a><span class="tparams">[<span name="T">+T</span>]</span><span class="result"> extends <a href="DataTable.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataTable">DataTable</a>[<span class="extype" name="edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable.T">T</span>] with <span class="extype" name="scala.Iterator">Iterator</span>[<a href="DataRow.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataRow">DataRow</a>[<span class="extype" name="edu.chop.cbmi.dataExpress.dataModels.SimpleDataTable.T">T</span>]] with <span class="extype" name="scala.Product">Product</span> with <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      <p class="comment cmt">A simple immutable <a name="edu.chop.cbmi.dataExpress.dataModels.DataTable" class="extype" href="DataTable.html">DataTable</a> that maintains all data elements in memory
+      <p class="comment cmt">A simple immutable <a href="DataTable.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataTable">edu.chop.cbmi.dataExpress.dataModels.DataTable</a> that maintains all data elements in memory
 </p>
     </li></ol>
             </div>
 
         
 
-        <div class="values members" id="values">
+        <div id="values" class="values members">
               <h3>Value Members</h3>
-              <ol><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.DataRow" data-isabs="false">
+              <ol><li name="edu.chop.cbmi.dataExpress.dataModels.DataRow" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DataRow"></a>
       <a id="DataRow:DataRow"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -150,11 +173,12 @@ e.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="DataRow$.html"><span class="name">DataRow</span></a><span class="result"> extends Serializable</span>
+        <a href="DataRow$.html"><span class="name">DataRow</span></a><span class="result"> extends <span class="extype" name="scala.Serializable">Serializable</span></span>
       </span>
       </h4>
-      <p class="comment cmt">Factory for <a name="edu.chop.cbmi.dataExpress.dataModels.DataRow" class="extype" href="DataRow.html">DataRow</a></p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.DataTable" data-isabs="false">
+      <p class="comment cmt">Factory for <a href="DataRow.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataRow">edu.chop.cbmi.dataExpress.dataModels.DataRow</a></p>
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.DataTable" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="DataTable"></a>
       <a id="DataTable:DataTable"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -162,11 +186,12 @@ e.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="DataTable$.html"><span class="name">DataTable</span></a><span class="result"> extends Serializable</span>
+        <a href="DataTable$.html"><span class="name">DataTable</span></a>
       </span>
       </h4>
-      <p class="comment cmt">Factory for <a name="edu.chop.cbmi.dataExpress.dataModels.DataTable" class="extype" href="DataTable.html">DataTable</a></p>
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.RichOption" data-isabs="false">
+      <p class="comment cmt">Factory for <a href="DataTable.html" class="extype" name="edu.chop.cbmi.dataExpress.dataModels.DataTable">edu.chop.cbmi.dataExpress.dataModels.DataTable</a></p>
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.RichOption" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="RichOption"></a>
       <a id="RichOption:RichOption"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -174,11 +199,25 @@ e.</p>
         <span class="kind">object</span>
       </span>
       <span class="symbol">
-        <a href="RichOption$.html"><span class="name">RichOption</span></a><span class="result"> extends AnyRef</span>
+        <a href="RichOption$.html"><span class="name">RichOption</span></a>
       </span>
       </h4>
       
-    </li><li visbl="pub" name="edu.chop.cbmi.dataExpress.dataModels.sql" data-isabs="false">
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.file" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="file"></a>
+      <a id="file:file"></a>
+      <h4 class="signature">
+      <span class="modifier_kind">
+        <span class="modifier"></span>
+        <span class="kind">package</span>
+      </span>
+      <span class="symbol">
+        <a href="file/package.html"><span class="name">file</span></a>
+      </span>
+      </h4>
+      
+    </li><li name="edu.chop.cbmi.dataExpress.dataModels.sql" visbl="pub" data-isabs="false" fullComment="no" group="Ungrouped">
+      <a id="sql"></a>
       <a id="sql:sql"></a>
       <h4 class="signature">
       <span class="modifier_kind">
@@ -194,10 +233,20 @@ e.</p>
             </div>
 
         
+
+        
         </div>
 
         <div id="inheritedMembers">
         
+        
+        </div>
+
+        <div id="groupedMembers">
+        <div class="group" name="Ungrouped">
+              <h3>Ungrouped</h3>
+              
+            </div>
         </div>
 
       </div>
