@@ -5,14 +5,6 @@ import scala.io.Source
 import java.util.Properties
 import edu.chop.cbmi.dataExpress.backends.{SqlBackendFactory, PostgresBackend, SqlBackend}
 
-/**
- * Created by IntelliJ IDEA.
- * User: masinoa
- * Date: 12/2/11
- * Time: 11:12 AM
- * To change this template use File | Settings | File Templates.
- */
-
 object TestProps {
   def getDbProps(dbName:String):Properties = {
     val filename = choosePropFile(dbName)
@@ -34,6 +26,7 @@ object TestProps {
       case "mysql" => "/mysql_test.properties"
       case "postgres" => "/postgres_test.properties"
       case "sqlite" => "/sqlite_test.properties"
+      case "sqlserver" => "/sqlserver_test.properties"
       case _ => "/%s_test.properties".format(dbname)
     }
   }

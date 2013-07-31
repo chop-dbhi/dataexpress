@@ -25,7 +25,7 @@ trait SqlBackendProvider {
 object SqlBackendFactory{
 	
   val sqlBackendProviderLoader = ServiceLoader.load[SqlBackendProvider](classOf[SqlBackendProvider])
-  private val included_backends = List("postgresql", "mysql", "sqlite", "oracle")
+  private val included_backends = List("postgresql", "mysql", "sqlite", "oracle", "sqlserver")
 
   private def load_included_bakcend(db_type: String, connection_properties: Properties, sqlDialect: SqlDialect = null,
     driver_class_name: String = null) = db_type match {
@@ -34,6 +34,7 @@ object SqlBackendFactory{
     case "oracle"     => new OracleBackend(connection_properties, sqlDialect, driver_class_name)
     //case "sqlserver"  => new SqlServerBackend(connection_properties, sqlDialect, driver_class_name)
     case "sqlite" => new SqLiteBackend(connection_properties, sqlDialect, driver_class_name)
+    case "sqlserver" => new SqlServerBackend(connection_properties, sqlDialect, driver_class_name)
     case _ => throw new RuntimeException("Unsupported database type: " + db_type)
   }
   
@@ -147,7 +148,11 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
 
     if (props.stringPropertyNames().contains("jdbcUri")) {
       jdbcUri = props.getProperty("jdbcUri")
-      val connectProps = new Properties(props)
+      val connectProps = new Properties()
+
+      //Oracle discourages this, but people apparently do it in this case: http://stackoverflow.com/a/2004900/576145
+      connectProps.putAll(props)
+
       connectProps.remove("jdbcUri")
       connection = dr.connect(jdbcUri, connectProps)
       connection.setAutoCommit(false)
