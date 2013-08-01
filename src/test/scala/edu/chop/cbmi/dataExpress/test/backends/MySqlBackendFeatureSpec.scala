@@ -27,9 +27,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     }
 
   val dbSchema:Option[String]           =     Option("qe10c01")
-
   val targetDbUserName:String           =     "qe10c01"
-
   val identifierQuote                   =     "`"
 
   def dataSetupFixture =

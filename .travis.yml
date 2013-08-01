@@ -6,7 +6,6 @@ env:
 #once develop is fixed we can turn this on
 branches:
     only:
-        - master
         - travis_ci_support
 services:
     - mysql
@@ -14,7 +13,7 @@ services:
     - sqlite3
 
 before_script:
-    - mysql -e 'create database dataexpress_test;'
+    - mysql -e 'create database dataexpress_test; GRANT ALL ON *.* TO 'travis'@'%';'
     - psql -c 'create database dataexpress_test;' -U postgres
 
 #Note that sbt needs the entire command quoted as well as quotes around the tags to exclude

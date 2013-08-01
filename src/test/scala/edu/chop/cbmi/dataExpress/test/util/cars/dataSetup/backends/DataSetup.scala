@@ -141,45 +141,30 @@ class OracleDataSetup {
 class MySqlDataSetup {
 
   var sourceDbUserName                = ""
-
   var targetDbUserName                = ""
-
   var sourceIdentifierQuote           = ""
-
   var targetIdentifierQuote           = ""
-
   var sourceDBSchemaName              = ""
-
   var targetDBSchemaName              = ""
 
   def createSourceSchema(): String   = {
-
     lazy val createSourceSchemaStatement     = "CREATE SCHEMA " + sourceIdentifierQuote + sourceDBSchemaName + sourceIdentifierQuote
-
     createSourceSchemaStatement
   }
 
   def createTargetSchema(): String   = {
-
     lazy val createTargetSchemaStatement     = "CREATE SCHEMA " + targetIdentifierQuote + targetDBSchemaName + targetIdentifierQuote
-
     createTargetSchemaStatement
   }
 
-
-
   def dropSourceSchema(): String   = {
-
     lazy val dropSourceSchemaStatement     = "DROP SCHEMA IF EXISTS "  + sourceIdentifierQuote + sourceDBSchemaName + sourceIdentifierQuote
-
     dropSourceSchemaStatement
   }
 
 
   def dropTargetSchema(): String   = {
-
     lazy val dropTargetSchemaStatement     = "DROP SCHEMA IF EXISTS "  + targetIdentifierQuote + targetDBSchemaName + targetIdentifierQuote
-
     dropTargetSchemaStatement
   }
 
