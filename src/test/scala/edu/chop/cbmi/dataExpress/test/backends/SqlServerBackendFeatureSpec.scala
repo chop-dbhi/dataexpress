@@ -1,16 +1,14 @@
 package edu.chop.cbmi.dataExpress.test.backends
 
 
-import org.scalatest.FeatureSpec
+import org.scalatest.{Tag, FeatureSpec, GivenWhenThen}
 import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.GivenWhenThen
 import edu.chop.cbmi.dataExpress.backends.SqlServerBackend
 import edu.chop.cbmi.dataExpress.test.util._
 import edu.chop.cbmi.dataExpress.dataModels._
 import edu.chop.cbmi.dataExpress.dataModels.sql._
 import edu.chop.cbmi.dataExpress.dataModels.sql.IntegerDataType
 import scala.language.reflectiveCalls
-
 
 class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
 
@@ -40,7 +38,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
   }
 
 
-  scenario("The user can create a table with four columns") {
+  scenario("The user can create a table with four columns", SqlServerTest) {
     val f = fixture
     val tableName = "cars_deba_a"
     val columnFixedWidth: Boolean = false
@@ -83,9 +81,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
     backend.close()
   }
 
-
-
-  scenario("The user can truncate a table and commit") {
+  scenario("The user can truncate a table and commit", SqlServerTest) {
     val f = fixture
     val tableName: String = "cars_deba_a"
     val countStatement: String = """select count(*) as 'count' from """ + tableName
@@ -108,10 +104,8 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
 
   }
 
-
-
   //TODO: This test needs to be re-written with an auto-incrementing sequence in the table to fully test insert returning keys
-  scenario("The inserted row can be committed") {
+  scenario("The inserted row can be committed", SqlServerTest) {
     val f = fixture
     val backend = new SqlServerBackend(f.props)
     val tableName = "cars_deba_a"
@@ -150,9 +144,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
     backend.close()
   }
 
-
-
-  scenario("The user can obtain a record from executing a select query") {
+  scenario("The user can obtain a record from executing a select query", SqlServerTest) {
     //Prerequisites:  ignore 1:  Passed
 
     val f = fixture
@@ -178,7 +170,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
     backend.close()
   }
 
-  scenario("The user can determine whether a select query has returned a record") {
+  scenario("The user can determine whether a select query has returned a record", SqlServerTest) {
 
     //Prerequisites:  ignore 1:  Passed
 
@@ -206,8 +198,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
 
   }
 
-
-  scenario("The user can commit an open transaction") {
+  scenario("The user can commit an open transaction", SqlServerTest) {
 
     val f = fixture
     var backend = new SqlServerBackend(f.props)
@@ -248,8 +239,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
     backend.close()
   }
 
-
-  scenario("The user can truncate a populated table") {
+  scenario("The user can truncate a populated table", SqlServerTest) {
     val f = fixture
     val tableName  = "cars_deba_a"
     val countStatement = "select count(1) as 'count' from %s".format(tableName)
@@ -274,8 +264,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
 
   }
 
-
-  scenario("The user can roll back an open transaction") {
+  scenario("The user can roll back an open transaction", SqlServerTest) {
     val f = fixture
     val backend = new SqlServerBackend(f.props)
     val tableName = "cars_deba_a"
@@ -321,8 +310,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
 
   }
 
-
-  scenario("The user can open a transaction, insert a row, and end the transaction") {
+  scenario("The user can open a transaction, insert a row, and end the transaction", SqlServerTest) {
 
     val f = fixture
     val backend = new SqlServerBackend(f.props)
@@ -375,8 +363,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
 
   }
 
-
-  scenario("The user can create a table with 32 columns") {
+  scenario("The user can create a table with 32 columns", SqlServerTest) {
     val f = fixture
     val tableName                             =     "cars_deba_b"
     val columnFixedWidth:Boolean              =     false
@@ -410,8 +397,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
     backend.close()
   }
 
-
-  scenario("The user can insert a row without constructing an insert statement") {
+  scenario("The user can insert a row without constructing an insert statement", SqlServerTest) {
     val f = fixture
     val tableName = "cars_deba_a"
     val columnNames = List("carid","carnumber","carmake","carmodel")
@@ -448,7 +434,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
 
   }
 
-  scenario("The user can insert a batch of rows and commit without having to construct the insert statements") {
+  scenario("The user can insert a batch of rows and commit without having to construct the insert statements", SqlServerTest) {
     val f = fixture
     val tableName = "cars_deba_a"
     val columnNames = List("carid","carnumber","carmake","carmodel")
@@ -488,7 +474,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
     backend.close()
   }
 
-  scenario("The user can drop a table") {
+  scenario("The user can drop a table", SqlServerTest) {
     val f = fixture
     val tableName = "cars_deba_c"
     val columnFixedWidth = false
@@ -521,7 +507,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
   }
 
   //Cascade on drop table is unsupported in sql server
-  scenario("The user gets an exception when trying to drop a table with cascade") {
+  scenario("The user gets an exception when trying to drop a table with cascade", SqlServerTest) {
     val f = fixture
     val tableName = "cars_deba_c"
     val viewName = "cars_deba_c_v"
@@ -553,7 +539,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
 
   }
 
-  scenario("The user can iterate over the results of a select query") {
+  scenario("The user can iterate over the results of a select query", SqlServerTest) {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
     val f = fixture
     val backend = new SqlServerBackend(f.props)
@@ -579,7 +565,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
     backend.close()
   }
 
-  scenario("The user can update a record in a table using a valid update statement") {
+  scenario("The user can update a record in a table using a valid update statement", SqlServerTest) {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
 
     val f = fixture
@@ -615,8 +601,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
     backend.close()
   }
 
-
-  scenario("The user can update a multiple records in a table using a valid update statement") {
+  scenario("The user can update a multiple records in a table using a valid update statement", SqlServerTest) {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
 
     val f = fixture
@@ -652,8 +637,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
     backend.close()
   }
 
-
-  scenario("The user can update a multiple records in a table without constructing update statement") {
+  scenario("The user can update a multiple records in a table without constructing update statement", SqlServerTest) {
     //Prerequisites:  Need Multiple Row in table cars_deba_a   with carmake = 'MiniCoopeRb'
 
     val f = fixture
@@ -692,8 +676,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
     backend.close()
   }
 
-
-  scenario("The user can insert a multiple rows using a loop without constructing an insert statement") {
+  scenario("The user can insert a multiple rows using a loop without constructing an insert statement", SqlServerTest) {
     //Prerequisites:  None of theses record should exist
     val f = fixture
     val tableName = "cars_deba_a"
@@ -728,22 +711,16 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
 
   }
 
-
-
-  scenario("Remove Test Data Setup")  {
+  scenario("Remove Test Data Setup", SqlServerTest)  {
     /**** Remove Test Data    ****/
     removeTestDataSetup
     /****                     ****/
 
   }
 
-  scenario("Close Test SetUp Connections")  {
+  scenario("Close Test SetUp Connections", SqlServerTest)  {
     setup.targetBackend.close
   }
-
-
-
-
 
 }
 
