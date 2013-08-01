@@ -1,7 +1,8 @@
 language: scala
 scala:
     - 2.10.0
-
+env:
+    -SBT_OPTS="-Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=384M" 
 #once develop is fixed we can turn this on
 branches:
     only:
