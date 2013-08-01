@@ -8,8 +8,7 @@ package edu.chop.cbmi.dataExpress.backends.test
  * To change this template use File | Settings | File Templates.
  */
 import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.{GivenWhenThen, Spec, FunSpec}
-import java.util.Properties
+import org.scalatest.{GivenWhenThen, FunSpec, Tag}
 import edu.chop.cbmi.dataExpress.test.util._
 import edu.chop.cbmi.dataExpress.backends.OracleBackend
 import scala.language.reflectiveCalls

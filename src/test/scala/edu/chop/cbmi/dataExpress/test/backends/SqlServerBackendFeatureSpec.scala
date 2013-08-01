@@ -1,9 +1,8 @@
 package edu.chop.cbmi.dataExpress.test.backends
 
 
-import org.scalatest.FeatureSpec
+import org.scalatest.{Tag, FeatureSpec, GivenWhenThen}
 import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.GivenWhenThen
 import edu.chop.cbmi.dataExpress.backends.SqlServerBackend
 import edu.chop.cbmi.dataExpress.test.util._
 import edu.chop.cbmi.dataExpress.dataModels._

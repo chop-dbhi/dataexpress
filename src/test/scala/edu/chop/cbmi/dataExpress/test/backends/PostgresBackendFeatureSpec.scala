@@ -21,7 +21,7 @@ import edu.chop.cbmi.dataExpress.backends.PostgresBackend
 import edu.chop.cbmi.dataExpress.dataModels._
 import edu.chop.cbmi.dataExpress.dataModels.sql._
 
-import edu.chop.cbmi.dataExpress.test.util.TestProps
+import edu.chop.cbmi.dataExpress.test.util._
 import edu.chop.cbmi.dataExpress.test.util.cars.dataSetup.backends.PostgresDataSetup
 import scala.language.reflectiveCalls
 

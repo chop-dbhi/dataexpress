@@ -1,7 +1,5 @@
 package edu.chop.cbmi.dataExpress.test.tutorial
 
-import org.scalatest.junit.JUnitRunner
-import org.scalatest.FeatureSpec
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.GivenWhenThen
 import java.util.{UUID, Properties}
@@ -9,8 +7,6 @@ import java.io.File
 import edu.chop.cbmi.dataExpress.backends._
 import edu.chop.cbmi.dataExpress.dataModels._
 import edu.chop.cbmi.dataExpress.dataModels.sql._
-import edu.chop.cbmi.dataExpress.dsl._
-import edu.chop.cbmi.dataExpress.dsl.stores.SqlDb
 import edu.chop.cbmi.dataExpress.dsl.ETL._
 import edu.chop.cbmi.dataExpress.dsl.ETL
 import edu.chop.cbmi.dataExpress.dsl.stores.SqlDb
