@@ -14,7 +14,7 @@ services:
 
 before_script:
     - mysql -e 'create database dataexpress_test;'
-    - mysql -e 'GRANT ALL ON *.* TO 'travis'@'%';'
+    - mysql -e "GRANT ALL ON *.* TO 'travis'@'%';"
     - psql -c 'create database dataexpress_test;' -U postgres
 
 #Note that sbt needs the entire command quoted as well as quotes around the tags to exclude
