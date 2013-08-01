@@ -1,0 +1,20 @@
+language: scala
+scala:
+    - 2.10.0
+
+#once develop is fixed we can turn this on
+branches:
+    only:
+        - master
+services:
+    - mysql
+    - posgres
+    - sqlite3
+
+before_script:
+    - mysql -e 'create database dataexpress_test;'
+    - psql -c 'create database dataexpress_test;' -U postgres
+
+#Note that sbt needs the entire command quoted as well as quotes around the tags to exclude
+script:
+    - sbt ++$TRAVIS_SCALA_VERSION 'test-only * -- -l "edu.chop.cbmi.dataExpress.test.util.tags.SqlServerTest edu.chop.cbmi.dataExpress.test.util.tags.OracleTest"'

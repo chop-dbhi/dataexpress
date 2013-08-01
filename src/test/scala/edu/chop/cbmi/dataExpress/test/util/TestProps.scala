@@ -22,6 +22,25 @@ object TestProps {
  }
   
   private def choosePropFile(dbname: String) = {
+    val travis = System.getenv("TRAVIS")
+
+    travis match {
+      case "true"=> getTravisDbProps(dbname)
+      case _ => getLocalDbProps(dbname)
+    }
+
+  }
+
+  private def getTravisDbProps(dbname: String) = {
+    dbname match {
+      case "mysql" => "/mysql_travis_test.properties"
+      case "postgres" => "/postgres_travis_test.properties"
+      case "sqlite" => "/sqlite_test.properties"
+      case _ => "/%s_travis_test.properties".format(dbname)
+
+    }
+  }
+  private def getLocalDbProps(dbname: String) = {
     dbname match {
       case "mysql" => "/mysql_test.properties"
       case "postgres" => "/postgres_test.properties"
@@ -29,7 +48,9 @@ object TestProps {
       case "sqlserver" => "/sqlserver_test.properties"
       case _ => "/%s_test.properties".format(dbname)
     }
+
   }
+
 
   def connectToDB(sb : SqlBackend) = {
     sb.connect
