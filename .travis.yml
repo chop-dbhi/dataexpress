@@ -6,6 +6,7 @@ scala:
 branches:
     only:
         - master
+        - travis_ci_support
 services:
     - mysql
     - posgres
