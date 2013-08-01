@@ -20,7 +20,6 @@ import edu.chop.cbmi.dataExpress.backends.OracleBackend
 import scala.language.reflectiveCalls
 import edu.chop.cbmi.dataExpress.test.util.cars.dataSetup.backends.OracleDataSetup
 
-
 class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
 
   def fixture =
@@ -28,7 +27,8 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 	  val props = TestProps.getDbProps("oracle")
     }
    
-
+  //TODO: Hard-coding schema names and users in the tests like this is confusing. It's not clear how they relate to the properties file
+  //This stuff all needs to be re-worked
   val dbSchema:Option[String] = Some("QE10C01")
   val targetDbUserName:String = "QE10C01"
 
@@ -72,7 +72,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-  scenario("The user can create a table with four columns") {
+  scenario("The user can create a table with four columns", OracleTest) {
 
     val f = fixture
     val tableName = "cars_deba_a"
@@ -143,7 +143,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.close()
   }
 
-  scenario("The user can truncate a table and commit") {
+  scenario("The user can truncate a table and commit", OracleTest) {
      val f = fixture
 
      val tableName:String                            =     "cars_deba_a"
@@ -181,9 +181,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
    }
 
-
-
-  scenario("The inserted row can be committed by executing an insert query") {
+  scenario("The inserted row can be committed by executing an insert query", OracleTest) {
     val f = fixture
     val backend = new OracleBackend(f.props)
     val tableName = "cars_deba_a"
@@ -223,8 +221,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
       backend.close()
   }
 
-
-  scenario("The user can obtain a record from executing a select query") {
+  scenario("The user can obtain a record from executing a select query", OracleTest) {
     //Prerequisites:  scenario 1:  Passed
 
     val f                     = fixture
@@ -257,12 +254,8 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     backend.close()
   }
-
-
-
-
   //THIS SHOULD WORK
-  scenario("The user can determine whether a select query has returned a record") {
+  scenario("The user can determine whether a select query has returned a record", OracleTest) {
     //Prerequisites:  scenario 1:  Passed
 
     val f             =   fixture
@@ -303,13 +296,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
-
-
-
-
-
-  scenario("The user can commit an open transaction") {
+  scenario("The user can commit an open transaction", OracleTest) {
 
     val f                             = fixture
 
@@ -383,10 +370,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
-
-
-  scenario("The user can truncate a populated table") {
+  scenario("The user can truncate a populated table", OracleTest) {
     val f = fixture
 
     val tableName:String                            =     "cars_deba_a"
@@ -419,10 +403,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
-
-
-  scenario("The user can roll back an open transaction") {
+  scenario("The user can roll back an open transaction", OracleTest) {
 
     val f                             = fixture
 
@@ -482,12 +463,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
-
-
-
-
-  scenario("The user can open a transaction, insert a row, and end the transaction") {
+  scenario("The user can open a transaction, insert a row, and end the transaction", OracleTest) {
 
     val f                             = fixture
 
@@ -562,9 +538,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
-
-  scenario("The user can create a table with 32 columns") {
+  scenario("The user can create a table with 32 columns", OracleTest) {
     val f = fixture
 
     val tableName                             =     "cars_deba_b"
@@ -613,9 +587,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.close()
   }
 
-
-
-  scenario("The user can insert a row without constructing an insert statement") {
+  scenario("The user can insert a row without constructing an insert statement", OracleTest) {
     val f = fixture
     val tableName: String = "cars_deba_a"
     val columnNames: List[String] = List("carid", "carnumber", "carmake", "carmodel")
@@ -650,13 +622,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
-
-
-
-
-
-  scenario("The user can insert a batch of rows and commit without having to construct the insert statements") {
+  scenario("The user can insert a batch of rows and commit without having to construct the insert statements", OracleTest) {
     val f = fixture
 
     val tableName:String                      =     "cars_deba_a"
@@ -719,10 +685,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
-
-
-  scenario("The user can drop a table") {
+  scenario("The user can drop a table", OracleTest) {
     val f = fixture
 
     val tableName:String                      =     "cars_deba_c"
@@ -773,12 +736,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
-
-
-
-
-  scenario("The user can drop a table with cascade") {
+  scenario("The user can drop a table with cascade", OracleTest) {
     val f = fixture
     val tableName: String = "cars_deba_c"
     val viewName: String = "cars_deba_c_v"
@@ -817,11 +775,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
-
-
-
-  scenario("The user can iterate over the results of a select query") {
+  scenario("The user can iterate over the results of a select query", OracleTest) {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
 
     val f                     = fixture
@@ -853,10 +807,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.close()
   }
 
-
-
-
-  scenario("The user can update a record in a table using a valid update statement") {
+  scenario("The user can update a record in a table using a valid update statement", OracleTest) {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
 
     val f                             = fixture
@@ -915,8 +866,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.close()
   }
 
-
-  scenario("The user can update a multiple records in a table using a valid update statement") {
+  scenario("The user can update a multiple records in a table using a valid update statement", OracleTest) {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
 
     val f                             = fixture
@@ -969,11 +919,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.close()
   }
 
-
-
-
-
-  scenario("The user can update a multiple records in a table without constructing update statement") {
+  scenario("The user can update a multiple records in a table without constructing update statement", OracleTest) {
     //Prerequisites:  Need Multiple Row in table cars_deba_a   with carmake = 'MiniCoopeRb'
 
     val f                                         = fixture
@@ -1032,11 +978,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.close()
   }
 
-
-
-
-
-  scenario("The user can insert a multiple rows using a loop without constructing an insert statement") {
+  scenario("The user can insert a multiple rows using a loop without constructing an insert statement", OracleTest) {
     //Prerequisites:  None of theses record should exist
     val f = fixture
 
@@ -1089,11 +1031,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
-
-
-
-  scenario("The user can delete multiple records in a table using a valid delete statement") {
+  scenario("The user can delete multiple records in a table using a valid delete statement", OracleTest) {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
 
     val f                             = fixture
@@ -1133,12 +1071,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
-
-
-
-
-  scenario("The user can drop all tables that begin with a certain string") {
+  scenario("The user can drop all tables that begin with a certain string", OracleTest) {
 
     /*http://stackoverflow.com/questions/3476765/mysql-drop-all-tables-ignoring-foreign-keys*/
 
@@ -1202,17 +1135,14 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
-
-
-  scenario("Remove Test Data Setup")  {
+  scenario("Remove Test Data Setup", OracleTest)  {
     /**** Remove Test Data    ****/
     removeTestDataSetup
     /****                     ****/
 
   }
 
-  scenario("Close Test SetUp Connections")  {
+  scenario("Close Test SetUp Connections", OracleTest)  {
 
     setup.targetBackend.close
 

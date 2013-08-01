@@ -1,12 +1,5 @@
 package edu.chop.cbmi.dataExpress.backends.test
 
-/**
- * Created by IntelliJ IDEA.
- * User: italiam
- * Date: 11/22/11
- * Time: 1:22 PM
- * To change this template use File | Settings | File Templates.
- */
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.{GivenWhenThen, FunSpec, Tag}
 import edu.chop.cbmi.dataExpress.test.util._
@@ -24,23 +17,20 @@ class OracleBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  
 
 
 
-    it("should have a null connection to start") {
+    it("should have a null connection to start", OracleTest) {
         val backend = new OracleBackend(f.props)
         backend.connection should be (null)
         backend.close()
     }
 
-    it("should connect using a Properties object") {
+    it("should connect using a Properties object", OracleTest) {
         val backend             = new OracleBackend(f.props)
         backend.connect()
         backend.connection should not be (null)
         backend.close()
     }
 
-
-
-
-    it("should throw an exception if one of the properties isn't provided") {
+    it("should throw an exception if one of the properties isn't provided", OracleTest) {
     	val badProps = f.props
         badProps.remove("jdbcUri")
     	val backend = new OracleBackend(badProps) 
@@ -48,8 +38,7 @@ class OracleBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  
         backend.close()
     }
 
-
-    it("should have a closed connection after it closes the connection") {
+    it("should have a closed connection after it closes the connection", OracleTest) {
         val newFixture          = fixture
         val backend             = new OracleBackend(newFixture.props)
         backend.connect()
@@ -58,12 +47,6 @@ class OracleBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  
         backend.connection.isClosed() should be (true)
 
     }
-
-
-
-
-
-
   }
 
 }
