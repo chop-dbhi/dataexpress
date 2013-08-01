@@ -99,8 +99,8 @@ abstract class PresidentsFeatureSpecWithSourceTarget extends PresidentsFeatureSp
   val backend_test_type: KNOWN_SQL_BACKEND
 
   lazy val schema = backend_test_type match {
-    case (x: POSTGRES) => Option("public")
-    case (y: MYSQL) => Option("qe10")
+    case (x: POSTGRES) => Option(TestProps.getDbProps("postgres").getProperty("schema"))
+    case (y: MYSQL) => Option(TestProps.getDbProps("mysql").getProperty("dbname"))
     case (z) => throw new Exception("Unknown Backend Test Type")
   }
 
