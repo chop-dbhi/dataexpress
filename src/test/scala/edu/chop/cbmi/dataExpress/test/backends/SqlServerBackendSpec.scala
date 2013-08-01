@@ -14,7 +14,7 @@ class SqlServerBackendSpec extends FunSpec with ShouldMatchers  {
       val props = TestProps.getDbProps("sqlserver")
     }
   describe("SqlServer backend") {
-    val f = fixture
+    lazy val f = fixture
 
 
 

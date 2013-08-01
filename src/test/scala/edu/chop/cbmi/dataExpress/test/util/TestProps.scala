@@ -33,7 +33,7 @@ object TestProps {
 
   private def getTravisDbProps(dbname: String) = {
     dbname match {
-      case "mysql" => {println("getting travis properties"); "/mysql_travis_test.properties"}
+      case "mysql" => "/mysql_travis_test.properties"
       case "postgres" => "/postgres_travis_test.properties"
       case "sqlite" => "/sqlite_test.properties"
       case _ => "/%s_travis_test.properties".format(dbname)
