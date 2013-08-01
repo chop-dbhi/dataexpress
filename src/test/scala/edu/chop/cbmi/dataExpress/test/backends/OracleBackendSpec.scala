@@ -5,13 +5,21 @@ import org.scalatest.{GivenWhenThen, FunSpec, Tag}
 import edu.chop.cbmi.dataExpress.test.util._
 import edu.chop.cbmi.dataExpress.backends.OracleBackend
 import scala.language.reflectiveCalls
+import java.util.Properties
 
 class OracleBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  {
 
+
   def fixture =
-  new {
-	  val props = TestProps.getDbProps("oracle")
+    new {
+      //Need to make sure we don't try to load properties inside travis_ci
+      val travis = System.getenv("TRAVIS")
+      val props = travis match {
+        case "true"=> new Properties()
+        case _ => TestProps.getDbProps("oracle")
+      }
     }
+
   describe("Oracle backend") {
     val f = fixture
 

@@ -22,7 +22,7 @@ import edu.chop.cbmi.dataExpress.test.util.cars.dataSetup.backends.OracleDataSet
 
 class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
 
-  def fixture =
+   def fixture =
     new {
 	  val props = TestProps.getDbProps("oracle")
     }
@@ -65,7 +65,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     true
   }
 
-  scenario("Data Setup")  {
+  scenario("Data Setup", OracleTest)  {
     /**** SetUp Test Data   ****/
     setUpTestData
     /****                   ****/
