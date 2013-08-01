@@ -18,6 +18,7 @@ import org.scalatest.FlatSpec
  */
 
 
+
 class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatchers {
   
   "The setup" should "be able to take a clean database and create the necessary tables" in withBlankDatabase {db => 
