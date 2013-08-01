@@ -25,15 +25,15 @@ object TestProps {
     val travis = System.getenv("TRAVIS")
 
     travis match {
-      case "true" => { println("running on Travis"); getTravisDbProps(dbname)}
-      case _ => {println("not running on Travis"); getLocalDbProps(dbname)}
+      case "true" =>  getTravisDbProps(dbname)
+      case _ => getLocalDbProps(dbname)
     }
 
   }
 
   private def getTravisDbProps(dbname: String) = {
     dbname match {
-      case "mysql" => "/mysql_travis_test.properties"
+      case "mysql" => {println("getting travis properties"); "/mysql_travis_test.properties"}
       case "postgres" => "/postgres_travis_test.properties"
       case "sqlite" => "/sqlite_test.properties"
       case _ => "/%s_travis_test.properties".format(dbname)

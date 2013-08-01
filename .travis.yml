@@ -9,7 +9,7 @@ branches:
         - travis_ci_support
 services:
     - mysql
-    - posgres
+    - postgres
     - sqlite3
 
 before_script:
