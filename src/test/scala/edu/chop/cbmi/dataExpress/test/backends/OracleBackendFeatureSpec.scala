@@ -48,7 +48,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     }
 
 
-  val setup                             =       dataSetupFixture
+  lazy val setup                             =       dataSetupFixture
 
   def setUpTestData: Boolean   = {
     for ((statementName, statement) <- setup.dataSetup.createTargetSchema) {
