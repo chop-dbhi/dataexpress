@@ -66,7 +66,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
 
     setup.targetBackend.close()
     setup.targetBackend.connect()
-    setup.targetStatement.execute(setup.dataSetup.dropTargetSchema)
+    setup.targetBackend.execute(setup.dataSetup.dropTargetSchema)
     setup.targetBackend.commit
     setup.targetStatement.close()
     true
