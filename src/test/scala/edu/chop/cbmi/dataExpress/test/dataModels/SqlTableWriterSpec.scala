@@ -58,7 +58,6 @@ class SqlTableWriterSpec extends PresidentsSpecWithSourceTarget{
       dw.insert_rows(PRESIDENTS,sdt).operation_succeeded_? should equal(true)
 
       And("after committing the backend the rows of the table should be in a new query")
-      target_backend.commit()
       query_and_count(PRESIDENTS) should equal(9)
 
 
