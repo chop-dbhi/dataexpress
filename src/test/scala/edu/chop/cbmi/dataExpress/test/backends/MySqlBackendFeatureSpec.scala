@@ -63,12 +63,12 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
 
 
   def removeTestDataSetup: Boolean = {
-
-    setup.targetBackend.close()
-    setup.targetBackend.connect()
-    setup.targetBackend.execute(setup.dataSetup.dropTargetSchema)
-    setup.targetBackend.commit
-    setup.targetStatement.close()
+//
+//    setup.targetBackend.close()
+//    setup.targetBackend.connect()
+//    setup.targetBackend.execute(setup.dataSetup.dropTargetSchema)
+//    setup.targetBackend.commit
+//    setup.targetStatement.close()
     true
   }
 
