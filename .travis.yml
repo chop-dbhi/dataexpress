@@ -9,8 +9,6 @@ branches:
         - travis_ci_support
 services:
     - mysql
-    - postgres
-    - sqlite3
 
 before_script:
     - mysql -e 'create database dataexpress_test;'
