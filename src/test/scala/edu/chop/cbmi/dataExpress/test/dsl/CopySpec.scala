@@ -23,8 +23,8 @@ import edu.chop.cbmi.dataExpress.test.util.presidents.SQLStatements.potus_data_r
 
 class CopySpec extends PresidentsSpecWithSourceTarget {
 
-  //override val backend_test_type : KNOWN_SQL_BACKEND = POSTGRES()
-  override val backend_test_type : KNOWN_SQL_BACKEND = MYSQL()
+  override val backend_test_type : KNOWN_SQL_BACKEND = POSTGRES()
+  //override val backend_test_type : KNOWN_SQL_BACKEND = MYSQL()
 
   //will be creating some extra tables
   val VICE_PRESIDENTS = add_known_table("vice_presidents")
@@ -130,14 +130,19 @@ class CopySpec extends PresidentsSpecWithSourceTarget {
           add_compare_table_assertion(TTP_THREE, ttp_map)
 
           copy table UPPER_PRES_COPY from source_db to target_db create TTP_FOUR
+          val rs = target_backend.executeQuery("select count(*) from ttp_four")
+          rs.next()
+          val num = rs.getInt(1)
+          num should be > 0
           val sql_statement2 = """select * from %s""".format(PRESIDENTS)
           copy query sql_statement2 from source_db to target_db append TTP_FOUR
+          BackendOps.add_table_name(target_backend, TTP_FOUR)
           AssertionOps.query_and_count(TTP_FOUR, target_backend) should equal(2*default_president_count)
 
           copy table UPPER_PRES_COPY from source_db to target_db create TTP_FIVE
           copy table PRESIDENTS from source_db to target_db append TTP_FIVE
+          BackendOps.add_table_name(target_backend, TTP_FIVE)
           AssertionOps.query_and_count(TTP_FIVE, target_backend) should equal(2*default_president_count)
-
         }
       } should equal(Left(true))
 
