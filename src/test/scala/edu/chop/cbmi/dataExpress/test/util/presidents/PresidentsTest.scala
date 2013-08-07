@@ -224,7 +224,7 @@ abstract class PresidentsSpecWithSourceTarget extends PresidentsSpec {
   def query_and_count(table_name: String, commit_target: Boolean = true, target: SqlBackend = target_backend,
                       source: SqlBackend = source_backend) = {
     if (commit_target) target.commit
-    AssertionOps.query_and_count(table_name, source)
+    AssertionOps.query_and_count(table_name, target)
   }
 
   def add_known_table(table_name: String, backend: SqlBackend = target_backend) = {
