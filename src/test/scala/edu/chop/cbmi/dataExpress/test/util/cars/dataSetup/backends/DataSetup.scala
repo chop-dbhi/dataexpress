@@ -152,7 +152,7 @@ class MySqlDataSetup {
     createSourceSchemaStatement
   }
 
-  def createTargetSchema(): String   = {
+  def   createTargetSchema(): String   = {
     lazy val createTargetSchemaStatement     = "CREATE SCHEMA " + targetIdentifierQuote + targetDBSchemaName + targetIdentifierQuote
     createTargetSchemaStatement
   }
