@@ -146,26 +146,50 @@ abstract class TypedDelimiterMarshaller[TYPE](delimiter: String, columns: =>  Se
 
 }
 
-case class IntDelimiterMarshaller(delimiter: String, cng: ColumnNameGenerator)
-  extends TypedDelimiterMarshaller[Int](delimiter, cng, (s:String)=> s.toInt){
+object IntDelimiterMarshaller {
+  def apply(delimiter: String, columns: => Seq[String]) = {
+    new IntDelimiterMarshaller(delimiter, columns)
+  }
+}
+
+class IntDelimiterMarshaller(delimiter: String, columns: => Seq[String])
+  extends TypedDelimiterMarshaller[Int](delimiter, columns, (s:String)=> s.toInt){
 
   def dataTypes = col_names.toList.map{x => IntegerDataType}
 }
 
-case class DoubleDelimiterMarshaller(delimiter: String, cng: ColumnNameGenerator, precision:Int = 10)
-  extends TypedDelimiterMarshaller[Double](delimiter, cng, (s:String)=> s.toDouble){
-
-  def dataTypes = col_names.toList.map{x => FloatDataType(precision)}
+object DoubleDelimiterMarshaller {
+  def apply(delimiter: String, columns: => Seq[String], precision:Int = 10) = {
+    new DoubleDelimiterMarshaller(delimiter, columns, precision)
+  }
 }
 
-case class BooleanDelimiterMarshaller(delimiter: String, cng: ColumnNameGenerator)
-  extends TypedDelimiterMarshaller[Boolean](delimiter, cng, (s:String)=> s.toBoolean){
+class DoubleDelimiterMarshaller(delimiter: String, columns: => Seq[String], precision:Int = 10)
+  extends TypedDelimiterMarshaller[Double](delimiter, columns, (s:String)=> s.toDouble){
 
-  def dataTypes = col_names.toList.map{x => BooleanDataType}
+  val dataTypes = columnNames.toList.map{x => FloatDataType(precision)}
 }
 
-case class StaticMarshaller(cng:ColumnNameGenerator) extends Marshaller(cng){
-  def dataTypes() = col_names.toList.map{x => TextDataType}
+
+object BooleanDelimiterMarshaller {
+  def apply(delimiter: String, columns: => Seq[String]) = {
+    new BooleanDelimiterMarshaller(delimiter, columns)
+  }
+}
+class BooleanDelimiterMarshaller(delimiter: => String, columns: => Seq[String])
+  extends TypedDelimiterMarshaller[Boolean](delimiter, columns, (s:String)=> s.toBoolean){
+
+  val dataTypes = columnNames.toList.map{x => BooleanDataType}
+}
+
+object StaticMarshaller  {
+  def apply(columns: => Seq[String]) = {
+    new StaticMarshaller(columns)
+  }
+}
+
+class StaticMarshaller(columns: => Seq[String]) extends Marshaller(columns){
+  val dataTypes = columnNames.toList.map{x => TextDataType}
 
   def unmarshall(line:String) = {
     if(line.trim.length==0)DataRow((col_names.head,null)) else DataRow((col_names.head,line))
