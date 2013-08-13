@@ -1,7 +1,7 @@
 package edu.chop.cbmi.dataExpress.backends.file
 
 import java.io.{File, FileWriter, BufferedWriter, PrintWriter}
-import edu.chop.cbmi.dataExpress.dataModels.{ColumnNameGenerator, DataRow}
+import edu.chop.cbmi.dataExpress.dataModels.{DataRow, Metadata}
 import scala.io.Source
 
 /**
@@ -28,6 +28,18 @@ object TextFileBackend{
   def apply(file: File, marshaller: Marshaller, readSkipLines: Int): TextFileBackend = new TextFileBackend(file, marshaller, readSkipLines, "UTF-8")
 
   def apply(file: File, marshaller: Marshaller) : TextFileBackend= new TextFileBackend(file, marshaller, 0, "UTF-8")
+
+  def getHeaderRowColumnNames(file: File, delimiter: String = ",", encoding: String="UTF-8") = {
+    val unr = s"$delimiter".r
+    val expandedDelimiter = s" $delimiter "
+    val source = Source.fromFile(file, encoding)
+    val iter = source.getLines()
+    val names = if(iter.isEmpty)Seq.empty[String] else{
+        unr.split(unr.replaceAllIn(iter.next, expandedDelimiter)).map{s => s.trim}.toSeq
+      }
+      source.close()
+      names
+    }
 }
 
 class TextFileBackend(override val file: File, marshaller: Marshaller, readSkipLines : Int, encoding: String) extends FileBackend(file){
@@ -96,20 +108,5 @@ case class TextIterator(lineIterator: Iterator[String], parser : Marshaller) ext
  override def next() = parser.unmarshall(lineIterator.next)
 }
 
-case class HeaderRowColumnNames(file: File, delimiter: String = ",", encoding: String="UTF-8") extends ColumnNameGenerator{
-  private lazy val unr = s"$delimiter".r
-  private lazy val expandedDelimiter = s" $delimiter "
-  private def columnNames = {
-    val source = Source.fromFile(file, encoding)
-    val iter = source.getLines()
-    val names = if(iter.isEmpty)Seq.empty[String]
-    else{
-      unr.split(unr.replaceAllIn(iter.next, expandedDelimiter)).map{s => s.trim}.toSeq
-    }
     source.close()
-    names
-  }
 
-
-  def generate_column_names() = columnNames
-}
