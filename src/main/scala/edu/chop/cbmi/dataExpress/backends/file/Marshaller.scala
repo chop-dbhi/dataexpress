@@ -1,6 +1,6 @@
 package edu.chop.cbmi.dataExpress.backends.file
 
-import edu.chop.cbmi.dataExpress.dataModels.{DataType,ColumnNameGenerator, DataRow}
+import edu.chop.cbmi.dataExpress.dataModels.{Metadata, DataType, DataRow}
 import edu.chop.cbmi.dataExpress.dataModels.sql.{BooleanDataType, FloatDataType, IntegerDataType, TextDataType}
 
 /**
@@ -9,24 +9,33 @@ import edu.chop.cbmi.dataExpress.dataModels.sql.{BooleanDataType, FloatDataType,
  * Date: 5/9/13
  * Time: 9:58 AM
  */
-abstract class Marshaller(cng:ColumnNameGenerator) {
-  lazy val col_names = cng.generate_column_names()
+abstract class Marshaller(columns: => Seq[String]) extends Metadata  {
+
+  override def columnNames = columns
 
   def unmarshall(line:String) : DataRow[_]
 
   def marshall(row: DataRow[_]) : String
 
-  def dataTypes() : Seq[DataType]
+  override def columnCount = columnNames.length
+
+//  override lazy val dataTypes : Seq[DataType]
 
   def marshallHeader(row:DataRow[String]) : String  = ((""/:row){(h,cn)=> s"$h${cn.getOrElse("")},"}).dropRight(1)
 }
 
-class CustomMarshaller(cng: ColumnNameGenerator, unmarshaller: (String)=>DataRow[_], marshaller: (DataRow[_])=> String, dataTypeFromColName: (String)=>DataType) extends Marshaller(cng){
+
+object CustomMarshaller {
+  def apply(columns: => Seq[String], unmarshaller: (String)=>DataRow[_], marshaller: (DataRow[_])=> String, dataTypeFromColName: (String)=>DataType) = {
+    new CustomMarshaller(columns, unmarshaller, marshaller, dataTypeFromColName)
+  }
+}
+class CustomMarshaller(columns: => Seq[String], unmarshaller: (String)=>DataRow[_], marshaller: (DataRow[_])=> String, dataTypeFromColName: (String)=>DataType) extends Marshaller(columns){
   def unmarshall(line : String) = unmarshaller(line)
 
   def marshall(row: DataRow[_]) = marshaller(row)
 
-  lazy val dataTypes = col_names.map{cn => dataTypeFromColName(cn)}.toSeq
+  override lazy val dataTypes = columnNames.map{cn => dataTypeFromColName(cn)}.toSeq
 
 }
 
