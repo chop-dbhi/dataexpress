@@ -114,7 +114,7 @@ class DelimiterMarshaller(delimiter: String, columns: => Seq[String]) extends Ma
 
 }
 
-abstract class TypedDelimiterMarshaller[TYPE](delimiter: String, cng: ColumnNameGenerator, f: (String)=> TYPE) extends Marshaller(cng){
+abstract class TypedDelimiterMarshaller[TYPE](delimiter: String, columns: =>  Seq[String], f: (String)=> TYPE) extends Marshaller(columns){
   private lazy val unr = s"$delimiter".r
   private lazy val expandedDelimiter = s" $delimiter "
 
@@ -124,7 +124,7 @@ abstract class TypedDelimiterMarshaller[TYPE](delimiter: String, cng: ColumnName
       if(ts.length==0)None
       else Some(f(ts))
     }.toList
-    val rowEntries = col_names.zip(items.map{item=>
+    val rowEntries = columnNames.zip(items.map{item=>
       item match{
         case Some(i) => i
         case _ => null
