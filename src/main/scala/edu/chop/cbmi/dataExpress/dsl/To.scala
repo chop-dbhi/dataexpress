@@ -43,7 +43,7 @@ case class ToFromRow(target : Store, row : DataRow[_]) extends To(target) {
   def append() = {
     target match {
       case (fs: FileStore)=>{
-        val writer = DataWriter(fs.fb, row.column_names)
+        val writer = DataWriter(fs.fb, row.columnNames)
         writer.insert_row("",row)
       }
       case _ => throw UnsupportedStoreType(target, "insert_row")
