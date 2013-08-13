@@ -1,7 +1,7 @@
 package edu.chop.cbmi.dataExpress.backends.file
 
 import java.io.File
-import edu.chop.cbmi.dataExpress.dataModels.{DataType, DataRow, ColumnNameGenerator}
+import edu.chop.cbmi.dataExpress.dataModels.{Metadata, DataType, DataRow}
 import edu.chop.cbmi.dataExpress.dataModels.sql._
 import scala.io.Source
 import scala.annotation.tailrec
@@ -51,8 +51,16 @@ class MagicOptions{
  * Date: 5/16/13
  * Time: 12:37 PM
  */
-sealed case class MagicMarshaller(sourceFile: File, cngOption:Option[ColumnNameGenerator] = None, options: MagicOptions = new MagicOptions)
-  extends Marshaller(cngOption.getOrElse(HeaderRowColumnNames(sourceFile, options.delimiter, options.encoding))){
+
+object MagicMarshaller {
+  def apply(sourceFile: File, columns: => Option[Seq[String]] = None, options: MagicOptions = new MagicOptions) = {
+    new MagicMarshaller(sourceFile, columns, options)
+  }
+}
+
+sealed class MagicMarshaller(sourceFile: File, columns: => Option[Seq[String]] = None, options: MagicOptions = new MagicOptions)
+  extends Marshaller({columns.getOrElse(TextFileBackend.getHeaderRowColumnNames(sourceFile, options.delimiter, options.encoding))}){
+
 
   lazy val typesFromRegex = {
     val lines = {
@@ -68,7 +76,7 @@ sealed case class MagicMarshaller(sourceFile: File, cngOption:Option[ColumnNameG
   private lazy val delimiterRegex = s"$delimiter".r
   private lazy val expandedDelimiter = s" $delimiter "
 
-  lazy val types = typesFromRegex.map{_.dataType}
+  override lazy val dataTypes = typesFromRegex.map{_.dataType}
 
   @tailrec
   private def bldMagicContainer(lines : Iterator[String], container: MagicContainer, count:Int = 1) : MagicContainer = {
@@ -85,7 +93,8 @@ sealed case class MagicMarshaller(sourceFile: File, cngOption:Option[ColumnNameG
     }else container
   }
 
-  def dataTypes() = types
+  //override def dataTypes = types
+
 
   private def convertToType(i:Int, s: String) = {
     val ts = s.trim
