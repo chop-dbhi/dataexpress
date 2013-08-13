@@ -155,7 +155,7 @@ object IntDelimiterMarshaller {
 class IntDelimiterMarshaller(delimiter: String, columns: => Seq[String])
   extends TypedDelimiterMarshaller[Int](delimiter, columns, (s:String)=> s.toInt){
 
-  def dataTypes = col_names.toList.map{x => IntegerDataType}
+  val dataTypes = columnNames.toList.map{x => IntegerDataType}
 }
 
 object DoubleDelimiterMarshaller {
@@ -192,7 +192,7 @@ class StaticMarshaller(columns: => Seq[String]) extends Marshaller(columns){
   val dataTypes = columnNames.toList.map{x => TextDataType}
 
   def unmarshall(line:String) = {
-    if(line.trim.length==0)DataRow((col_names.head,null)) else DataRow((col_names.head,line))
+    if(line.trim.length==0)DataRow((columnNames.head,null)) else DataRow((columnNames.head,line))
   }
 
   def marshall(row: DataRow[_]) = row.head match{
