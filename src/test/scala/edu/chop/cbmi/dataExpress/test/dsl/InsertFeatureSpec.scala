@@ -10,7 +10,7 @@ import java.sql.Date
 import edu.chop.cbmi.dataExpress.dataModels.{DataRow, DataTable}
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import edu.chop.cbmi.dataExpress.backends.file.{HeaderRowColumnNames, TextFileBackend}
+import edu.chop.cbmi.dataExpress.backends.file.{TextFileBackend}
 import java.io.File
 
 
@@ -81,7 +81,7 @@ class InsertFeatureSpec extends PresidentsFeatureSpecWithSourceTarget{
 
         tfb.writeHeader(DataRow(List("id","first_name","last_name","num_terms", "dob").map{cn=>(cn,cn)}: _*))
 
-        register store FileStore(tfb, HeaderRowColumnNames(fileOne)) as fs
+        register store FileStore(tfb) as fs
 
         insert row new_row(
           "id" -> (default_president_count + 1),

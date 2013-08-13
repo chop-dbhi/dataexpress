@@ -4,7 +4,7 @@ import edu.chop.cbmi.dataExpress.test.util.presidents.{KNOWN_SQL_BACKEND, Presid
 import java.io.File
 import edu.chop.cbmi.dataExpress.backends.file._
 import edu.chop.cbmi.dataExpress.test.util.Functions.sqlDateFrom
-import edu.chop.cbmi.dataExpress.dataModels.{ColumnNameGenerator, DataRow, SeqColumnNames}
+import edu.chop.cbmi.dataExpress.dataModels.{DataRow}
 import edu.chop.cbmi.dataExpress.test.util.presidents.MYSQL
 import scala.Some
 import edu.chop.cbmi.dataExpress.dataModels.sql._
@@ -22,10 +22,10 @@ import edu.chop.cbmi.dataExpress.dataModels.RichOption._
  */
 
 object PresMarshaller {
-  def apply() = new PresMarshaller(SeqColumnNames(Seq("id","first_name", "last_name","num_terms", "dob")))
+  def apply() = new PresMarshaller(Seq("id","first_name", "last_name","num_terms", "dob"))
 }
 
-class PresMarshaller(cng: ColumnNameGenerator) extends Marshaller(cng){
+class PresMarshaller(columns: => Seq[String]) extends Marshaller(columns){
   val delim = ","
   def unmarshall(line:String) : DataRow[_] = {
     val split = line.split(delim)
@@ -40,8 +40,8 @@ class PresMarshaller(cng: ColumnNameGenerator) extends Marshaller(cng){
         case _ => ts
       }
     }
-    val paddedItems = if(items.length==col_names.length-1)(items.toList.:+(null)).toArray else items
-    val rowEntries = col_names.zip(paddedItems)
+    lazy val paddedItems = if(items.length==columnNames.length-1)(items.toList.:+(null)).toArray else items
+    lazy val rowEntries = columnNames.zip(paddedItems)
     DataRow(rowEntries: _*)
   }
 
@@ -61,7 +61,7 @@ class PresMarshaller(cng: ColumnNameGenerator) extends Marshaller(cng){
   }
 
   lazy private val colTypes = List(CharacterDataType(20,false), CharacterDataType(50,false), IntegerDataType, DateDataType)
-  def dataTypes() = colTypes
+  override def dataTypes = colTypes
 }
 class CopyFileSpec extends PresidentsSpecWithSourceTarget{
   //override val backend_test_type : KNOWN_SQL_BACKEND = POSTGRES()
@@ -89,7 +89,7 @@ class CopyFileSpec extends PresidentsSpecWithSourceTarget{
 
   def fixture() = {
     new {
-      val cng = SeqColumnNames(Seq("id","first_name", "last_name","num_terms", "dob"))
+      val columnNames = Seq("id","first_name", "last_name","num_terms", "dob")
       //val cngH = HeaderRowColumnNames(fileTwo)
       val fileBackendOne = TextFileBackend(fileOne, PresMarshaller())
       val fileBackendTwo = TextFileBackend(fileTwo, PresMarshaller(), 1)
@@ -106,8 +106,8 @@ class CopyFileSpec extends PresidentsSpecWithSourceTarget{
       val fs3 = "fileStore3"
 
       ETL.execute(true,true){
-        register store FileStore(f.fileBackendOne, f.cng, false) as fs1
-        register store FileStore(f.fileBackendTwo, f.cng) as fs2
+        register store FileStore(f.fileBackendOne, false) as fs1
+        register store FileStore(f.fileBackendTwo) as fs2
         register store SqlDb(prop_file_source, schema) as source
 
         When("using create from a db, a file is created")
@@ -120,7 +120,7 @@ class CopyFileSpec extends PresidentsSpecWithSourceTarget{
 
         When("copying from a file to a db")
         //test magic marhsaller and copying to db
-        register store FileStore(TextFileBackend(fileOne, f.cng), f.cng) as "fileStoreMagic"
+        register store FileStore(TextFileBackend(fileOne, Some(f.columnNames))) as "fileStoreMagic"
         copy from "fileStoreMagic" to source create PRESIDENTS_COPY
         (get table PRESIDENTS_COPY from source).length should equal(default_president_count)
 
@@ -167,8 +167,8 @@ class CopyFileSpec extends PresidentsSpecWithSourceTarget{
 
         copy from fs1 change_column_names("id"->"IDNUM", "last_name"->"LN") to fs2 create
 
-        val cng = HeaderRowColumnNames(fileTwo)
-        register store FileStore(TextFileBackend(fileTwo, new PresMarshaller(cng), 1), cng) as fs3
+        def headerColumnNames = TextFileBackend.getHeaderRowColumnNames(fileTwo)
+        register store FileStore(TextFileBackend(fileTwo, new PresMarshaller(headerColumnNames), 1)) as fs3
 
         (0 /: (get from fs3)){(s,dr)=>
           s + dr.IDNUM.asu[Int]

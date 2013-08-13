@@ -4,9 +4,7 @@ import java.io.File
 import edu.chop.cbmi.dataExpress.dataModels.{DataRow}
 import edu.chop.cbmi.dataExpress.backends.file._
 import edu.chop.cbmi.dataExpress.backends.file.TextFileBackend
-import edu.chop.cbmi.dataExpress.dataModels.SeqColumnNames
 import edu.chop.cbmi.dataExpress.backends.file.DelimiterCustomMarshaller
-import edu.chop.cbmi.dataExpress.backends.file.HeaderRowColumnNames
 import org.scalatest.{BeforeAndAfter, GivenWhenThen, FunSpec}
 import org.scalatest.matchers.ShouldMatchers
 import edu.chop.cbmi.dataExpress.dsl.ETL
@@ -40,8 +38,8 @@ class GetFromFileSpec extends FunSpec with GivenWhenThen with ShouldMatchers wit
     new {
       val colNames = Seq("Name","ID","Known")
       val content = List("Bob,249,true","Jane Doe,3430,false","Mike R.,,false","Steve,83839,")
-      val cng = HeaderRowColumnNames(file,",")
-      val marshaller = DelimiterCustomMarshaller(",", cng, (a:Array[Option[String]])=>{
+      def headerColumnNames = TextFileBackend.getHeaderRowColumnNames(file,",")
+      val marshaller = DelimiterCustomMarshaller(",", headerColumnNames, (a:Array[Option[String]])=>{
         val name = a(0) match{
           case Some(s) => s.toString
           case _ => null
@@ -58,8 +56,8 @@ class GetFromFileSpec extends FunSpec with GivenWhenThen with ShouldMatchers wit
       })
       val backend = TextFileBackend(file, marshaller, 1)
       val rows = {
-        val cg = SeqColumnNames(colNames)
-        val mars = DelimiterMarshaller(",",cg)
+        //val cg = SeqColumnNames(colNames)
+        val mars = DelimiterMarshaller(",",colNames)
         content.map{line =>  mars.unmarshall(line)}
       }
     }
@@ -70,7 +68,7 @@ class GetFromFileSpec extends FunSpec with GivenWhenThen with ShouldMatchers wit
   describe("The DSL get statement") {
     it("should allow the user to retrieve data from a text file") {
       val source = "source"
-      register store FileStore(f.backend, f.cng) as source
+      register store FileStore(f.backend) as source
       val table = get from source
 
       And("the table should be an iterator over DataRow that match the content")

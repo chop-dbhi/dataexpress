@@ -7,9 +7,7 @@ import edu.chop.cbmi.dataExpress.dataModels.{DataRow, DataTable}
 import java.io.File
 import edu.chop.cbmi.dataExpress.dataModels.file.FileTable
 import edu.chop.cbmi.dataExpress.backends.file.TextFileBackend
-import edu.chop.cbmi.dataExpress.dataModels.SeqColumnNames
 import edu.chop.cbmi.dataExpress.backends.file.DelimiterMarshaller
-import edu.chop.cbmi.dataExpress.backends.file.HeaderRowColumnNames
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._
 
 
@@ -39,8 +37,8 @@ class FileTableSpec extends FunSpec with GivenWhenThen with ShouldMatchers with 
     new {
       val colNames = Seq("Name","ID","Known")
       val content = List("Bob,249,true","Jane Doe,3430,false","Mike R.,,false","Steve,83839,")
-      val cng = HeaderRowColumnNames(file,",")
-      val marshaller = DelimiterCustomMarshaller(",", cng, (a:Array[Option[String]])=>{
+      lazy val headerColumnNames = TextFileBackend.getHeaderRowColumnNames(file,",")
+      val marshaller = DelimiterCustomMarshaller(",", headerColumnNames, (a:Array[Option[String]])=>{
         val name = a(0) match{
           case Some(s) => s.toString
           case _ => null
@@ -57,8 +55,8 @@ class FileTableSpec extends FunSpec with GivenWhenThen with ShouldMatchers with 
       })
       val backend = TextFileBackend(file, marshaller, 1)
       val rows = {
-        val cg = SeqColumnNames(colNames)
-        val mars = DelimiterMarshaller(",",cg)
+        //val cg = SeqColumnNames(colNames)
+        val mars = DelimiterMarshaller(",",colNames)
         content.map{line =>  mars.unmarshall(line)}
       }
     }
@@ -69,10 +67,10 @@ class FileTableSpec extends FunSpec with GivenWhenThen with ShouldMatchers with 
   describe("A File Table"){
      it("should result from a call to DataTable"){
        Given("A file backend and a columnanme generator")
-       val ft:FileTable = DataTable(f.backend, f.cng)
+       val ft:FileTable = DataTable(f.backend, f.marshaller)
 
        And("the table should have column names from the header")
-         ft.column_names should equal(f.colNames)
+         ft.columnNames should equal(f.colNames)
 
        And("the table should be an iterator over DataRow that match the content")
        (0 /: ft){(idx, row) =>

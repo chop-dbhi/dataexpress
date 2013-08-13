@@ -4,7 +4,7 @@ import org.scalatest.{BeforeAndAfter, GivenWhenThen, FunSpec}
 import org.scalatest.matchers.ShouldMatchers
 import edu.chop.cbmi.dataExpress.backends.file._
 import java.io.File
-import edu.chop.cbmi.dataExpress.dataModels.{SeqColumnNames, DataRow}
+import edu.chop.cbmi.dataExpress.dataModels.{DataRow}
 import edu.chop.cbmi.dataExpress.backends.file.DelimiterMarshaller
 import edu.chop.cbmi.dataExpress.backends.file.TextFileBackend
 
@@ -16,8 +16,8 @@ import edu.chop.cbmi.dataExpress.backends.file.TextFileBackend
  */
 class TextFileBackendSpec extends FunSpec with GivenWhenThen with ShouldMatchers with BeforeAndAfter{
 
-  lazy val file1 = new File("./output/TextFileBackendSpec.dat")
-  lazy val file2 = new File("./output/TextFileBackendHeaderSpec.dat")
+  val file1 = new File("./output/TextFileBackendSpec.dat")
+  val file2 = new File("./output/TextFileBackendHeaderSpec.dat")
 
   before{
      if(file1.exists())file1.delete()
@@ -33,13 +33,11 @@ class TextFileBackendSpec extends FunSpec with GivenWhenThen with ShouldMatchers
     new {
       val colNames = Seq("Name","ID","Gender")
       val content = List("Bob,249,M","Jane Doe,3430,F","Mike R.,,M","Steve,83839,")
-      val cng = SeqColumnNames(colNames)
-      val marshaller = DelimiterMarshaller(",",cng)
-      val backend = TextFileBackend(file1, cng) //will use MagicMarshaller
+      val marshaller = DelimiterMarshaller(",",colNames)
+      val backend = TextFileBackend(file1, Some(colNames)) //will use MagicMarshaller
       val backendWithHeader = TextFileBackend(file2, marshaller,1)
       val rows = {
-        val cg = SeqColumnNames(colNames)
-        val mars = DelimiterMarshaller(",",cg)
+        val mars = DelimiterMarshaller(",",colNames)
         content.map{line =>  mars.unmarshall(line)}
       }
     }
