@@ -7,6 +7,7 @@ env:
 branches:
     only:
         - travis_ci_support
+        - develop
 services:
     - mysql
 
