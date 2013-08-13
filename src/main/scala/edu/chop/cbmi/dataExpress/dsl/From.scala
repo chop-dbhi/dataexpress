@@ -52,7 +52,7 @@ case class From private[dsl](private val store : Store) {
   }
 
   def get_values() = store match{
-    case (s: FileStore) => new FixedDimensionTransformableTable(DataTable(s.fb, s.cng))
+    case (s: FileStore) => new FixedDimensionTransformableTable(DataTable(s.fb, s.fb.marshaller))
     case _ => throw UnsupportedStoreType(store, "get_values")
   }
 
