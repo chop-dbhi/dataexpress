@@ -1,7 +1,7 @@
 package edu.chop.cbmi.dataExpress.dataWriters
 
 import edu.chop.cbmi.dataExpress.backends.SqlBackend
-import edu.chop.cbmi.dataExpress.dataModels.{ColumnNameGenerator, DataType, DataTable, DataRow}
+import edu.chop.cbmi.dataExpress.dataModels.{DataType, DataTable, DataRow}
 import sql.SqlTableWriter
 import edu.chop.cbmi.dataExpress.backends.file.FileBackend
 import edu.chop.cbmi.dataExpress.dataWriters.file.FileTableWriter
@@ -44,9 +44,8 @@ trait Updater{
 /**Factory method for creating instances of [[edu.chop.cbmi.dataExpress.dataWriters.DataWriter]]*/
 object DataWriter{
 
-  def apply(sqlBackend : SqlBackend, schema : Option[String] = None, catalog : String = null)
-  = SqlTableWriter(sqlBackend, schema, catalog)
+  def apply(sqlBackend : SqlBackend, schema : Option[String] = None, catalog : String = null) = SqlTableWriter(sqlBackend, schema, catalog)
 
-  def apply(fileBackend: FileBackend, colNames: Seq[String]) = FileTableWriter(fileBackend,colNames)
+  def apply(fileBackend: FileBackend, colNames: Seq[String]) = FileTableWriter(fileBackend, colNames)
 
 }
