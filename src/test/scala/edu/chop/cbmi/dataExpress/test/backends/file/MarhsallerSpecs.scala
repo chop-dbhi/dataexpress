@@ -13,7 +13,6 @@ import edu.chop.cbmi.dataExpress.backends.file.DelimiterMarshaller
 import scala.Some
 import edu.chop.cbmi.dataExpress.backends.file.DoubleDelimiterMarshaller
 import edu.chop.cbmi.dataExpress.backends.file.StaticMarshaller
-import edu.chop.cbmi.dataExpress.dataModels.SeqColumnNames
 import edu.chop.cbmi.dataExpress.dataModels.sql.TextDataType
 
 /**
@@ -32,10 +31,10 @@ class MarhsallerSpecs extends FunSpec with GivenWhenThen with ShouldMatchers wit
   def fixture(kind:Symbol) = {
     new {
       val content = List("Bob,249,M","Jane Doe,3430,F","Mike R.,,M","Steve,83839,",",,",",83,")
-      val cng = SeqColumnNames(Seq("Name","ID","Gender"))
+      val cng = Seq("Name","ID","Gender")
       val marshaller = kind match{
         case DELIMITER => DelimiterMarshaller(",",cng)
-        case STATIC => StaticMarshaller(SeqColumnNames(Seq("LINE")))
+        case STATIC => StaticMarshaller(Seq("LINE"))
         case _ => throw new Exception("Unknown Line Marshaller")
       }
     }
@@ -65,7 +64,7 @@ class MarhsallerSpecs extends FunSpec with GivenWhenThen with ShouldMatchers wit
   describe("A Typed Marshaller"){
     it("converts value delimited data to DataRows[TYPE]"){
       val numbers = List("1,2,3", "6,7.0,")
-      val mar = DoubleDelimiterMarshaller(",",SeqColumnNames(Seq("A","B","C")))
+      val mar = DoubleDelimiterMarshaller(",",Seq("A","B","C"))
       val rows = numbers.map{line => mar.unmarshall(line)}
       rows.length should equal(numbers.length)
       (0 /: rows){(idx, row) =>
@@ -98,14 +97,14 @@ class MarhsallerSpecs extends FunSpec with GivenWhenThen with ShouldMatchers wit
 
   describe("A Custom Marshaller"){
     val f = fixture(STATIC)
-    val cg = SeqColumnNames(Seq("LINE"))
+    val cg = Seq("LINE")
 
-    def unmarsh(cng:ColumnNameGenerator)(line:String) = {
-      DataRow((cng.generate_column_names().head,line.toUpperCase()))
+    def unmarsh(columns:Seq[String])(line:String) = {
+      DataRow((columns.head,line.toUpperCase()))
     }
 
-    def marsh(cng:ColumnNameGenerator)(dr: DataRow[_]) = {
-      dr(cng.generate_column_names().head).asu[String].toLowerCase
+    def marsh(columns:Seq[String])(dr: DataRow[_]) = {
+      dr(columns.head).asu[String].toLowerCase
     }
 
     def types(cn:String) : DataType = {
