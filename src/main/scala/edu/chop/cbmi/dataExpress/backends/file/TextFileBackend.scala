@@ -20,7 +20,7 @@ object TextFileBackend{
     case _ => TextFileBackend(file, MagicMarshaller(file, columns, new MagicOptions), 0, "UTF-8")
   }
 
-  def apply(file:File) : TextFileBackend= new TextFileBackend(file, MagicMarshaller(file), 1, "UTF-8")
+  //def apply(file:File) : TextFileBackend = new TextFileBackend(file, MagicMarshaller(file), 1, "UTF-8")
 
   def apply(file: File, marshaller: Marshaller, readSkipLines: Int, encoding: String ) : TextFileBackend =
     new TextFileBackend(file,marshaller, readSkipLines, encoding)
