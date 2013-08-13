@@ -12,12 +12,12 @@ import scala.io.Source
  */
 
 object TextFileBackend{
-  def apply(file:File, cng:ColumnNameGenerator, readSkipLines : Int, options: MagicOptions, encoding: String) : TextFileBackend =
-    new TextFileBackend(file, MagicMarshaller(file, Some(cng), options), readSkipLines, encoding )
+  def apply(file:File, columns: => Option[Seq[String]], readSkipLines : Int, options: MagicOptions, encoding: String) : TextFileBackend =
+    new TextFileBackend(file, MagicMarshaller(file, columns, options), readSkipLines, encoding )
 
-  def apply(file: File, cng: ColumnNameGenerator) : TextFileBackend = cng match{
-    case hrc: HeaderRowColumnNames => TextFileBackend(file, MagicMarshaller(file, Some(cng), new MagicOptions), 1, "UTF-8")
-    case _ => TextFileBackend(file, MagicMarshaller(file, Some(cng), new MagicOptions), 0, "UTF-8")
+  def apply(file: File, columns: => Option[Seq[String]] = None) : TextFileBackend = columns match{
+    case None => TextFileBackend(file, MagicMarshaller(file, None, new MagicOptions), 1, "UTF-8")
+    case _ => TextFileBackend(file, MagicMarshaller(file, columns, new MagicOptions), 0, "UTF-8")
   }
 
   def apply(file:File) : TextFileBackend= new TextFileBackend(file, MagicMarshaller(file), 1, "UTF-8")
