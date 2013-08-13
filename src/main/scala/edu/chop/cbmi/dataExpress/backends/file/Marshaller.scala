@@ -78,12 +78,18 @@ class DelimiterCustomMarshaller(delimiter: String, columns: => Seq[String],
 
 }
 
-case class DelimiterMarshaller(delimiter: String, cng: ColumnNameGenerator) extends Marshaller(cng){
+object DelimiterMarshaller {
+  def apply(delimiter: String, columns: => Seq[String]) = {
+    new DelimiterMarshaller(delimiter, columns)
+  }
+}
+
+class DelimiterMarshaller(delimiter: String, columns: => Seq[String]) extends Marshaller(columns){
 
   private lazy val unr = s"$delimiter".r
   private lazy val expandedDelimiter = s" $delimiter "
 
-  def dataTypes() = col_names.toList.map{x => TextDataType}
+  val dataTypes = columnNames.toList.map{x => TextDataType}
 
   def unmarshall(line:String) = {
     val items: Array[String] = unr.split(unr.replaceAllIn(line,expandedDelimiter)).map{s=>
@@ -91,7 +97,7 @@ case class DelimiterMarshaller(delimiter: String, cng: ColumnNameGenerator) exte
       if(ts.length==0)null
       else ts
     }
-    val rowEntries = col_names.zip(items)
+    val rowEntries = columnNames.zip(items)
     DataRow(rowEntries: _*)
   }
 
