@@ -105,7 +105,7 @@ sealed class MagicMarshaller(sourceFile: File, columns: => Option[Seq[String]] =
   def unmarshall(line:String) = {
     val items : Array[String] = delimiterRegex.split(delimiterRegex.replaceAllIn(line,expandedDelimiter)).map{s=>s.trim}
     val convertedItems: Array[Any] = Array.tabulate(items.length){i => convertToType(i,items(i))}
-    val rowEntries = col_names.zip(convertedItems)
+    val rowEntries = columnNames.zip(convertedItems)
     DataRow(rowEntries: _*)
   }
 
