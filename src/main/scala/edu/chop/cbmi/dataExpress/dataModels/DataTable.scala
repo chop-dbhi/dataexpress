@@ -16,9 +16,9 @@ import edu.chop.cbmi.dataExpress.dataModels.file.FileTable
  *
  */
 trait Metadata {
-	val columnNames:Seq[String]
-	val dataTypes:Seq[DataType]
-	val columnCount:Int
+	def columnNames: Seq[String]
+	def dataTypes: Seq[DataType]
+	def columnCount: Int
 }
 
 /**
@@ -74,11 +74,6 @@ object DataRow{
 abstract class DataTable[+T] extends Iterator[DataRow[T]] with Dynamic with Metadata {
 
 
-  /**
-   * provides the DataType of each column
-   * @return
-   */
-  def dataTypes() : Seq[DataType]
 
   /**
    * @param name name of column
