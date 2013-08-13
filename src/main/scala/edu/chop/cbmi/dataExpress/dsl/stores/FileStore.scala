@@ -1,7 +1,6 @@
 package edu.chop.cbmi.dataExpress.dsl.stores
 
 import edu.chop.cbmi.dataExpress.backends.file.{FileBackend}
-import edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator
 
 /**
  * Created with IntelliJ IDEA.
@@ -9,7 +8,7 @@ import edu.chop.cbmi.dataExpress.dataModels.ColumnNameGenerator
  * Date: 5/10/13
  * Time: 1:08 PM
  */
-case class FileStore(fb: FileBackend,cng: ColumnNameGenerator, writeHeaderOnCreate: Boolean = true) extends Store{
+case class FileStore(fb: FileBackend, writeHeaderOnCreate: Boolean = true) extends Store{
   private var _unique_id : Any = fb.file.getAbsolutePath
 
   override def is_closed_? : Boolean = !fb.is_open_? //really no such thing
