@@ -2,7 +2,7 @@ package edu.chop.cbmi.dataExpress.dataWriters.file
 
 import edu.chop.cbmi.dataExpress.dataWriters.{OperationStatus, DataWriter}
 import edu.chop.cbmi.dataExpress.backends.file.{Overwrite, Append, FileBackend}
-import edu.chop.cbmi.dataExpress.dataModels.{ColumnNameGenerator, DataType, DataTable, DataRow}
+import edu.chop.cbmi.dataExpress.dataModels.{DataType, DataTable, DataRow}
 import scala.collection.mutable.ListBuffer
 
 /**
