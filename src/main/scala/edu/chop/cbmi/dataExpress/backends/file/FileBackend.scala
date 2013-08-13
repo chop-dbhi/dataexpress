@@ -2,7 +2,7 @@ package edu.chop.cbmi.dataExpress.backends.file
 
 import java.io.{FileWriter, BufferedWriter, PrintWriter, File}
 import scala.io.{BufferedSource, Source}
-import edu.chop.cbmi.dataExpress.dataModels.{ColumnNameGenerator, DataType, DataRow}
+import edu.chop.cbmi.dataExpress.dataModels.{DataType, DataRow}
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,12 +16,12 @@ object Overwrite extends WriteMode
 object Append extends WriteMode
 class WriteModeException(wm: WriteMode, msg: String) extends Exception(msg)
 
-abstract class FileBackend(val file: File) {
+abstract class FileBackend(val file: File, val marshaller: Marshaller) {
   //ABSTRACT STUFF
 
   def writeHeader(hr: DataRow[String]) : Unit
 
-  def dataTypes() : Seq[DataType]
+  def dataTypes() : Seq[DataType] = marshaller.dataTypes
 
   def read() : Iterator[DataRow[_]]
 
