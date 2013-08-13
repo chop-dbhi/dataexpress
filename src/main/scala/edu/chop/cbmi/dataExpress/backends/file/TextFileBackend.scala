@@ -42,9 +42,9 @@ object TextFileBackend{
     }
 }
 
-class TextFileBackend(override val file: File, marshaller: Marshaller, readSkipLines : Int, encoding: String) extends FileBackend(file){
+class TextFileBackend(override val file: File, marshaller: Marshaller, readSkipLines : Int, encoding: String) extends FileBackend(file, marshaller){
 
-  def dataTypes() = marshaller.dataTypes()
+  //override lazy val dataTypes = marshaller.dataTypes
 
   def writeHeader(hr: DataRow[String]) = {
     printToFile{pw =>
@@ -108,5 +108,4 @@ case class TextIterator(lineIterator: Iterator[String], parser : Marshaller) ext
  override def next() = parser.unmarshall(lineIterator.next)
 }
 
-    source.close()
 
