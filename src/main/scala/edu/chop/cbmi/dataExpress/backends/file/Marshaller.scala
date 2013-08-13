@@ -40,14 +40,20 @@ class CustomMarshaller(columns: => Seq[String], unmarshaller: (String)=>DataRow[
 }
 
 
-case class DelimiterCustomMarshaller(delimiter: String, cng: ColumnNameGenerator,
+object DelimiterCustomMarshaller {
+  def apply(delimiter: String, columns: => Seq[String],
+            unmarshaller: (Array[Option[String]])=>Array[Any]) = {
+    new DelimiterCustomMarshaller(delimiter, columns, unmarshaller)
+  }
+}
+class DelimiterCustomMarshaller(delimiter: String, columns: => Seq[String],
                                 unmarshaller: (Array[Option[String]])=>Array[Any])
-                                extends Marshaller(cng){
+                                extends Marshaller(columns){
 
   private lazy val unr = s"$delimiter".r
   private lazy val expandedDelimiter = s" $delimiter "
 
-  def dataTypes() = col_names.toList.map{x => TextDataType}
+  override lazy val dataTypes = columnNames.toList.map{x => TextDataType}
 
   def unmarshall(line : String) = {
     val items: Array[Option[String]] = unr.split(unr.replaceAllIn(line,expandedDelimiter)).map{s=>
@@ -55,7 +61,7 @@ case class DelimiterCustomMarshaller(delimiter: String, cng: ColumnNameGenerator
       if(ts.length==0)None
       else Some(ts)
     }
-    val rowEntries = col_names.zip(unmarshaller(items))
+    val rowEntries = columnNames.zip(unmarshaller(items))
     DataRow(rowEntries: _*)
   }
 
