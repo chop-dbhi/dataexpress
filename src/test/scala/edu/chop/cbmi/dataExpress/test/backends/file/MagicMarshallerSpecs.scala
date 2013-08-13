@@ -6,17 +6,13 @@ import edu.chop.cbmi.dataExpress.dataModels.{DataRow}
 import java.io.File
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._
 import edu.chop.cbmi.dataExpress.backends.file._
-import edu.chop.cbmi.dataExpress.backends.file.HeaderRowColumnNames
 import edu.chop.cbmi.dataExpress.backends.file.TextFileBackend
-import edu.chop.cbmi.dataExpress.dataModels.SeqColumnNames
 import edu.chop.cbmi.dataExpress.dataModels.sql._
 import edu.chop.cbmi.dataExpress.backends.file.DelimiterMarshaller
 import edu.chop.cbmi.dataExpress.dataModels.sql.FloatDataType
 import scala.Some
 import edu.chop.cbmi.dataExpress.backends.file.MagicMarshaller
-import edu.chop.cbmi.dataExpress.backends.file.HeaderRowColumnNames
 import edu.chop.cbmi.dataExpress.backends.file.TextFileBackend
-import edu.chop.cbmi.dataExpress.dataModels.SeqColumnNames
 import java.util.Calendar
 import java.sql.Date
 
@@ -38,7 +34,7 @@ class MagicMarshallerSpecs extends FunSpec with GivenWhenThen with ShouldMatcher
     if(file.exists())file.delete()
   }
 
-  def buildFile(content:List[DataRow[_]], colNames: Seq[String], withHeader: Boolean = true) = {
+  def buildFile(content:List[DataRow[_]], colNames: => Seq[String], withHeader: Boolean = true) = {
     f.backend.delete()
     f.backend.makeNewFile()
     if(withHeader)f.backend.writeHeader(DataRow(colNames.zip(colNames): _*))
@@ -90,8 +86,8 @@ class MagicMarshallerSpecs extends FunSpec with GivenWhenThen with ShouldMatcher
                           DataRow(id->"",     name->"ZoE",    dbl->"",        bool1->"",      bool2->"",  d1->"",           d2->""),
                           DataRow(id->"",     name->"",       dbl->"1.",      bool1->"",      bool2->"",  d1->"2005/10/12", d2->""))
 
-      val cng = HeaderRowColumnNames(file,",")
-      val dm = DelimiterMarshaller(",", SeqColumnNames(colNames))
+      lazy val headerColumnNames = TextFileBackend.getHeaderRowColumnNames(file, ",")
+      val dm = DelimiterMarshaller(",", colNames)
       val backend = TextFileBackend(file, dm, 1)
 
       val expectedTypes = Seq(IntegerDataType,
@@ -211,26 +207,26 @@ class MagicMarshallerSpecs extends FunSpec with GivenWhenThen with ShouldMatcher
 
        Given("a file with a single row, no header")
        buildFile(f.content1, f.colNames, false)
-       val m1 = MagicMarshaller(file, Some(SeqColumnNames(f.colNames)), new TestMagicOptions1())
-       m1.dataTypes() should equal(f.expectedTypes)
+       val m1 = MagicMarshaller(file, Some(f.colNames), new TestMagicOptions1())
+       m1.dataTypes should equal(f.expectedTypes)
        f.content1.foreach{row => testMarshalling(row, m1)}
 
        Given("a file with a single row and a header")
        buildFile(f.content1, f.colNames, true)
-       val m2 = MagicMarshaller(file, Some(f.cng), new TestMagicOptions1())
-       m2.dataTypes() should equal(f.expectedTypes)
+       val m2 = MagicMarshaller(file, Some(f.headerColumnNames), new TestMagicOptions1())
+       m2.dataTypes should equal(f.expectedTypes)
        f.content1.foreach{row => testMarshalling(row, m2)}
 
        Given("a file with multiple rows whose columns all have the same format")
        buildFile(f.content2.take(3), f.colNames, true)
-       val m3 = MagicMarshaller(file, Some(f.cng), new TestMagicOptions2())
-       m3.dataTypes() should equal(f.expectedTypes)
+       val m3 = MagicMarshaller(file, Some(f.headerColumnNames), new TestMagicOptions2())
+       m3.dataTypes should equal(f.expectedTypes)
        f.content2.take(3).foreach{row => testMarshalling(row, m3)}
 
        Given("a file with multiple rows whose columns all have the same format but with missing values")
        buildFile(f.content2, f.colNames, true)
-       val m4 = MagicMarshaller(file, Some(f.cng), new TestMagicOptions2())
-       m4.dataTypes() should equal(f.expectedTypes)
+       val m4 = MagicMarshaller(file, Some(f.headerColumnNames), new TestMagicOptions2())
+       m4.dataTypes should equal(f.expectedTypes)
        f.content2.foreach{row => testMarshalling(row, m4)}
      }
   }
