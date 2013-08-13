@@ -1,19 +1,19 @@
 language: scala
 scala:
     - 2.10.0
-
+env:
+    -SBT_OPTS="-Xms512M -Xmx1536M -Xss1M -XX:+CMSClassUnloadingEnabled -XX:MaxPermSize=384M" 
 #once develop is fixed we can turn this on
 branches:
     only:
-        - master
+        - travis_ci_support
 services:
     - mysql
-    - posgres
-    - sqlite3
 
 before_script:
     - mysql -e 'create database dataexpress_test;'
     - psql -c 'create database dataexpress_test;' -U postgres
+    - psql -c 'CREATE SCHEMA test;' -U postgres -d dataexpress_test;
 
 #Note that sbt needs the entire command quoted as well as quotes around the tags to exclude
 script:

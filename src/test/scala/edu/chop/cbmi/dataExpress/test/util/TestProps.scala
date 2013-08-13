@@ -25,7 +25,7 @@ object TestProps {
     val travis = System.getenv("TRAVIS")
 
     travis match {
-      case "true"=> getTravisDbProps(dbname)
+      case "true" =>  getTravisDbProps(dbname)
       case _ => getLocalDbProps(dbname)
     }
 

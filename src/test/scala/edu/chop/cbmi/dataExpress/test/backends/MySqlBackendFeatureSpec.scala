@@ -27,48 +27,49 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
     }
 
   val dbSchema:Option[String]           =     Option("qe10c01")
-
   val targetDbUserName:String           =     "qe10c01"
-
   val identifierQuote                   =     "`"
 
-  def dataSetupFixture =
+  val dataSetupFixture =
     new {
 
       val tf                            =       fixture
-
-      val targetBackend                 =       new MySqlBackend(tf.props)
-
-      targetBackend.connect
-
-      val targetConnection              =       targetBackend.connection
-      val targetStatement               =       targetConnection.createStatement()
-
       val dataSetup                     =       new MySqlDataSetup()
-
       dataSetup.targetDBSchemaName      =       dbSchema.get
-
       dataSetup.targetIdentifierQuote   =       identifierQuote
-
       dataSetup.targetDbUserName        =       targetDbUserName
-
     }
 
 
   val setup                             =       dataSetupFixture
 
   def setUpTestData: Boolean   = {
-    setup.targetStatement.execute(setup.dataSetup.createTargetSchema)
-    setup.targetBackend.commit
+    val be = new MySqlBackend(fixture.props)
+    be.connect()
+    be.execute(setup.dataSetup.createTargetSchema)
+    be.commit()
+    be.close()
     true
   }
 
 
   def removeTestDataSetup: Boolean = {
+//
 
-    setup.targetStatement.execute(setup.dataSetup.dropTargetSchema)
-    setup.targetBackend.commit
-    setup.targetStatement.close()
+    //setup.targetBackend.statementCache.cleanUp()
+
+    //MySQL can't drop a schema on Linux with an ext3 filesystem if the tables have data in them without hanging (!!)
+    //See: http://www.mysqlperformanceblog.com/2009/06/16/slow-drop-table/ and http://stackoverflow.com/questions/150058/mysql-drop-database-takes-time-why
+
+    val be = new MySqlBackend(fixture.props)
+    be.connect()
+    //be.execute("delete from `%s`.`cars_deba_a`".format(targetDbUserName))
+    //be.execute("delete from `%s`.`cars_deba_b`".format(targetDbUserName))
+    be.execute("drop database `qe10c01`")
+    be.commit()
+
+    //setup.targetBackend.execute(setup.dataSetup.dropTargetSchema)
+    be.close()
     true
   }
 
@@ -1226,12 +1227,9 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
             println(e.getMessage + "\n\n")
             fail("backend.executeQuery(" + "\"" + sqlStatement + "\"" + ")produced java.sql.SQLException" )
 
-
-
-
-
-
     }
+
+    backend.close()
 
 
   }
@@ -1315,7 +1313,7 @@ class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Should
 
   scenario("Close Test SetUp Connections")  {
 
-    setup.targetBackend.close
+   // setup.targetBackend.close
 
   }
 

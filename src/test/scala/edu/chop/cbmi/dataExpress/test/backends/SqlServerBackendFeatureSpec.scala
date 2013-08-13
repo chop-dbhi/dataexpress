@@ -28,7 +28,7 @@ class SqlServerBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Sh
       val targetStatement = targetConnection.createStatement()
     }
 
-  val setup = dataSetupFixture
+  lazy val setup = dataSetupFixture
 
 
   def removeTestDataSetup: Boolean = {

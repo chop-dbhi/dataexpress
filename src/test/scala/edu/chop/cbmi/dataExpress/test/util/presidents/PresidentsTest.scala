@@ -99,8 +99,8 @@ abstract class PresidentsFeatureSpecWithSourceTarget extends PresidentsFeatureSp
   val backend_test_type: KNOWN_SQL_BACKEND
 
   lazy val schema = backend_test_type match {
-    case (x: POSTGRES) => Option("public")
-    case (y: MYSQL) => Option("qe10")
+    case (x: POSTGRES) => Option(TestProps.getDbProps("postgres").getProperty("schema"))
+    case (y: MYSQL) => Option(TestProps.getDbProps("mysql").getProperty("dbname"))
     case (z) => throw new Exception("Unknown Backend Test Type")
   }
 
@@ -195,8 +195,8 @@ abstract class PresidentsSpecWithSourceTarget extends PresidentsSpec {
   val backend_test_type: KNOWN_SQL_BACKEND
 
   lazy val schema = backend_test_type match {
-    case (x: POSTGRES) => Option("public")
-    case (y: MYSQL) => Option("qe10")
+    case (x: POSTGRES) => Option(TestProps.getDbProps("postgres").getProperty("schema"))
+    case (y: MYSQL) => Option(TestProps.getDbProps("mysql").getProperty("dbname"))
     case (z) => throw new Exception("Unknown Backend Test Type")
   }
 
@@ -224,7 +224,7 @@ abstract class PresidentsSpecWithSourceTarget extends PresidentsSpec {
   def query_and_count(table_name: String, commit_target: Boolean = true, target: SqlBackend = target_backend,
                       source: SqlBackend = source_backend) = {
     if (commit_target) target.commit
-    AssertionOps.query_and_count(table_name, source)
+    AssertionOps.query_and_count(table_name, target)
   }
 
   def add_known_table(table_name: String, backend: SqlBackend = target_backend) = {
