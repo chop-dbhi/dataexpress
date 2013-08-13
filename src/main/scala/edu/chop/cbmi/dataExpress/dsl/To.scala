@@ -23,7 +23,7 @@ package edu.chop.cbmi.dataExpress.dsl
 import exceptions.UnsupportedStoreType
 import edu.chop.cbmi.dataExpress.dsl.stores.{FileStore, SqlDb, Store}
 import edu.chop.cbmi.dataExpress.dataWriters.DataWriter
-import edu.chop.cbmi.dataExpress.dataModels.{SeqColumnNames, DataRow, DataType}
+import edu.chop.cbmi.dataExpress.dataModels.{DataRow, DataType}
 import scala.collection.mutable.{ListBuffer}
 
 /**
