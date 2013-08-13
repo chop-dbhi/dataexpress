@@ -6,7 +6,7 @@ import edu.chop.cbmi.dataExpress.backends.SqlBackend
 import edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation
 import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
 import scala.language.dynamics
-import edu.chop.cbmi.dataExpress.backends.file.FileBackend
+import edu.chop.cbmi.dataExpress.backends.file.{Marshaller, FileBackend}
 import edu.chop.cbmi.dataExpress.dataModels.file.FileTable
 
 /**
@@ -161,5 +161,5 @@ object DataTable {
     SqlRelation(query, bindVars, dataStore)
   }
 
-  def apply(fileStore : FileBackend, cng: ColumnNameGenerator) = FileTable(fileStore, cng)
+  def apply(fileStore : FileBackend, marshaller: Marshaller) = FileTable(fileStore, marshaller)
 }
