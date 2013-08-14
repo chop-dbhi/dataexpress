@@ -12,7 +12,7 @@ homepage := Some(url("http://dataexpress.research.chop.edu/"))
 
 version := "0.9.1.3"
 
-organization := "edu.chop.cbmi"
+organization := "edu.chop.research"
 
 scalaVersion := "2.10.0"
 
