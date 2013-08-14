@@ -6,7 +6,21 @@ The official [DataExpress](http://dataexpress.research.chop.edu/) website contai
 
 ## Downloading Binaries
 
-The [releases page](https://github.com/cbmi/dataexpress/releases) contains the jars and tutorial starter files for DataExpress
+The [releases page](https://github.com/cbmi/dataexpress/releases) contains the jars and tutorial starter files for DataExpress. You can use these if you're not familiar with Scala or the various JVM build processes
+
+## Using from SBT, Maven, etc...
+
+DataExpress is published to the Sonatype OSS snapshot and release repositories. These repositories are pushed to Maven Central every 2 hours. This means that you can use releases without adding custom resolvers to your sbt build definition or custom repositories to your Maven POM. The group id (organization) is `edu.chop.research` and the artifact id (name) is `dataexpress` 
+
+To add a dependency to the latest **release** version of DataExpress to your sbt (0.12.x) build definition:
+
+    libraryDependencies += "edu.chop.research" %% "dataexpress" % "0.9.1.3"
+
+If you would like to live on the (often bleeding-) edge, a **snapshot** version of DataExpress can go in your sbt (0.12.x) build definition:
+
+    resolvers += Opts.resolver.sonatypeSnapshots
+
+    libraryDependencies += "edu.chop.research" %% "dataexpress" % "0.9.1.4-SNAPSHOT"
 
 ## Compiling from Source
 
