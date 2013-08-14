@@ -8,6 +8,7 @@ assemblySettings
 
 name := "dataexpress"
 
+homepage := Some(url("http://dataexpress.research.chop.edu/"))
 
 version := "0.9.1.3"
 
