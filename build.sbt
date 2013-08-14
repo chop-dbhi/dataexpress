@@ -6,13 +6,17 @@ assemblySettings
 
 //standard options ------------------------------
 
-name := "DataExpress"
+name := "dataexpress"
+
+homepage := Some(url("http://dataexpress.research.chop.edu/"))
 
 version := "0.9.1.3"
 
-organization := "edu.chop.cbmi"
+organization := "edu.chop.research"
 
 scalaVersion := "2.10.0"
+
+licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/bsd-license.php"))
 
 //assembly options
 
@@ -22,8 +26,6 @@ test in assembly := {}
 
 assembleArtifact in packageScala := false
 
-//Need this for now until we unwind some of the tests
-parallelExecution in Test := false
 
 //compile dependencies------------------------------
 
@@ -36,6 +38,10 @@ libraryDependencies ++= Seq(
 
 //test dependencies------------------------------
 
+//Need this for now until we unwind some of the tests
+parallelExecution in Test := false
+
+
 libraryDependencies ++= {
   val deps = Seq(
         "org.scalatest" %% "scalatest" % "2.0.M5b",
@@ -47,6 +53,35 @@ libraryDependencies ++= {
 //scala options------------------------------
 
 scalacOptions +="-language:dynamics"
+
+
+//Publishing options---------------------------
+
+publishMavenStyle := true
+
+publishTo <<= version { (v: String) =>
+  val nexus = "https://oss.sonatype.org/"
+  if (v.trim.endsWith("SNAPSHOT"))
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+}
+
+publishArtifact in Test := false
+
+pomIncludeRepository := { _ => false }
+
+pomExtra := (
+  <scm>
+    <url>git@github.com:cbmi/dataexpress.git</url>
+    <connection>scm:git:git@github.com:cbmi/dataexpress.git</connection>
+  </scm>
+  <developers>
+    <developer>
+      <id>mitalia</id>
+      <name>Michael Italia</name>
+    </developer>
+  </developers>)
 
 //console imports------------------------------
 
