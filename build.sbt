@@ -54,6 +54,35 @@ libraryDependencies ++= {
 
 scalacOptions +="-language:dynamics"
 
+
+//Publishing options---------------------------
+
+publishMavenStyle := true
+
+publishTo <<= version { (v: String) =>
+  val nexus = "https://oss.sonatype.org/"
+  if (v.trim.endsWith("SNAPSHOT"))
+    Some("snapshots" at nexus + "content/repositories/snapshots")
+  else
+    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+}
+
+publishArtifact in Test := false
+
+pomIncludeRepository := { _ => false }
+
+pomExtra := (
+  <scm>
+    <url>git@github.com:cbmi/dataexpress.git</url>
+    <connection>scm:git:git@github.com:cbmi/dataexpress.git</connection>
+  </scm>
+  <developers>
+    <developer>
+      <id>mitalia</id>
+      <name>Michael Italia</name>
+    </developer>
+  </developers>)
+
 //console imports------------------------------
 
 initialCommands in console := """import edu.chop.cbmi.dataExpress.dsl.ETL
