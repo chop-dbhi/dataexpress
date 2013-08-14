@@ -16,6 +16,8 @@ organization := "edu.chop.research"
 
 scalaVersion := "2.10.0"
 
+licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/bsd-license.php"))
+
 //assembly options
 
 jarName in assembly <<=version("DataExpress_" + _ + "_standalone.jar")
