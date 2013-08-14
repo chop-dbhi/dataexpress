@@ -6,7 +6,8 @@ assemblySettings
 
 //standard options ------------------------------
 
-name := "DataExpress"
+name := "dataexpress"
+
 
 version := "0.9.1.3"
 
