@@ -10,6 +10,7 @@ out/
 backup/
 .idea/
 .DS_Store
+*.swp
 *.iml
 *.ipr
 *.iws
