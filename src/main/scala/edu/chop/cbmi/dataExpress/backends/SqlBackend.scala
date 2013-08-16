@@ -57,7 +57,7 @@ object SqlBackendFactory{
       val providers = sqlBackendProviderLoader.iterator()
       var provider : SqlBackend = null
       var keep_searching = true
-      while(providers.hasNext() && keep_searching){
+      while(providers.hasNext && keep_searching){
         providers.next().getProviderFor(db_type, connection_properties, sqlDialect, driver_class_name) match{
           case Some(p) => {
             provider = p
