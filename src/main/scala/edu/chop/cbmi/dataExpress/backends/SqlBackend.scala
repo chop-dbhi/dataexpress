@@ -11,14 +11,16 @@ import scala.Some
 
 /** 
  * Provides a mechanism to get a SqlBackend by supplying the necessary parameters at runtime
- * 
- * @param db_vendor A string value for the database vendor (e.g. postgresql, mysql, sqlite, oracle, etc...)
- * @param connectionProperties a [[java.util.Properties]] object that contains the connection information
- * @param sqlDialect an [[edu.chop.cbmi.dataExpress.backends.SqlDialect]] to be used with the database system
- * @param driverClassName the string name of the JDBC driver class
- * 
+ *
  */
 trait SqlBackendProvider {
+  /**
+   *
+   * @param db_vendor A string value for the database vendor (e.g. postgresql, mysql, sqlite, oracle, etc...)
+   * @param connectionProperties a [[java.util.Properties]] object that contains the connection information
+   * @param sqlDialect an [[edu.chop.cbmi.dataExpress.backends.SqlDialect]] to be used with the database system
+   * @param driverClassName the string name of the JDBC driver class
+   */
   def getProviderFor(db_vendor : String, connectionProperties : Properties, sqlDialect : SqlDialect, driverClassName : String) : Option[SqlBackend]
 }
 
@@ -74,7 +76,7 @@ object SqlBackendFactory{
   /**
    * Creates the appropriate [[edu.chop.cbmi.dataExpress.backends.SqlBackend]] from a .properties file
    *
-   * @param connection_properties a .properties file that can be serialized to a [[java.util.Properties]] object containing all the necessary information to connect
+   * @param connection_properties_file a .properties file that can be serialized to a [[java.util.Properties]] object containing all the necessary information to connect
    * @param sqlDialect The [[edu.chop.cbmi.dataExpress.backends.SqlDialect]] to use with the database
    * @param driver_class_name The string name of the driver class to be used
    */
@@ -92,7 +94,7 @@ object SqlBackendFactory{
   /**
    * Creates the appropriate [[edu.chop.cbmi.dataExpress.backends.SqlBackend]] from a .properties file
    *
-   * @param connection_properties a .properties file that can be serialized to a [[java.util.Properties]] object containing all the necessary information to connect
+   * @param connection_properties_file a .properties file that can be serialized to a [[java.util.Properties]] object containing all the necessary information to connect
    * @param sqlDialect The [[edu.chop.cbmi.dataExpress.backends.SqlDialect]] to use with the database
    */
   def apply(connection_properties_file: String, sqlDialect : SqlDialect) : SqlBackend =
@@ -101,7 +103,7 @@ object SqlBackendFactory{
   /**
    * Creates the appropriate [[edu.chop.cbmi.dataExpress.backends.SqlBackend]] from a .properties file
    *
-   * @param connection_properties a .properties file that can be serialized to a [[java.util.Properties]] object containing all the necessary information to connect
+   * @param connection_properties_file a .properties file that can be serialized to a [[java.util.Properties]] object containing all the necessary information to connect
    * @param driver_class_name The string name of the driver class to be used
    */
   def apply(connection_properties_file: String, driver_class_name : String) : SqlBackend =
@@ -110,8 +112,7 @@ object SqlBackendFactory{
   /**
    * Creates the appropriate [[edu.chop.cbmi.dataExpress.backends.SqlBackend]] from a .properties file
    *
-   * @param connection_properties a .properties file that can be serialized to a [[java.util.Properties]] object containing all the necessary information to connect
-   * @param driver_class_name The string name of the driver class to be used
+   * @param connection_properties_file a .properties file that can be serialized to a [[java.util.Properties]] object containing all the necessary information to connect
    */
   def apply(connection_properties_file: String) : SqlBackend = apply(connection_properties_file, null, null)
 
@@ -175,7 +176,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    */
   def close(connection:java.sql.Connection) = connection.close()
 
-  /** Closes the [[java.sql.connection]] associated with instances of the backend */
+  /** Closes the [[java.sql.Connection]] associated with instances of the backend */
   def close() = {
     if (connection != null) checkResultSetThenExecute {
       statementCache.cleanUp
@@ -311,7 +312,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * @param tableName the name of the table
    * @param columnNames the list of column names to use
    * @param dataTypes a list of DataExpress [[edu.chop.cbmi.dataExpress.dataModels.DataType]] objects that correspond to the columns
-   * @param schemaNames The name of the schema where the table will be created
+   * @param schemaName The name of the schema where the table will be created
    */
   def createTable(tableName: String, columnNames : List[String], dataTypes: List[DataType], schemaName:Option[String] = None) :
   Boolean = {
@@ -408,9 +409,8 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    *
    *  {{{List(("id",12345),("type","Luggage Combination"))}}}
    *
-   *  passed in as a filter is converted to the SQL `WHERE id = 12345 AND type = 'Luggage Combination' Currently,
-   *  there is no support for operations other than equality on filters (e.g. ```WHERE id > 100```).
-   * 
+   *  passed in as a filter is converted to the SQL `WHERE id = 12345 AND type = 'Luggage Combination'` Currently,
+   *  there is no support for operations other than equality on filters (e.g. `WHERE id > 100`).
    * @param tableName The name of the table to do the insert
    * @param updated_row The contents to be used for the update
    * @param filter A list of (`columnName`,`value`) tuples to be used when constructing the `WHERE` clause
