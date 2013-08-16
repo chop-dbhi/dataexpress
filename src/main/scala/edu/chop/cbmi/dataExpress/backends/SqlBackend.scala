@@ -504,6 +504,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
         try {
           val status = statement.executeBatch.toList
           successfulStatementCount += status.count(i => i != Statement.EXECUTE_FAILED)
+          if((java.util.Calendar.getInstance().getTimeInMillis - startTime) % 10000 == 0) {
             val rate =  successfulStatementCount / ((java.util.Calendar.getInstance().getTimeInMillis - startTime)/1000.001) //prevent divide by zero
             logger.info(s"Inserted $successfulStatementCount rows so far ($rate records/second)")
           }
