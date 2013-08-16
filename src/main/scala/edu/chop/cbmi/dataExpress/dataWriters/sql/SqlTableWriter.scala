@@ -60,8 +60,8 @@ case class SqlTableWriter(backend:SqlBackend, schema:Option[String] = None, cata
    * @param row A DataRow whose column names match columns in the target table, not all columns are required
    * @return SqlOperationsStatus contains status and primary key of newly inserted row
    */
-  override def insert_row[T](table_name:String, row: DataRow[T]) =
-    SqlOperationStatus(true, backend.insertReturningKeys(table_name, row, schema))
+  override def insert_row[T](table_name:String, row:DataRow[T]) =
+    SqlOperationStatus(succeed = true, backend.insertReturningKeys(table_name, row, schema))
 
   /**
    * @param table A DataTable whose column names match columns in the target table, not all columns are required
@@ -70,12 +70,12 @@ case class SqlTableWriter(backend:SqlBackend, schema:Option[String] = None, cata
   override def insert_rows[T](table_name: String, table: DataTable[T]) = {
     //TODO for logging it would help to know how many rows were inserted
     val result = backend.batchInsert(table_name, table, schema)
-    SqlOperationStatus(true)
+    SqlOperationStatus(succeed = true)
   }
 
   override def insert_rows[T](table_name: String, rows: Iterable[DataRow[T]]) = {
     val result = backend.batchInsertRows(table_name, rows.iterator, column_names(table_name), schema)
-    if(result == -1)SqlOperationStatus(false) else SqlOperationStatus(true)
+    if(result == -1)SqlOperationStatus(succeed = false) else SqlOperationStatus(succeed = true)
   }
 
 
