@@ -44,8 +44,8 @@ object SqlTableWriter{
 case class SqlTableWriter(backend:SqlBackend, schema:Option[String] = None, catalog:String = null)
   extends DataWriter with Updater with Logging{
 
-  private def column_names(table_name : String) = {
   logger.trace(s"Intialized SqlTablewriter with $backend in schema $schema")
+  private def column_names(table_name:String) = {
     val rs = backend.connection.getMetaData.getColumns(catalog, schema.getOrElse(null), table_name, null)
     var names =  scala.collection.mutable.HashMap.empty[Int,String]
     if(rs.next){
