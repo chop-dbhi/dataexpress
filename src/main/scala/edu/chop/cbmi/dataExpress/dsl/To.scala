@@ -82,7 +82,12 @@ case class ToFromTable(target : Store, source_table : TransformableDataTable) ex
          }
         target match{
           //TODO note the createTable method in Sql backend currently forces a drop table
-          case s: SqlDb => s.backend.createTable(table_name, col_names, data_types, s.schema)
+          case s: SqlDb => {
+            s.backend.startTransaction()
+            s.backend.createTable(table_name, col_names, data_types, s.schema)
+            s.backend.endTransaction()
+            s.backend.commit()
+          }
           case fs: FileStore => {
             fs.fb.delete()
             fs.fb.makeNewFile()
@@ -96,7 +101,9 @@ case class ToFromTable(target : Store, source_table : TransformableDataTable) ex
        } //end CREATE_MODE
        case APPEND_MODE => {
          val writer = target match{
-           case s:SqlDb => DataWriter(s.backend, s.schema, s.catalog.getOrElse(null))
+           case s:SqlDb => {
+             DataWriter(s.backend, s.schema, s.catalog.getOrElse(null))
+           }
            case fs: FileStore => DataWriter(fs.fb, col_names)
          }
          if(source_table._transformers.isEmpty){
