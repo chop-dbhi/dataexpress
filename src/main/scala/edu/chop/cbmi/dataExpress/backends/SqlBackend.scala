@@ -4,9 +4,10 @@ import edu.chop.cbmi.dataExpress.dataModels.DataType
 import edu.chop.cbmi.dataExpress.dataModels.{DataTable, DataRow}
 import java.util.Properties
 import java.io.FileInputStream
-import edu.chop.cbmi.dataExpress.logging.Log
-import java.sql.{ResultSet, PreparedStatement, Statement, Driver}
+import com.typesafe.scalalogging.log4j._
+import java.sql._
 import java.util.ServiceLoader
+import scala.Some
 
 /** 
  * Provides a mechanism to get a SqlBackend by supplying the necessary parameters at runtime
