@@ -25,6 +25,7 @@ import edu.chop.cbmi.dataExpress.exceptions.TableDoesNotExist
 import collection.mutable.ListBuffer
 import edu.chop.cbmi.dataExpress.dataModels.{DataType, DataTable, DataRow}
 import edu.chop.cbmi.dataExpress.dataWriters.{Updater, DataWriter}
+import com.typesafe.scalalogging.log4j._
 
 /**
  * Created by IntelliJ IDEA.
@@ -40,10 +41,11 @@ object SqlTableWriter{
   val OVERWRITE_OPTION_APPEND = 2
 }
 
-case class SqlTableWriter(val backend : SqlBackend, val schema : Option[String] = None, val catalog : String = null)
-  extends DataWriter with Updater{
+case class SqlTableWriter(backend:SqlBackend, schema:Option[String] = None, catalog:String = null)
+  extends DataWriter with Updater with Logging{
 
   private def column_names(table_name : String) = {
+  logger.trace(s"Intialized SqlTablewriter with $backend in schema $schema")
     val rs = backend.connection.getMetaData.getColumns(catalog, schema.getOrElse(null), table_name, null)
     var names =  scala.collection.mutable.HashMap.empty[Int,String]
     if(rs.next){
