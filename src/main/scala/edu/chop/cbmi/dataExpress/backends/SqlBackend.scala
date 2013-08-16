@@ -322,7 +322,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
   /**
    * Rollback an existing transaction
    */
-  def rollback(): Boolean = execute(sqlDialect.rollback)
+  def rollback(): Boolean = execute(sqlDialect.rollback())
 
   /**
    * Start a new transaction (potentially closing the old one)
