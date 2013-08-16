@@ -33,7 +33,8 @@ libraryDependencies ++= Seq(
   "org.xerial" % "sqlite-jdbc" % "3.7.2",
   "postgresql" % "postgresql" % "9.0-801.jdbc4",
   "mysql" % "mysql-connector-java" % "5.1.26",
-  "com.typesafe" %% "scalalogging-slf4j" % "1.0.1"
+  "com.typesafe" %% "scalalogging-log4j" % "1.0.1",
+  "org.apache.logging.log4j" % "log4j-core" % "2.0-beta4"
 )
 
 
