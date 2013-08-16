@@ -16,19 +16,23 @@ object BackendOps {
 
   val KNOWN_TABLES = scala.collection.mutable.Map.empty[SqlBackend, List[String]]
 
-  def add_table_name(backend : SqlBackend, table_name : String) = {
-    if(KNOWN_TABLES.contains(backend))KNOWN_TABLES(backend) = table_name :: KNOWN_TABLES(backend)
-    else KNOWN_TABLES(backend) = List(table_name)
+  def add_table_name(backend : SqlBackend, table_name : String, schema: Option[String]) = {
+    val fullyQualifiedTableName = schema.get match {
+      case "" => s"${backend.sqlDialect.quoteIdentifier(table_name)}"
+      case _ => s"${backend.sqlDialect.quoteIdentifier(schema.get)}.${backend.sqlDialect.quoteIdentifier(table_name)}"
+    }
+    if(KNOWN_TABLES.contains(backend)) KNOWN_TABLES(backend) = fullyQualifiedTableName :: KNOWN_TABLES(backend)
+    else KNOWN_TABLES(backend) = List(fullyQualifiedTableName)
   }
 
-  def execute_drop_table(table_name : String, backend : SqlBackend) = {
-    backend.execute(SQLStatements.drop_table(table_name, Some(backend)))
+  def execute_drop_table(table_name : String, backend : SqlBackend, schema: Option[String]) = {
+    backend.execute(SQLStatements.drop_table(table_name, Some(backend), schema))
     backend.commit
   }
 
   private def drop_known_backend_tables(key: SqlBackend) = KNOWN_TABLES.get(key) match {
     case Some(l) => l foreach {table =>
-          execute_drop_table(table, key)
+          execute_drop_table(table, key, None) //Pass None because we keep fully qualified table names in the list
     }
     case None => {}//nothing to do if there are no tables to drop
   }
@@ -58,7 +62,7 @@ object TableOps{
 object AssertionOps {
   val assertion_functions = scala.collection.mutable.ListBuffer.empty[() => Any]
 
-  def query_and_count(table_name: String, backend : SqlBackend) = {
+  def query_and_count(table_name: String, backend : SqlBackend, schema: Option[String]) = {
       (0 /: DataTable(backend, """select * from %s""".format(backend.sqlDialect.quoteIdentifier(table_name)))) { (i,r)=> i +1 }
   }
 

@@ -45,17 +45,17 @@ trait PresidentsTest {
   }
 
   def create_default_presidents_table(backend: SqlBackend, schema: Option[String]) = {
-    backend.execute(SQLStatements.drop_table(PRESIDENTS, Some(backend)))
+    backend.execute(SQLStatements.drop_table(PRESIDENTS, Some(backend), schema))
     val backend_type = KNOWN_SQL_BACKEND.backend_type(backend) match {
       case Some(bet) => bet
       case None => throw new Exception("Unsupported backend")
     }
-    val create_statement = SQLStatements.create_president_table(backend_type, schema.getOrElse(null))
+    val create_statement = SQLStatements.create_president_table(backend_type, schema)
     backend.execute(create_statement)
-    val insert_statement = SQLStatements.insert_president_values(backend_type, SQLStatements.default_president_list())
+    val insert_statement = SQLStatements.insert_president_values(backend_type, schema, SQLStatements.default_president_list())
     backend.execute(insert_statement)
     backend.commit()
-    BackendOps.add_table_name(backend, PRESIDENTS)
+    BackendOps.add_table_name(backend, PRESIDENTS, schema)
   }
 
   def NewTestPropsBackend(backend_type: KNOWN_SQL_BACKEND): SqlBackend = backend_type match {
@@ -128,11 +128,11 @@ abstract class PresidentsFeatureSpecWithSourceTarget extends PresidentsFeatureSp
   def query_and_count(table_name: String, commit_target: Boolean = true, target: SqlBackend = target_backend,
                       source: SqlBackend = source_backend) = {
     if (commit_target) target.commit
-    AssertionOps.query_and_count(table_name, source)
+    AssertionOps.query_and_count(table_name, source, schema)
   }
 
   def add_known_table(table_name: String, backend: SqlBackend = target_backend) = {
-    BackendOps.add_table_name(backend, table_name)
+    BackendOps.add_table_name(backend, table_name, schema)
     table_name
   }
 
@@ -222,13 +222,14 @@ abstract class PresidentsSpecWithSourceTarget extends PresidentsSpec {
   }
 
   def query_and_count(table_name: String, commit_target: Boolean = true, target: SqlBackend = target_backend,
+                      targetSchema: Option[String],
                       source: SqlBackend = source_backend) = {
     if (commit_target) target.commit
-    AssertionOps.query_and_count(table_name, target)
+    AssertionOps.query_and_count(table_name, target, targetSchema)
   }
 
   def add_known_table(table_name: String, backend: SqlBackend = target_backend) = {
-    BackendOps.add_table_name(backend, table_name)
+    BackendOps.add_table_name(backend, table_name, schema)
     table_name
   }
 

@@ -27,10 +27,10 @@ class SqlTableWriterSpec extends PresidentsSpecWithSourceTarget{
 
   //will be creating some new tables in the target
   val VICE_PRESIDENTS = "vice_presidents"
-  BackendOps.add_table_name(target_backend, VICE_PRESIDENTS)
+  BackendOps.add_table_name(target_backend,VICE_PRESIDENTS, schema)
 
   val PRESIDENTS_COPY = "pres_copy"
-  BackendOps.add_table_name(target_backend, PRESIDENTS_COPY)
+  BackendOps.add_table_name(target_backend, PRESIDENTS_COPY, schema)
 
   describe("A SqlTableWriter"){
     val dw = DataWriter(target_backend)
@@ -49,7 +49,7 @@ class SqlTableWriterSpec extends PresidentsSpecWithSourceTarget{
 
 
       And("after commiting the backend the rows should appear in a new query")
-      query_and_count(PRESIDENTS) should equal(7)
+      query_and_count(PRESIDENTS, targetSchema = schema) should equal(7)
 
       Given("any DataTable whose DataRows have an appropriate number of arguments, insert all rows into the table")
       val gb = List(8,"George","Bush", 1)
@@ -58,7 +58,7 @@ class SqlTableWriterSpec extends PresidentsSpecWithSourceTarget{
       dw.insert_rows(PRESIDENTS,sdt).operation_succeeded_? should equal(true)
 
       And("after committing the backend the rows of the table should be in a new query")
-      query_and_count(PRESIDENTS) should equal(9)
+      query_and_count(PRESIDENTS, targetSchema = schema) should equal(9)
 
 
       Given("a function mapping from a String to a T, insert a new row into the tables")
@@ -73,14 +73,14 @@ class SqlTableWriterSpec extends PresidentsSpecWithSourceTarget{
         }
       })
       And("after comitting the backend the rows of the table should be in a new query")
-      query_and_count(PRESIDENTS) should equal(10)
+      query_and_count(PRESIDENTS, targetSchema=schema) should equal(10)
 
 
       And("it should allow updates of existing rows")
       Given("a new DataRow and a filter")
       val washington = DataRow("first_name"->"Bob")
       dw.update_row(PRESIDENTS, washington, "id"->1)
-      query_and_count(PRESIDENTS) should equal(10)
+      query_and_count(PRESIDENTS, targetSchema = schema) should equal(10)
 
 
       val gw = DataTable(source_backend, """select * from %s where %s='1'""".format(
@@ -98,7 +98,7 @@ class SqlTableWriterSpec extends PresidentsSpecWithSourceTarget{
           case _ => None
         }
       })
-      query_and_count(PRESIDENTS) should equal(10)
+      query_and_count(PRESIDENTS, targetSchema = schema) should equal(10)
 
       val ja = DataTable(target_backend, """select * from %s where %s='2'""".format(
         target_backend.sqlDialect.quoteIdentifier(PRESIDENTS),target_backend.sqlDialect.quoteIdentifier("id"))).next
@@ -114,16 +114,16 @@ class SqlTableWriterSpec extends PresidentsSpecWithSourceTarget{
       val vps = DataTable(List("first_name","last_name"), biden, cheney)
       dw.insert_table(VICE_PRESIDENTS, List(CharacterDataType(20, false), CharacterDataType(20,false)),
         vps, SqlTableWriter.OVERWRITE_OPTION_DROP)
-      BackendOps.add_table_name(target_backend, VICE_PRESIDENTS)
-      query_and_count(VICE_PRESIDENTS) should equal(2)
+      BackendOps.add_table_name(target_backend, VICE_PRESIDENTS, schema)
+      query_and_count(VICE_PRESIDENTS, targetSchema = schema) should equal(2)
 
 
       val the_pres_table = DataTable(source_backend, "SELECT * FROM %s".format(
         source_backend.sqlDialect.quoteIdentifier(PRESIDENTS)))
       val dts = the_pres_table.dataTypes
       dw.insert_table(PRESIDENTS_COPY, dts, the_pres_table, SqlTableWriter.OVERWRITE_OPTION_DROP)
-      BackendOps.add_table_name(target_backend, PRESIDENTS_COPY)
-      query_and_count(PRESIDENTS_COPY) should equal(10)
+      BackendOps.add_table_name(target_backend, PRESIDENTS_COPY, schema)
+      query_and_count(PRESIDENTS_COPY, targetSchema = schema) should equal(10)
     }
   }
 }

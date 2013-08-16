@@ -84,8 +84,8 @@ object SQLStatements {
   def potus_data_row(president : Int, id : Option[Int] = None) = {
     val p = potus(president, id)
     p._5 match{
-      case null => (DataRow(List("id","first_name","last_name","num_terms", "dob"))(
-            List(Some(p._1), Some(p._2), Some(p._3), Some(p._4), None)))
+      case null => DataRow(List("id", "first_name", "last_name", "num_terms", "dob"))(
+        List(Some(p._1), Some(p._2), Some(p._3), Some(p._4), None))
       case _ => (DataRow(List("id","first_name","last_name","num_terms","dob"))
             (List(Some(p._1), Some(p._2), Some(p._3), Some(p._4), Some(p._5))))
     }
@@ -95,13 +95,24 @@ object SQLStatements {
     List(potus(1), potus(2), potus(3), potus(4))
   }
 
-  def drop_table(table_name: String, sqlbackend: Option[SqlBackend]) = sqlbackend match {
-    case None => """DROP TABLE IF EXISTS %s""".format(table_name)
-    case Some(sbe) => """DROP TABLE IF EXISTS %s""".format(sbe.sqlDialect.quoteIdentifier(table_name))
+  def drop_table(table_name: String, sqlbackend: Option[SqlBackend], schema: Option[String]) = {
+    //can't quote these properly because different implementations do this differently, this really should just use backend methods
+    val fullyQualifiedTableName = schema match {
+      case None => s"$table_name"
+      case _ => s"${schema.get}.$table_name"
+    }
+    sqlbackend match {
+      case None => s"DROP TABLE IF EXISTS $fullyQualifiedTableName"
+      case Some(sbe) => s"DROP TABLE IF EXISTS $fullyQualifiedTableName"
+    }
   }
-
-  def create_president_table(backend_type : KNOWN_SQL_BACKEND, schema : String) = backend_type match{
-    case (bs:POSTGRES) =>"""CREATE TABLE "%s"."presidents"
+  def create_president_table(backend_type : KNOWN_SQL_BACKEND, schema : Option[String]) =  {
+    val fullyQualifiedTableName = schema.get match {
+      case "" => s"presidents"
+      case _ =>  s"${schema.get}.presidents"
+    }
+    backend_type match{
+    case (bs:POSTGRES) => """CREATE TABLE %s
                                 (id serial NOT NULL,
                                  first_name character varying(20),
                                  last_name character varying(20),
@@ -111,21 +122,27 @@ object SQLStatements {
                                 )
                                 WITH (
                                   OIDS=FALSE
-                                 );""".format(schema)
-    case (bs:MYSQL) => """CREATE TABLE `%s`.`presidents` (
+                                 );""".format(fullyQualifiedTableName)
+    case (bs:MYSQL) => """CREATE TABLE %s (
           	`id` SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
           	`first_name` varchar(20),
           	`last_name` varchar(20),
           	`num_terms` SMALLINT UNSIGNED NOT NULL DEFAULT '1',
           	`dob` date,
           	PRIMARY KEY (`id`)
-          );""".format(schema)
+          );""".format(fullyQualifiedTableName)
+    }
   }
-
+  //TODO: This method needs to be re-worked to use the backend and not be dependent on sql
   def insert_president_values(backend_type : KNOWN_SQL_BACKEND,
+        schema:Option[String] = None,
         presidents : List[(Int,String,String,Int,Date)],
-        insert_prefix : String = """INSERT INTO presidents(id, first_name, last_name, num_terms, dob) VALUES %s""") = {
-    val values = (""/:presidents) {(s,t) => s + "(%s,'%s','%s',%s,%s),".format(t._1.toString,t._2,t._3,t._4.toString,formated_date_string(t._1,backend_type))}
-    insert_prefix.format(values.substring(0, values.length-1))
+        insert_prefix : String = """INSERT INTO %s(id, first_name, last_name, num_terms, dob) VALUES %s""") = {
+    val values = (""/:presidents) {(s,t) => s + "(%s,'%s','%s',%s,%s),".format(t._1.toString,t._2,t._3,t._4.toString,formated_date_string(t._1, backend_type))}
+    val fullyQualifiedTableName = schema.get match {
+      case "" => s"presidents"
+      case _ =>  s"${schema.get}.presidents"
+    }
+    insert_prefix.format(fullyQualifiedTableName, values.substring(0, values.length-1))
   }
 }
