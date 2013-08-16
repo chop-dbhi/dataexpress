@@ -86,6 +86,9 @@ pomExtra := (
 
 //console imports------------------------------
 
+javaOptions in console := Seq("-Dlog4j.configuration=log4j2.xml")
+
+
 initialCommands in console := """import edu.chop.cbmi.dataExpress.dsl.ETL
 import edu.chop.cbmi.dataExpress.dsl.ETL._
 import edu.chop.cbmi.dataExpress.dsl.stores.SqlDb
