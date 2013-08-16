@@ -176,8 +176,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
   }
   
   /** returns the URI for the JDBC connection
-   */
-  //TODO: Check to confirm this is actually still needed
+   */ //TODO: Check to confirm this is actually still needed
   def get_jdbcUri = if(jdbcUri==null)connectionProperties.getProperty("jdbcUri") else jdbcUri
 
   /** Closes a [[java.sql.Connection]] 
@@ -196,6 +195,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
       catch {
         case e:Exception => {
             logger.error(s"The database at $jdbcUri reported an error when closing the connection", e)
+        }
 
       }
       finally {
@@ -317,7 +317,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
   /** 
    * Commit any open transactions to the database
    */
-  def commit(): Boolean = execute(sqlDialect.commit)
+  def commit(): Boolean = execute(sqlDialect.commit())
   
   /**
    * Rollback an existing transaction
@@ -388,7 +388,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
 
   /*------ Insertion Methods ------*/
   /** 
-   * Insert a single [[edu.chop.cbmi.dataModels.DataRow]] into a table, returning auto-generated primary keys
+   * Insert a single [[edu.chop.cbmi.dataExpress.dataModels.DataRow]] into a table, returning auto-generated primary keys
    * 
    * 
    * @param tableName The name of the table to do the insert
@@ -539,13 +539,13 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
       for (v <- vars) {
         //TODO: Too many edge cases in here, need to explicity set some more date/time stuff
         v._1 match {
-          case Some(i: java.sql.Timestamp)    => sqlStatement.setTimestamp((v._2 + 1), i)
-          case Some(i: java.sql.Time)         => sqlStatement.setTime((v._2 + 1), i)
-          case Some(i: java.sql.Date)		  => sqlStatement.setDate((v._2 + 1), i)
+          case Some(i: java.sql.Timestamp)    => sqlStatement.setTimestamp(v._2 + 1, i)
+          case Some(i: java.sql.Time)         => sqlStatement.setTime(v._2 + 1, i)
+          case Some(i: java.sql.Date)		  => sqlStatement.setDate(v._2 + 1, i)
           //TODO: Test the java.util.Date for precision here to avoid trying to set to a higher precision
-          case Some(i: java.util.Date)        => sqlStatement.setDate((v._2 + 1), new java.sql.Date(i.getTime))
+          case Some(i: java.util.Date)        => sqlStatement.setDate(v._2 + 1, new java.sql.Date(i.getTime))
           case None => sqlStatement.setNull(v._2 + 1, java.sql.Types.NULL)  //TODO: do something better here
-          case _    => sqlStatement.setObject((v._2 + 1), v._1.get)
+          case _    => sqlStatement.setObject(v._2 + 1, v._1.get)
         }
       }
     }
