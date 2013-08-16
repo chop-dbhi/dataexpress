@@ -67,13 +67,13 @@ case class SqlTableWriter(backend:SqlBackend, schema:Option[String] = None, cata
    * @param table A DataTable whose column names match columns in the target table, not all columns are required
    * @return SqlOperationsStatus contains status and primary keys for each row
    */
-  override def insert_rows[T](table_name: String, table: DataTable[T]) = {
+  override def insert_rows[T](table_name:String, table:DataTable[T]) = {
     //TODO for logging it would help to know how many rows were inserted
     val result = backend.batchInsert(table_name, table, schema)
     SqlOperationStatus(succeed = true)
   }
 
-  override def insert_rows[T](table_name: String, rows: Iterable[DataRow[T]]) = {
+  override def insert_rows[T](table_name:String, rows:Iterable[DataRow[T]]) = {
     val result = backend.batchInsertRows(table_name, rows.iterator, column_names(table_name), schema)
     if(result == -1)SqlOperationStatus(succeed = false) else SqlOperationStatus(succeed = true)
   }
