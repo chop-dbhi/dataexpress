@@ -122,7 +122,7 @@ object SqlBackendFactory{
  * 
  * Instances of SqlBacked should normally be instantiated via [[edu.chop.cbmi.dataExpress.backends.SqlBackendFactory]]
  */
-case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialect, driverClassName : String) {
+case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialect, driverClassName : String) extends Logging {
   var connection:java.sql.Connection = _
   var statementCache:SqlQueryCache = _
   val CACHESIZE=20
@@ -145,18 +145,27 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * @param props the [[java.util.Properties]] object with the connect information
    */
   def connect(props:Properties):java.sql.Connection = {
-
+    logger.debug(s"Getting Database driver for ${driverClassName.toString}" )
     val dr = java.lang.Class.forName(driverClassName).newInstance().asInstanceOf[Driver]
 
     if (props.stringPropertyNames().contains("jdbcUri")) {
       jdbcUri = props.getProperty("jdbcUri")
+      logger.trace(s"Database properties are: ${props.toString}")
       val connectProps = new Properties()
 
       //Oracle discourages this, but people apparently do it in this case: http://stackoverflow.com/a/2004900/576145
       connectProps.putAll(props)
 
       connectProps.remove("jdbcUri")
-      connection = dr.connect(jdbcUri, connectProps)
+
+      try {
+        connection = dr.connect(jdbcUri, connectProps)
+      }
+      catch {
+        case e:Exception => {
+          logger.error(s"Failed top open database connection to $jdbcUri, using driver ${driverClassName.toString} check your database properties.", e)
+        }
+      }
       connection.setAutoCommit(false)
       statementCache = new SqlQueryCache(CACHESIZE, connection)
       connection
@@ -178,11 +187,21 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
 
   /** Closes the [[java.sql.Connection]] associated with instances of the backend */
   def close() = {
+    logger.info(s"Closing database connection to $jdbcUri")
     if (connection != null) checkResultSetThenExecute {
-      statementCache.cleanUp
-      connection.close()
-      if (!connection.isClosed()) {
-        throw new java.lang.RuntimeException("Failed to close database connection")
+      statementCache.cleanUp()
+      try {
+        connection.close()
+      }
+      catch {
+        case e:Exception => {
+            logger.error(s"The database at $jdbcUri reported an error when closing the connection", e)
+
+      }
+      finally {
+        if (!connection.isClosed) {
+          logger.warn(s"Connection to database $jdbcUri may still be open, close attempt failed")
+        }
       }
       None
     }
@@ -196,14 +215,22 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
  * 
  */
  protected def checkResultSetThenExecute(code: => Option[ResultSet]) = {
-    if(SUPPORTS_MULT_RS)code
+    if(SUPPORTS_MULT_RS) {
+      logger.trace("Executing code since driver supports multiple result sets")
+      code
+    }
     else{
+      logger.trace("Driver does not support having multiple result sets")
       openResultSet match {
-        case None => {}
-        case Some(ors) => ors.close
+        case None => {logger.trace("No open result set found")}
+        case Some(ors) => {
+          logger.trace("closing an open result set before trying next statement")
+          ors.close()
+        }
       }
       val rs = code
       openResultSet = rs
+      logger.trace("executing new statement after closing resultset")
       rs
     }
   }
@@ -219,6 +246,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    *
    */
   def executeQuery(sqlStatement: String, bindvars: Seq[Option[_]] = Seq.empty[Option[_]], fetchSize:Int=20): java.sql.ResultSet = {
+    logger.trace(s"Executing SQL Query: $sqlStatement with vars ${bindvars.toString()} fetch size: $fetchSize")
     checkResultSetThenExecute{
       val statement = statementCache.getStatement(sqlStatement)
       prepStatement(statement, bindvars)
@@ -242,7 +270,8 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * @return true if no errors were encountered
    */
    def execute(sqlStatement: String, bindVars: Seq[Option[_]] = Seq.empty[Option[_]]) : Boolean = {
-     val statement = statementCache.getStatement(sqlStatement)
+    logger.trace(s"Executing SQL Statement: $sqlStatement with vars ${bindVars.toString()}")
+    val statement = statementCache.getStatement(sqlStatement)
      prepStatement(statement, bindVars)
      var isFirstResultAResultSet = false
      checkResultSetThenExecute{
@@ -262,6 +291,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
     * @param bindVars set of bind variables to use
     */
    def executeReturningKeys(sqlStatement: String, bindVars: Seq[Option[_]]): DataRow[_] = {
+     logger.trace(s"Executing SQL Query Returning Keys: $sqlStatement with vars ${bindVars.toString()}")
      val statement = statementCache.getStatementReturningKeys(sqlStatement)
      prepStatement(statement, bindVars)
      checkResultSetThenExecute{
@@ -325,11 +355,13 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
       if (tableFromMeta.toUpperCase == tableName.toUpperCase){
         //automatically cascades constraints, this is usually what you want with ETL
         //TODO: this side effect should probably be removed and pushed up to the DSL or some higher level place
-        dropTable(tableName, true, schemaName)
+        logger.warn(s"Existing table $tableName in schema $schemaName is being automatically dropped before being re-created. Auto-drop behavior will be removed in future versions of DataExpress.")
+        dropTable(tableName, cascade = true, schemaName = schemaName)
       }
 
     }
     val typeMap = columnNames.zip(dataTypes).toList
+    logger.info(s"Creating table $tableName with ${columnNames.toString()} in schema $schemaName")
     execute(sqlDialect.createTable(tableName, typeMap, schemaName))
 
   }
@@ -338,7 +370,10 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    *  <code>Truncate</code>s a SQL table
    *  @param tableName the name of the table to truncate
    */
-  def truncateTable(tableName: String, schemaName:Option[String] = None) : Boolean = execute(sqlDialect.truncate(tableName, schemaName))
+  def truncateTable(tableName: String, schemaName:Option[String] = None) : Boolean = {
+    logger.info(s"Truncating table $tableName in $schemaName")
+    execute(sqlDialect.truncate(tableName, schemaName))
+  }
 
   /**
    * Drops a database table, optionally cascading constraints
@@ -346,8 +381,11 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * @param tableName the name of the table to drop
    * @param cascade when {{{true}}} indicates that constraints should be cascadedd
    */
-  def dropTable(tableName: String, cascade:Boolean=false, schemaName:Option[String] = None) : Boolean =
+  def dropTable(tableName: String, cascade:Boolean=false, schemaName:Option[String] = None) : Boolean = {
+    logger.info(s"Dropping table $tableName in schema $schemaName, cascade = $cascade")
     execute(sqlDialect.dropTable(tableName, cascade, schemaName))
+  }
+
   /*------ Insertion Methods ------*/
   /** 
    * Insert a single [[edu.chop.cbmi.dataModels.DataRow]] into a table, returning auto-generated primary keys
@@ -357,8 +395,11 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * @param row The [[edu.chop.cbmi.dataExpress.dataModels.DataRow]] to insert
    * @param schemaName The schema where the table is located
    */
-  def insertReturningKeys(tableName: String, row: DataRow[_], schemaName:Option[String] = None): DataRow[_] =
+  def insertReturningKeys(tableName: String, row: DataRow[_], schemaName:Option[String] = None): DataRow[_] ={
+    logger.trace(s"Insert $row into $tableName in schema $schemaName returning keys")
     executeReturningKeys(sqlDialect.insertRecord(tableName, row.columnNames.toList, schemaName), row)
+  }
+
  
    /**
    * Insert a single [[edu.chop.cbmi.dataExpress.dataModels.DataRow]] into a table
@@ -367,8 +408,11 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * @param row The [[edu.chop.cbmi.dataExpress.dataModels.DataRow]] to insert
    * @param schemaName The schema where the table is located
    */
-  def insertRow(tableName: String, row: DataRow[_], schemaName:Option[String] = None): Boolean = 
-    execute(sqlDialect.insertRecord(tableName, row.columnNames.toList, schemaName), row)
+  def insertRow(tableName: String, row: DataRow[_], schemaName:Option[String] = None): Boolean ={
+     logger.trace(s"Insert row: $row into table $tableName in schema $schemaName")
+     execute(sqlDialect.insertRecord(tableName, row.columnNames.toList, schemaName), row)
+   }
+
   
   /**
    * Perform a batch insert into a table. '''This is the preferred insertion method for large
@@ -379,6 +423,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * @param schemaName The schema where the table is located
    */
   def batchInsert(tableName:String, table:DataTable[_], schemaName:Option[String] = None):Int = {
+    logger.info(s"Batch inserting DataTable into $tableName in schema $schemaName")
     val sqlStatement = sqlDialect.insertRecord(tableName, table.columnNames.toList, schemaName)
     val statement = statementCache.getStatement(sqlStatement)
     executeBatch(statement, table, 50, {dr:DataRow[_] => dr})
@@ -395,6 +440,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * Assumes all rows have the same length and column names
    */
   def batchInsertRows(tableName:String, rows:Iterator[DataRow[_]], columnNames: List[String], schemaName:Option[String] = None):Int = {
+    logger.info(s"Batch inserting rows into $tableName in schema $schemaName")
     if(!rows.isEmpty){
       val sqlStatement = sqlDialect.insertRecord(tableName, columnNames, schemaName)
       val statement = statementCache.getStatement(sqlStatement)
@@ -417,6 +463,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * @param schemaName The schema where the table is located  
    */
   def updateRow(tableName: String, updated_row: DataRow[_], filter: List[(String, Any)], schemaName: Option[String] = None) = {
+    logger.trace(s"Update $tableName with row $updated_row using filter $filter in schema $schemaName")
     val sqlStatement = sqlDialect.updateRecords(tableName, updated_row.columnNames.toList, filter, schemaName)
     val bind_vars = DataRow.map_to_option(updated_row.map((v:Option[_])=>{
       v match {
@@ -444,7 +491,9 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
 
     var currentBatch = 0
     var successfulStatementCount = 0
+    val startTime = java.util.Calendar.getInstance().getTimeInMillis
 
+    logger.info(s"Starting batch insert")
     while (values.hasNext) {
       val bindVars = callback(values.next())
       prepStatement(statement, bindVars)
@@ -454,7 +503,10 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
         //TODO: Some transaction handling to bail out if we fail
         try {
           val status = statement.executeBatch.toList
-          successfulStatementCount += status.filter(i => i != Statement.EXECUTE_FAILED).length
+          successfulStatementCount += status.count(i => i != Statement.EXECUTE_FAILED)
+            val rate =  successfulStatementCount / ((java.util.Calendar.getInstance().getTimeInMillis - startTime)/1000.001) //prevent divide by zero
+            logger.info(s"Inserted $successfulStatementCount rows so far ($rate records/second)")
+          }
         } catch {
           case e: java.sql.BatchUpdateException => {
             throw e.getNextException
@@ -463,9 +515,15 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
       }
     }
     if (currentBatch % batchSize != 0) {
+      logger.debug("Batch has some unflushed rows, flushing to the database now")
       val status = statement.executeBatch.toList
-      successfulStatementCount += status.filter(i => i != Statement.EXECUTE_FAILED).length
+      val rowsFlushed = status.count(i => i != Statement.EXECUTE_FAILED)
+      successfulStatementCount += rowsFlushed
+      logger.debug(s"flushed $rowsFlushed from the batch to the database")
     }
+    val endTime = java.util.Calendar.getInstance().getTimeInMillis
+    val rate = successfulStatementCount/((endTime - startTime)/1000.001) //prevent divide by zero
+    logger.info(s"Successfully completed batch insert of $successfulStatementCount records ($rate records/second)")
     successfulStatementCount
   }
  
