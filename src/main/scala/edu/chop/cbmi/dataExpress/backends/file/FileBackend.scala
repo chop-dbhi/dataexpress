@@ -3,6 +3,7 @@ package edu.chop.cbmi.dataExpress.backends.file
 import java.io.{FileWriter, BufferedWriter, PrintWriter, File}
 import scala.io.{BufferedSource, Source}
 import edu.chop.cbmi.dataExpress.dataModels.{DataType, DataRow}
+import com.typesafe.scalalogging.log4j.Logging
 
 /**
  * Created with IntelliJ IDEA.
@@ -16,7 +17,7 @@ object Overwrite extends WriteMode
 object Append extends WriteMode
 class WriteModeException(wm: WriteMode, msg: String) extends Exception(msg)
 
-abstract class FileBackend(val file: File, val marshaller: Marshaller) {
+abstract class FileBackend(val file: File, val marshaller: Marshaller) extends Logging {
   //ABSTRACT STUFF
 
   def writeHeader(hr: DataRow[String]) : Unit

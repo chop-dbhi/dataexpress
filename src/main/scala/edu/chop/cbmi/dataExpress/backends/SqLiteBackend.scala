@@ -19,7 +19,7 @@ class SqLiteBackend(override val connectionProperties : Properties, _sqlDialect 
    */
   override def executeReturningKeys(sqlStatement:String, bindVars: Seq[Option[_]]): DataRow[_] = {
     super.execute(sqlStatement, bindVars)
-    //TODO: when logging is added, include a warning wehenver anyone calls this method
+    logger.warn("Trying to execute a SQL statement that returns primary keys, but SQLite does not support returning auto-generated keys!")
     DataRow.empty
   }
   

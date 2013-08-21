@@ -4,17 +4,18 @@ import edu.chop.cbmi.dataExpress.dataModels.RichOption._
 import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
 import DataRow.map_to_option
 import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
+import com.typesafe.scalalogging.log4j.Logging
 
 /**
  * A simple immutable [[edu.chop.cbmi.dataExpress.dataModels.DataTable]] that maintains all data elements in memory
  */
 case class SimpleDataTable[+T](columnNames: Seq[String])(private val data: Seq[Seq[T]])
-  extends DataTable[T] with Iterator[DataRow[T]] {
+  extends DataTable[T] with Iterator[DataRow[T]] with Logging {
   private var index = 0
-  require(data.length > 0, println("data cannot be empty"))
-  require(columnNames.length == data(0).length, println("generate_column_names.length must equal data(0).length"))
+  require(data.length > 0, logger.error("data cannot be empty"))
+  require(columnNames.length == data(0).length, logger.error("generate_column_names.length must equal data(0).length"))
   require((true /: data)((b: Boolean, l: Seq[_]) => b && l.length == data(0).length),
-    println("All elements in data must be of equal length"))
+    logger.error("All elements in data must be of equal length"))
   private val  iterator = SimpleDataIterator(columnNames, data)
 
   lazy val dataTypes = {

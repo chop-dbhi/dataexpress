@@ -68,7 +68,6 @@ case class SqlTableWriter(backend:SqlBackend, schema:Option[String] = None, cata
    * @return SqlOperationsStatus contains status and primary keys for each row
    */
   override def insert_rows[T](table_name:String, table:DataTable[T]) = {
-    //TODO for logging it would help to know how many rows were inserted
     val result = backend.batchInsert(table_name, table, schema)
     if(result == -1) {
       SqlOperationStatus(succeed = false)

@@ -3,6 +3,7 @@ package edu.chop.cbmi.dataExpress.backends.file
 import java.io.{File, FileWriter, BufferedWriter, PrintWriter}
 import edu.chop.cbmi.dataExpress.dataModels.{DataRow, Metadata}
 import scala.io.Source
+import com.typesafe.scalalogging.log4j.Logger
 
 /**
  * Created with IntelliJ IDEA.
@@ -42,7 +43,7 @@ object TextFileBackend{
     }
 }
 
-class TextFileBackend(override val file: File, marshaller: Marshaller, readSkipLines : Int, encoding: String) extends FileBackend(file, marshaller){
+class TextFileBackend(override val file: File, marshaller: Marshaller, readSkipLines : Int, encoding: String) extends FileBackend(file, marshaller) {
 
   //override lazy val dataTypes = marshaller.dataTypes
 
