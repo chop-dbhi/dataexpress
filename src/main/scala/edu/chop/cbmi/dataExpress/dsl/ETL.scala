@@ -25,6 +25,7 @@ import edu.chop.cbmi.dataExpress.dataModels.{DataRow, DataTable}
 import statements.{InsertSelect, GetSelect, CopySelect}
 import stores.{RegisterAsPre, Store}
 import scala.language.implicitConversions
+import com.typesafe.scalalogging.log4j.{Logger, Logging}
 
 /**
  * Created by IntelliJ IDEA.
@@ -39,7 +40,7 @@ case class InformationMessage(msg:String) extends Message
 case object ExecutionOffMessage extends Message
 case class ErrorMessage(ex:Exception, msg:String) extends Message
 
-object ETL {
+object ETL extends Logging {
 
   private val registered_stores = scala.collection.mutable.Map.empty[Any,Store]
 
@@ -52,7 +53,7 @@ object ETL {
         catch {
           case ex : Exception => {
             val msg = "ERROR: execute exception %s".format(ex.getMessage)
-            println(msg)
+            logger.error(s"ETL Execution encounter an exception: $msg")
             Right(ErrorMessage(ex,msg))
           }
         }
@@ -70,7 +71,7 @@ object ETL {
     }catch{
       //TODO should there be rollback or option to rollback here?
       case e:Exception => {
-        //TODO should do some logging here
+        logger.error(s"Problems committing transaction: $e.getMessage")
         throw new java.lang.RuntimeException(e.getMessage())
         false
       }
@@ -82,7 +83,7 @@ object ETL {
       registered_stores.values.foreach(_.close)
     }
     catch {
-      case (fnf: FileNotFoundException) => println("Warning: Unable to close: " + fnf.getMessage)
+      case (fnf: FileNotFoundException) => logger.warn(s"Warning: Unable to close: ${fnf.getMessage}")
     }
     registered_stores.clear
   }
@@ -92,7 +93,7 @@ object ETL {
     val store = registered_stores.get(key) match {
       case Some(s: Store) => {
     	  if (!s.is_closed_?) {
-    	    println("Warning: You are creating a data store %s but %s is already a store with an open connection that will now be closed.".format(f.unique_id, f.unique_id))
+    	    logger.warn(s"You are creating a data store ${f.unique_id} but this is already a store with an open connection that will now be closed.")
     	    s.close
     	  }
     	  registered_stores.put(key, f)
