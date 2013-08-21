@@ -63,7 +63,12 @@ object AssertionOps {
   val assertion_functions = scala.collection.mutable.ListBuffer.empty[() => Any]
 
   def query_and_count(table_name: String, backend : SqlBackend, schema: Option[String]) = {
-      (0 /: DataTable(backend, """select * from %s""".format(backend.sqlDialect.quoteIdentifier(table_name)))) { (i,r)=> i +1 }
+    val fullyQualifiedTableName = schema.get match {
+      case "" => s"${backend.sqlDialect.quoteIdentifier(table_name)}"
+      case _ => s"${backend.sqlDialect.quoteIdentifier(schema.get)}.${backend.sqlDialect.quoteIdentifier(table_name)}"
+    }
+
+    DataTable(backend, """select * from %s""".format(fullyQualifiedTableName)).length
   }
 
   def execute_assertions() = {
