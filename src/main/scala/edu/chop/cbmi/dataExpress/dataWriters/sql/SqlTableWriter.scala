@@ -69,27 +69,19 @@ case class SqlTableWriter(backend:SqlBackend, schema:Option[String] = None, cata
    */
   override def insert_rows[T](table_name:String, table:DataTable[T]) = {
     //TODO for logging it would help to know how many rows were inserted
-    backend.startTransaction()
     val result = backend.batchInsert(table_name, table, schema)
-    backend.endTransaction()
     if(result == -1) {
-      backend.rollback()
       SqlOperationStatus(succeed = false)
     } else {
-      backend.commit()
       SqlOperationStatus(succeed = true)
     }
   }
 
   override def insert_rows[T](table_name:String, rows:Iterable[DataRow[T]]) = {
-    backend.startTransaction()
     val result = backend.batchInsertRows(table_name, rows.iterator, column_names(table_name), schema)
-    backend.endTransaction()
     if(result == -1) {
-      backend.rollback()
       SqlOperationStatus(succeed = false)
     } else {
-      backend.commit()
       SqlOperationStatus(succeed = true)
     }
   }
