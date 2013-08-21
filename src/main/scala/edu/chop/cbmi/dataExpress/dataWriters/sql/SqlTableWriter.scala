@@ -35,7 +35,7 @@ import com.typesafe.scalalogging.log4j._
  * To change this template use File | Settings | File Templates.
  */
 
-object SqlTableWriter{
+object  SqlTableWriter{
   val OVERWRITE_OPTION_DROP = 0
   val OVERWRITE_OPTION_TRUNCATE = 1
   val OVERWRITE_OPTION_APPEND = 2
@@ -69,13 +69,29 @@ case class SqlTableWriter(backend:SqlBackend, schema:Option[String] = None, cata
    */
   override def insert_rows[T](table_name:String, table:DataTable[T]) = {
     //TODO for logging it would help to know how many rows were inserted
+    backend.startTransaction()
     val result = backend.batchInsert(table_name, table, schema)
-    SqlOperationStatus(succeed = true)
+    backend.endTransaction()
+    if(result == -1) {
+      backend.rollback()
+      SqlOperationStatus(succeed = false)
+    } else {
+      backend.commit()
+      SqlOperationStatus(succeed = true)
+    }
   }
 
   override def insert_rows[T](table_name:String, rows:Iterable[DataRow[T]]) = {
+    backend.startTransaction()
     val result = backend.batchInsertRows(table_name, rows.iterator, column_names(table_name), schema)
-    if(result == -1)SqlOperationStatus(succeed = false) else SqlOperationStatus(succeed = true)
+    backend.endTransaction()
+    if(result == -1) {
+      backend.rollback()
+      SqlOperationStatus(succeed = false)
+    } else {
+      backend.commit()
+      SqlOperationStatus(succeed = true)
+    }
   }
 
 
