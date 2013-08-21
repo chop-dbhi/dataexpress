@@ -83,10 +83,7 @@ case class ToFromTable(target : Store, source_table : TransformableDataTable) ex
         target match{
           //TODO note the createTable method in Sql backend currently forces a drop table
           case s: SqlDb => {
-            s.backend.startTransaction()
             s.backend.createTable(table_name, col_names, data_types, s.schema)
-            s.backend.endTransaction()
-            s.backend.commit()
           }
           case fs: FileStore => {
             fs.fb.delete()
