@@ -4,6 +4,13 @@ import AssemblyKeys._
 
 assemblySettings
 
+//code coverage dependenies (must remain at the top!)-------------------------
+
+Seq(ScctPlugin.instrumentSettings : _*)
+
+Seq(com.github.theon.coveralls.CoverallsPlugin.coverallsSettings: _*)
+
+
 //standard options ------------------------------
 
 name := "dataexpress"
@@ -30,7 +37,7 @@ assembleArtifact in packageScala := false
 //compile dependencies------------------------------
 
 libraryDependencies ++= Seq(
-  "org.xerial" % "sqlite-jdbc" % "3.7.2",
+  "org.xerial" % "sqlite-jdbc" % "3.7.15-M1",
   "postgresql" % "postgresql" % "9.0-801.jdbc4",
   "mysql" % "mysql-connector-java" % "5.1.26",
   "com.typesafe" %% "scalalogging-log4j" % "1.0.1",
@@ -51,6 +58,7 @@ libraryDependencies ++= {
       )
   deps map {v => v % "test"}
 }
+
 
 //scala options------------------------------
 
