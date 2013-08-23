@@ -1,3 +1,5 @@
+Develop Build Status: [![Build Status](https://travis-ci.org/cbmi/dataexpress.png?branch=develop)](https://travis-ci.org/cbmi/dataexpress)
+
 __We now have [a google group for DataExpress](https://groups.google.com/forum/#!forum/dataexpress-etl)! Please come join the discussion and help us build a community__
 
 # Getting Started
