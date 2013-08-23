@@ -18,4 +18,4 @@ before_script:
 
 #Note that sbt needs the entire command quoted as well as quotes around the tags to exclude
 script:
-    - sbt ++$TRAVIS_SCALA_VERSION 'test-only * -- -l "edu.chop.cbmi.dataExpress.test.util.tags.SqlServerTest edu.chop.cbmi.dataExpress.test.util.tags.OracleTest" coveralls'
+    - sbt ++$TRAVIS_SCALA_VERSION 'test-only * -- -l "edu.chop.cbmi.dataExpress.test.util.tags.SqlServerTest edu.chop.cbmi.dataExpress.test.util.tags.OracleTest"'
