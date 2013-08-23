@@ -50,7 +50,6 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     true
   }
 
-
   scenario("The user can create a table with four columns") {
     val f = fixture
     val tableName = "cars_deba_a"
@@ -94,8 +93,6 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.close()
   }
 
-
-
   scenario("The user can truncate a table and commit") {
     val f = fixture
     val tableName: String = "cars_deba_a"
@@ -118,8 +115,6 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
      backend.close()
 
    }
-
-
 
   //TODO: This test needs to be re-written with an auto-incrementing sequence in the table to fully test insert returning keys
   scenario("The inserted row can be committed") {
@@ -160,8 +155,6 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     rs.getInt(1) should equal(1)
     backend.close()
   }
-
-
 
   scenario("The user can obtain a record from executing a select query") {
     //Prerequisites:  ignore 1:  Passed
@@ -217,7 +210,6 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
   scenario("The user can commit an open transaction") {
 
     val f = fixture
@@ -260,7 +252,6 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.close()
   }
 
-
   scenario("The user can truncate a populated table") {
     val f = fixture
     val tableName  = "cars_deba_a"
@@ -285,7 +276,6 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.close()
 
   }
-
 
   scenario("The user can roll back an open transaction") {
     val f = fixture
@@ -333,7 +323,6 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     newBackend.close()
 
   }
-
 
   scenario("The user can open a transaction, insert a row, and end the transaction") {
 
@@ -388,7 +377,6 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
   }
 
-
   scenario("The user can create a table with 32 columns") {
     val f = fixture
     val tableName                             =     "cars_deba_b"
@@ -422,7 +410,6 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     backend.close()
   }
-
 
  scenario("The user can insert a row without constructing an insert statement") {
     val f = fixture
@@ -631,7 +618,6 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.close()
   }
 
-
   scenario("The user can update a multiple records in a table using a valid update statement") {
     //Prerequisites:  Need Multiple Row in table cars_deba_a
 
@@ -667,7 +653,6 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     backend.close()
   }
-
 
   scenario("The user can update a multiple records in a table without constructing update statement") {
     //Prerequisites:  Need Multiple Row in table cars_deba_a   with carmake = 'MiniCoopeRb'
@@ -708,7 +693,6 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.close()
   }
 
-
   scenario("The user can insert a multiple rows using a loop without constructing an insert statement") {
     //Prerequisites:  None of theses record should exist
     val f = fixture
@@ -743,8 +727,6 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     backend.close()
 
   }
-  
-
 
   scenario("Remove Test Data Setup")  {
     /**** Remove Test Data    ****/

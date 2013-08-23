@@ -26,7 +26,7 @@ trait SqlDialect {
    * Returns a complete `CREATE TABLE` SQL statement
    *
    * @param name the table name
-   * @param columns a list of column tuples where each tuple is a column name and [[edu.chop.dataExpress.dataModels.sql.DataType]]
+   * @param columns a list of column tuples where each tuple is a column name and [[edu.chop.cbmi.dataExpress.dataModels.DataType]]
    * @param schemaName the schema where the table will be created
    */
   def createTable(name: String, columns: List[(String, DataType)], schemaName: Option[String]): String
@@ -86,7 +86,7 @@ trait SqlDialect {
    *
    *  {{{List(("id",12345),("type","Luggage Combination"))}}}
    *
-   *  passed in as a filter is converted to the SQL `WHERE id = 12345 AND type = 'Luggage Combination'
+   *  passed in as a filter is converted to the SQL `WHERE id = 12345 AND type = 'Luggage Combination'`
    *
    *  @param tableName The name of the table where the update will be applied
    *  @param columnNames The list of column names to be updated
@@ -111,7 +111,6 @@ trait SqlDialect {
     column_names map ((name: String) => column_names.indexOf(name)) map ((j: Int) => {
       val i = j + 1
       meta.getColumnType(i) match {
-        //TODO: Add BIGINT support!
         case java.sql.Types.BIGINT => BigIntegerDataType
         case java.sql.Types.INTEGER => IntegerDataType
         case java.sql.Types.SMALLINT => SmallIntegerDataType
@@ -130,14 +129,13 @@ trait SqlDialect {
           //fix for Oracle FLOATS
           if (scale == -127) FloatDataType(precision) else DecimalDataType(precision, scale)
         }
-        case java.sql.Types.CHAR => CharacterDataType(meta.getColumnDisplaySize(i), true)
-        case java.sql.Types.VARCHAR => CharacterDataType(meta.getColumnDisplaySize(i), false)
-        //TODO: use the meta.getColumnTypeName to get the SQL data type and look for the time zone using a regex
+        case java.sql.Types.CHAR => CharacterDataType(meta.getColumnDisplaySize(i), fixedWidth = true)
+        case java.sql.Types.VARCHAR => CharacterDataType(meta.getColumnDisplaySize(i), fixedWidth = false)
         case java.sql.Types.TIMESTAMP => {
           val tzSupport = meta.getColumnTypeName(i).toUpperCase.contains("WITH TIME ZONE")
           DateTimeDataType(tzSupport)
         }
-        case -101 => DateTimeDataType(true) //-101 = jdbc: TIME STAMP WITH TIME ZONE
+        case -101 => DateTimeDataType(withZone = true) //-101 = jdbc: TIME STAMP WITH TIME ZONE
         case java.sql.Types.DATE => DateDataType
         case java.sql.Types.TIME => {
           val tzSupport = meta.getColumnTypeName(i).toUpperCase.contains("WITH TIME ZONE")
