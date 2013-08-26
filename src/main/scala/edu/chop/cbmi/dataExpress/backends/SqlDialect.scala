@@ -51,12 +51,17 @@ trait SqlDialect {
   /**
    * Returns a `COMMIT` SQL Statement
    *
+   * @deprecated Executing COMMIT in a SQL session is not advisable, the driver's commit should be used instead
    */
+  @deprecated
   def commit(): String
 
   /**
    * Returns a `ROLLBACK` SQL statement
+   *
+   * @deprecated Executing ROLLBACK in a SQL session is not advisable, the driver's rollback should be used instead
    */
+  @deprecated
   def rollback(): String
 
   /**
