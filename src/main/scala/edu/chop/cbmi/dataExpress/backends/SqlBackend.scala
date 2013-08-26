@@ -312,7 +312,42 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
      }else DataRow.empty
 
   }
-   
+
+  /**
+   *
+   * @param codeBlock The block intended to be executed as part of the transaction
+   *
+   */
+  def executeTransaction(codeBlock: => Any) = {
+    try {
+      logger.debug(s"Attempting to start a transaction on $jdbcUri")
+      this.connection.setAutoCommit(false)
+      codeBlock
+      logger.debug(s"Transaction block complete, attempting commit")
+      commit()
+    }
+    catch {
+      case e: Throwable => {
+        logger.error("Transaction failed, attempting rollback")
+        try {
+          rollback()
+        }
+        catch {
+          case e: Throwable => {
+            logger.error(s"Transaction rollback failed, database $jdbcUri may be in an inconsistent state")
+            throw new RuntimeException(s"Halting because of failed transaction. Root exception was: ${e.getMessage()} ${e.getStackTrace}")
+          }
+        }
+
+      }
+    }
+    finally {
+      logger.debug("Returning to autocommit mode")
+      this.connection.setAutoCommit(true)
+    }
+
+  }
+
   /** 
    * Commit open transaction to the database
    */
