@@ -335,7 +335,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
         catch {
           case e: Throwable => {
             logger.error(s"Transaction rollback failed, database $jdbcUri may be in an inconsistent state")
-            throw new RuntimeException(s"Halting because of failed transaction. Root exception was: ${e.getMessage()} ${e.getStackTrace}")
+            throw new RuntimeException(s"Halting because of failed transaction. Root exception was: ${e.getMessage} ${e.getStackTrace}")
           }
         }
 
@@ -374,7 +374,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
     }
     catch {
       case e: Throwable => {
-        logger.warn(s"Commit encountered exception ${e.getMessage()}")
+        logger.warn(s"Commit encountered exception ${e.getMessage}")
         false
       }
     }
