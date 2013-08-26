@@ -314,9 +314,19 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
   }
    
   /** 
-   * Commit any open transactions to the database
+   * Commit open transaction to the database
    */
-  def commit(): Boolean = execute(sqlDialect.commit())
+  def commit(): Boolean = {
+    try
+      connection.commit()
+      true
+    catch {
+      case e => {
+        logger.warn(s"Commit encountered exception ${e.getMessage()}")
+        false
+      }
+    }
+  }
   
   /**
    * Rollback an existing transaction
