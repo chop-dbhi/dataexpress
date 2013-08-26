@@ -35,9 +35,9 @@ object SqlBackendFactory{
     case "postgresql" => new PostgresBackend(connection_properties, sqlDialect, driver_class_name)
     case "mysql" => new MySqlBackend(connection_properties, sqlDialect, driver_class_name)
     case "oracle"     => new OracleBackend(connection_properties, sqlDialect, driver_class_name)
-    //case "sqlserver"  => new SqlServerBackend(connection_properties, sqlDialect, driver_class_name)
     case "sqlite" => new SqLiteBackend(connection_properties, sqlDialect, driver_class_name)
     case "sqlserver" => new SqlServerBackend(connection_properties, sqlDialect, driver_class_name)
+    //TODO: Do we want to allow "Generic" here to allow quick and dirty support for random RDBMS systems?
     case _ => throw new RuntimeException("Unsupported database type: " + db_type)
   }
   
