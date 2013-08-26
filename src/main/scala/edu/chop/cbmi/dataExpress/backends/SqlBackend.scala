@@ -166,7 +166,6 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
           logger.error(s"Failed top open database connection to $jdbcUri, using driver ${driverClassName.toString} check your database properties.", e)
         }
       }
-      connection.setAutoCommit(false)
       statementCache = new SqlQueryCache(CACHESIZE, connection)
       connection
     }
