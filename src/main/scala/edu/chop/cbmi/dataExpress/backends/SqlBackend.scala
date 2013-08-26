@@ -352,11 +352,12 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * Commit open transaction to the database
    */
   def commit(): Boolean = {
-    try
+    try {
       connection.commit()
       true
+    }
     catch {
-      case e => {
+      case e: Throwable => {
         logger.warn(s"Commit encountered exception ${e.getMessage()}")
         false
       }
@@ -367,9 +368,10 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    * Rollback an existing transaction
    */
   def rollback(): Boolean = {
-    try
+    try{
       connection.rollback()
       true
+    }
     catch {
       case e: Throwable => {
         logger.warn(s"Commit encountered exception ${e.getMessage()}")
