@@ -322,9 +322,10 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
     try {
       logger.debug(s"Attempting to start a transaction on $jdbcUri")
       this.connection.setAutoCommit(false)
-      codeBlock
+      val result = codeBlock
       logger.debug(s"Transaction block complete, attempting commit")
       commit()
+      result
     }
     catch {
       case e: Throwable => {
