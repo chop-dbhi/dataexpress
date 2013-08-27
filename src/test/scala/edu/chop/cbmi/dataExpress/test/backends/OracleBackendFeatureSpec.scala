@@ -54,14 +54,12 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     for ((statementName, statement) <- setup.dataSetup.createTargetSchema) {
       setup.targetStatement.execute(statement)
     }
-    setup.targetBackend.commit
     true
   }
 
 
   def removeTestDataSetup: Boolean = {
     setup.targetStatement.execute(setup.dataSetup.dropTargetSchema)
-    setup.targetBackend.commit
     true
   }
 
@@ -88,8 +86,7 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
-    
+
     When("the user issues a valid create table instruction for a table that does not exist")
     try {
       var tableExistResult                    =   backend.executeQuery(verifyTableStatement)
@@ -133,7 +130,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     /* Table should be dropped now if it existed) */
 
     backend.createTable(tableName,columnNames,dataTypes, schemaName = dbSchema)
-    backend.commit()
     Then("the table should exist")
     val tableExistResult                          =     backend.executeQuery(verifyTableStatement)
     assert(tableExistResult.next())
@@ -154,7 +150,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
      Given("an active connection and a populated table")
      assert(backend.connect().isInstanceOf[java.sql.Connection] )
-     backend.connection.setAutoCommit(false)
 
 
      When("the user issues truncate and then commit instructions for that table")
@@ -165,12 +160,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
              fail("backend.truncateTable(" + "\"" + tableName + "," + dbSchema.get + "\"" + ")produced java.sql.SQLException" )
      }
 
-     try
-       backend.commit()
-     catch {
-     case e:java.sql.SQLException =>
-             fail("backend.commit()produced java.sql.SQLException" )
-     }
 
      Then("the table should be truncated")
      val countResult                                 =     backend.executeQuery(countStatement)
@@ -206,12 +195,10 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
-    
+
     
     When("an insert query is executed and committed")
-      backend.execute(sqlStatement,bindVars)
-      backend.commit()
+      backend.executeTransaction(backend.execute(sqlStatement,bindVars))
 
       Then("the insert should be successful")
       val verifyResults = backend.executeQuery(verifySqlStatement)
@@ -242,7 +229,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
 
     When("a query that should generate results is executed")
 
@@ -274,7 +260,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
 
     When("a select query that has a non empty result is executed")
     //resultSetReturned                             = backend.execute(sqlStatement,bindVars)
@@ -332,25 +317,8 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection with an open transaction ")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
-    //In Oracle a transaction is started automatically with the first statement
-    try   {
-      val insertedRow                   = backend.executeReturningKeys(sqlStatement,bindVars)
-
-    }
-    catch  {
-    case e:java.sql.SQLException =>
-            fail(e.getMessage + "\n" + e.getCause + "\n" + sqlStatement + "\n")
-    }
-
-    When("the user issues a commit instruction")
-    try
-      backend.commit()
-    catch {
-    case e:java.sql.SQLException =>
-            fail(e.getMessage + "\n" + e.getCause + "\n" + sqlStatement )
-    }
-
+    When("the user issues an insert instruction inside a transaction")
+     backend.executeTransaction(backend.executeReturningKeys(sqlStatement,bindVars))
     Then("the data should be persisted")
     backend.close()
     connectionClosed                    = backend.connection.isClosed
@@ -381,7 +349,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection and a populated table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
     var countResult                                 =     backend.executeQuery(countStatement)
     countResult.next() should  be (true)
     countResult.getInt("count") should be > (0)
@@ -432,19 +399,12 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection with an open transaction ")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
-    //In Oracle (11g) - Transaction is automatically started with the first statement
-    val insertedRow                   = backend.executeReturningKeys(sqlStatement,bindVars)
-    assert(insertedRow.isInstanceOf[DataRow[Any]])
-
-    When("the user issues a roll back instruction")
-    try
-      backend.rollback()
-    catch {
-    case e:java.sql.SQLException =>
-            fail(e.getMessage + "\n" + e.getCause + "\n" + sqlStatement )
-    }
-
+    backend.executeTransaction({
+      val insertedRow = backend.executeReturningKeys(sqlStatement,bindVars)
+      assert(insertedRow.isInstanceOf[DataRow[Any]])
+      When("the user issues a bad statement, an implicit rollback should happen")
+      backend.execute("insert into not_a_table(id) values('foo')")
+    })
     Then("the data should not be persisted")
     backend.close()
     connectionClosed                  = backend.connection.isClosed
@@ -497,28 +457,13 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
 
-    When("the user starts a transaction by issuing a valid insert statement")
-    try   {
+    When("the user starts a transaction by starting a transaction block")
+    backend.executeTransaction({
             val insertedRow                   = backend.executeReturningKeys(sqlStatement,bindVars)
             assert(insertedRow.isInstanceOf[DataRow[Any]])
-    }
-    catch {
-    case    e:java.sql.SQLException =>
-            fail(e.getMessage + "\n" + e.getCause + "\n" + sqlStatement )
-    }
-
-    And("the user ends the transaction")
-    try
-            //backend.endTransaction()  Not supported in Oracle 11g
-            //Must use either a DDL statement or commit to end transaction programttically in
-            //Oracle 11g
-            backend.commit()
-    catch {
-    case    e:java.sql.SQLException =>
-            fail(e.getMessage + "\n" + e.getCause + "\n")
-    }
+            And("the user ends the transaction implicitly")
+    })
 
     Then("the inserted data should be persisted")
     backend.close()
@@ -567,15 +512,9 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
 
     When("the user issues a valid create table instruction")
-    try
-      backend.createTable(tableName,columnNames,dataTypes, schemaName = dbSchema)
-    catch {
-    case e:java.sql.SQLException =>
-            fail(e.getMessage + "\n" + e.getCause + "\n")
-    }
+    backend.createTable(tableName,columnNames,dataTypes, schemaName = dbSchema)
 
 
     Then("the table should exist")
@@ -603,7 +542,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
 
     When("the user issues a valid insert command for an existing table and a unique record")
     var recordCountResult = backend.executeQuery(verifyRecordStatement)
@@ -617,7 +555,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     assert(recordCountResult.next())
     recordCount = recordCountResult.getInt("count")
     recordCount should be(1)
-    backend.commit()
     backend.close()
 
   }
@@ -652,22 +589,12 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection and an empty table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
-    try
-      backend.truncateTable(tableName, dbSchema)
-    catch {
-    case e:java.sql.SQLException =>
-            fail(e.getMessage + "\n" + e.getCause + "\n")
-    }
+    backend.truncateTable(tableName, dbSchema)
 
     When("the user issues a batch insert command (with commit) to insert multiple rows into the table ")
-    successfulStatementCount                      =     backend.batchInsert(tableName, table, dbSchema )
-    try
-      backend.commit()
-    catch {
-    case e:java.sql.SQLException =>
-            fail("backend.commit() produced java.sql.SQLException" )
-    }
+    successfulStatementCount = backend.executeTransaction({
+      backend.batchInsert(tableName, table, dbSchema )}).asInstanceOf[Int]
+
 
     Then("the batch insert command should be successful")
     successfulStatementCount  should equal  (rows.length)
@@ -708,23 +635,12 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection and an existing table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
-    try
-      backend.createTable(tableName,columnNames,dataTypes, dbSchema)
-    catch {
-    case e:java.sql.SQLException =>
-            fail(e.getMessage + "\n" + e.getCause + "\n")
-    }
+    backend.createTable(tableName,columnNames,dataTypes, dbSchema)
     tableVerified                             =     backend.execute(verifyTableStatement)
     tableVerified should be (true)
 
     When("the user issues a drop table command for that table")
-    try
-      backend.dropTable(tableName, schemaName = dbSchema)
-    catch {
-    case e:java.sql.SQLException =>
-            fail(e.getMessage + "\n" + e.getCause + "\n")
-    }
+    backend.dropTable(tableName, schemaName = dbSchema)
 
 
     Then("the table should be dropped")
@@ -754,9 +670,8 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection and an existing table")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
     backend.createTable(tableName,columnNames,dataTypes, dbSchema)
-    var tableVerifiedResult = backend.executeQuery(verifyTableStatement)
+    val tableVerifiedResult = backend.executeQuery(verifyTableStatement)
     assert(tableVerifiedResult.next())
     tableVerifiedResult.getInt("count") should  equal  (1)
 
@@ -792,14 +707,12 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
 
     When("a query that should generate multiple results is executed")
     val resultSet = backend.executeQuery(sqlStatement,bindVars)
 
     Then("the user should be able to iterate over the results")
     while (resultSet.next()) { resultsCount+=1 }
-
 
     And("multiple results should be returned")
     resultsCount should be > (1)
@@ -840,7 +753,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
 
     When("an update query is executed")
     try
@@ -892,7 +804,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
 
     When("an update query for multiple records is executed")
     try
@@ -947,7 +858,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
 
     When("an update row instruction for multiple records is executed")
     try
@@ -1006,7 +916,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
 
     When("the user issues valid insert row commands in a loop for an existing table")
 
@@ -1056,7 +965,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
 
     When("a delete query for multiple records is executed")
     backend.execute(sqlStatement,bindVars)
@@ -1095,7 +1003,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
 
     When("the user issues drop table commands for tables that begin with a certain string")
     try {
@@ -1128,8 +1035,6 @@ class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val objectExistResult                      =     backend.executeQuery(verifyObjectCountStatement)
     assert(objectExistResult.next())
     objectExistResult.getInt("count")  should be (0)
-
-    backend.commit()
 
     backend.close()
 

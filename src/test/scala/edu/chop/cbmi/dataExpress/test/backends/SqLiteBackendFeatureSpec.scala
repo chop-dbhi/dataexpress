@@ -227,14 +227,10 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val valuesList = List(carId, carNumber, carMake, carModel)
     val bindVars: DataRow[Any] = DataRow(("carid", carId), ("carnumber", carNumber), ("carmake", carMake), ("carmodel", carModel))
 
-    Given("an active connection with an open transaction ")
+    Given("an active connection ")
     assert(backend.connect().isInstanceOf[java.sql.Connection])
-    backend.connection.setAutoCommit(false)
-    backend.commit()
-    backend.startTransaction()
-    backend.execute(sqlStatement, bindVars)
-    When("the user issues a commit instruction")
-    backend.commit()
+    When("the user executes a statement inside a transaction")
+    backend.executeTransaction(backend.execute(sqlStatement, bindVars))
     Then("the data should be persisted")
     backend.close()
     backend.connection.isClosed should be (true)
@@ -283,8 +279,8 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val tableName = "cars_deba_a"
     val columnNames: List[String] = List("carid", "carnumber", "carmake", "carmodel")
     val valuesHolders: List[String] = for (i <- (0 to (columnNames.length - 1)).toList) yield "?"
-    val sqlStatement = """insert into %s(%s) values(%s)""".format(tableName, 
-                           											 columnNames.mkString(", "), 
+    val sqlStatement = """insert into %s(%s) values(%s)""".format(tableName,
+                           											 columnNames.mkString(", "),
                            											 valuesHolders.mkString(", "))
 
     val carId = "K0000050"
@@ -294,22 +290,21 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
     val valuesList = List(carId, carNumber, carMake, carModel)
     val bindVars: DataRow[Any] = DataRow(("carid", carId), ("carnumber", carNumber), ("carmake", carMake), ("carmodel", carModel))
 
-    Given("an active connection with an open transaction ")
+    Given("an active connection ")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
-    backend.commit()
-    backend.startTransaction()
-    backend.execute(sqlStatement,bindVars)
+    When("the execution fails")
+    backend.executeTransaction{
+      backend.execute(sqlStatement,bindVars)
+      backend.execute(s"""insert into $tableName(not_a_column) values("foo")""")
+    }
     //can't depend on the row coming back
     //assert(insertedRow.isInstanceOf[DataRow[Any]])
 
-    When("the user issues a rollback instruction")
-    backend.rollback()
-    
+
     Then("the data should not be persisted")
     backend.close()
     backend.connection.isClosed should be(true)
-    val sqlVerifyStatement = """select count(*) as count from %s  
+    val sqlVerifyStatement = """select count(*) as count from %s
       										  where carid = ?
                                                 and carnumber = ?
                                                 and carmake = ?
@@ -350,14 +345,8 @@ class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Shoul
 
     Given("an active connection")
     assert(backend.connect().isInstanceOf[java.sql.Connection] )
-    backend.connection.setAutoCommit(false)
-    backend.commit()
-    When("the user issues a start transaction instruction")
-    backend.startTransaction()
-    And("the user inserts a row")
-    backend.execute(sqlStatement,bindVars)
-    And("the user ends the transaction")
-    backend.endTransaction()
+    When("the user inserts a row")
+    backend.executeTransaction(backend.execute(sqlStatement,bindVars))
     Then("the data should be persisted")
     backend.close()
     backend.connection.isClosed should be (true)
