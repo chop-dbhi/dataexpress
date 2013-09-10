@@ -10,8 +10,8 @@ import edu.chop.cbmi.dataExpress.test.util.TestProps
 class SqlBackendSpec extends FlatSpec {
 
   val sqlBackendsToTest = Table(("backend", "dialect", "driver"),
-                                ("postgres", PostgresSqlDialect, "org.postgresql.Driver"),
-                                ("mysql", MySqlDialect, "com.mysql.jdbc.Driver"),
+                             //   ("postgres", PostgresSqlDialect, "org.postgresql.Driver"),
+                             //   ("mysql", MySqlDialect, "com.mysql.jdbc.Driver"),
                                 ("sqlite", SqLiteDialect, "org.sqlite.JDBC")
                                 )
   private def propertiesForBackend(backendName: String) = TestProps.getDbPropFilePath(backendName)
@@ -21,10 +21,19 @@ class SqlBackendSpec extends FlatSpec {
 
     val backendForTest = SqlBackendFactory(propertiesForBackend(backend), dialect, driver)
 
-    def withSourceDatabase(testCode: SqlBackend => Any) {
-    val source = backendForTest
-    try testCode(source)
-    finally source.close()
+    def withSourceDatabase(testCode: (SqlBackend,String) => Any) {
+      val source = backendForTest
+      val tablePrefix = java.util.UUID.randomUUID.toString.substring(0,8)
+      try testCode(source,tablePrefix)
+      finally {
+        val schema = try {source.connection.getSchema()}
+        catch { case e:AbstractMethodError => null} //Some databases don't implement this abstract method (I'm looking at you Sqlite)
+        val rs = source.connection.getMetaData.getTables(null, schema, s"$tablePrefix%", null)
+        val tables = scala.collection.mutable.ListBuffer[String]()
+        while (rs.next) tables += rs.getString(3)
+        tables.foreach{t:String => source.execute(s"DROP TABLE $t")}
+        source.close()
+    }
   }
     def withTargetDatabase(testCode: SqlBackend => Any) {
     val target = backendForTest
@@ -34,8 +43,8 @@ class SqlBackendSpec extends FlatSpec {
 
    behavior of s"A $backend backend"
 
-   it should "Allow a user to connect" in withSourceDatabase { (source: SqlBackend) =>
-    source.connect()
+   it should "Allow a user to connect" in withSourceDatabase { (source: SqlBackend, prefix: String) =>
+     source.connect()
    }
 
   }
