@@ -61,3 +61,7 @@ All commands assume you are working in the dataexpress root directory, here ~/da
 See [CONTRIBUTORS.md](https://github.com/cbmi/dataexpress/blob/master/CONTRIBUTORS.md#getting-involved-and-contributing) in the repo for all the details. 
 
 tl;dr: we would love your contributions!
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/cbmi/dataexpress/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
