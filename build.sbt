@@ -27,7 +27,7 @@ licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/bsd-licen
 
 //assembly options
 
-jarName in assembly <<=version("DataExpress_" + _ + "_standalone.jar")
+jarName in assembly := "DataExpress_" + version + "_standalone.jar"
 
 test in assembly := {}
 
