@@ -5,10 +5,12 @@ import AssemblyKeys._
 assemblySettings
 
 //code coverage dependenies (must remain at the top!)-------------------------
+//Disabling for now
 
-Seq(ScctPlugin.instrumentSettings : _*)
+//Seq(ScctPlugin.instrumentSettings : _*)
 
-Seq(com.github.theon.coveralls.CoverallsPlugin.coverallsSettings: _*)
+//Seq(com.github.theon.coveralls.CoverallsPlugin.coverallsSettings: _*)
+
 
 
 //standard options ------------------------------
