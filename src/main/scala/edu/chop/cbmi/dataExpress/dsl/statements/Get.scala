@@ -46,9 +46,14 @@ class GetFromQuery(query : String) extends GetFrom{
     case _ => throw UnsupportedStoreType(source, "GetFromQuery.from")
   }
 
-  def using_bind_vars(bind_var : Any*) = {
+  def bind(bind_var : Any*) = {
     _bind_vars = bind_var.toSeq map {Some(_)}
     this
+  }
+
+  @deprecated("renamed to `bind`", "0.9.1")
+  def using_bind_vars(bind_var : Any*) = {
+    this.bind(bind_var : _*)
   }
 }
 

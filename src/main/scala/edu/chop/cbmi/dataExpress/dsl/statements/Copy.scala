@@ -112,9 +112,14 @@ class CopyFromQueryPre(query : String) extends CopyPre{
 
   def from(source : Store) = new CopyFromQuery(query, source, _bind_vars)
 
-  def using_bind_vars(bind_var : Any*) = {
+  def bind(bind_var : Any*) = {
     _bind_vars = bind_var.toSeq map {Some(_)}
     this
+  }
+
+  @deprecated("renamed to `bind`", "0.9.1")
+  def using_bind_vars(bind_var : Any*) = {
+    this.bind(bind_var : _*)
   }
 }
 

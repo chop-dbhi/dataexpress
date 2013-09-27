@@ -136,7 +136,7 @@ class CopySpec extends PresidentsSpecWithSourceTarget {
 
           val bindable_statement = """select * from %s.%s where %s= ?""".format(schema.get, PRESIDENTS,
             source_backend.sqlDialect.quoteIdentifier("num_terms"))
-          commit_on_success(target_db) {copy query bindable_statement using_bind_vars 2 from source_db to target_db create TTP_THREE}
+          commit_on_success(target_db) {copy query bindable_statement bind 2 from source_db to target_db create TTP_THREE}
           BackendOps.add_table_name(target_backend, TTP_THREE, schema)
           add_compare_table_assertion(TTP_THREE, ttp_map)
 
