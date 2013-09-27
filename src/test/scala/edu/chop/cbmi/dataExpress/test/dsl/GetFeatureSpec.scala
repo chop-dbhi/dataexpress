@@ -37,11 +37,11 @@ class GetFeatureSpec extends PresidentsFeatureSpecWithSourceTarget{
 
     scenario("get is invoked with a bindable query statement"){
       register store SqlDb(prop_file_source, schema) as source
-      val table = get query bindable_statement using_bind_vars 1 from source
+      val table = get query bindable_statement bind 1 from source
       (0 /: table){ (i,r) => i+1} should equal(default_otp_count)
       table foreach { row => row.num_terms.asu[Int] should equal(1)}
 
-      val table2 = get query bindable_statement using_bind_vars 2 from source
+      val table2 = get query bindable_statement bind 2 from source
       (0 /: table2){ (i,r) => i+1} should equal(default_ttp_count)
       table2 foreach { row => row.num_terms.asu[Int] should equal(2)}
       ETL.cleanup()
