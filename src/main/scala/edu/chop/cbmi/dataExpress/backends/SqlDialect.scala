@@ -135,7 +135,7 @@ trait SqlDialect {
           if (scale == -127) FloatDataType(precision) else DecimalDataType(precision, scale)
         }
         case java.sql.Types.CHAR => CharacterDataType(meta.getColumnDisplaySize(i), fixedWidth = true)
-        case java.sql.Types.VARCHAR => CharacterDataType(meta.getColumnDisplaySize(i), fixedWidth = false)
+        case java.sql.Types.VARCHAR | java.sql.Types.NVARCHAR => CharacterDataType(meta.getColumnDisplaySize(i), fixedWidth = false)
         case java.sql.Types.TIMESTAMP => {
           val tzSupport = meta.getColumnTypeName(i).toUpperCase.contains("WITH TIME ZONE")
           DateTimeDataType(tzSupport)
