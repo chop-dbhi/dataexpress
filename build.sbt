@@ -1,31 +1,26 @@
 //assembly to package with dependencies ------------------------------
 
-import AssemblyKeys._
-
-assemblySettings
-
 //standard options ------------------------------
 
 name := "dataexpress"
 
 homepage := Some(url("http://dataexpress.research.chop.edu/"))
 
-version := "0.9.1.3"
+val v = "0.9.2"
+
+version := v
 
 organization := "edu.chop.research"
 
-scalaVersion := "2.10.0"
+scalaVersion := "2.11.7"
 
 licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/bsd-license.php"))
 
-//assembly options
-
-jarName in assembly <<=version("DataExpress_" + _ + "_standalone.jar")
+assemblyJarName in assembly := s"DataExpress_${v}_standalone.jar"
 
 test in assembly := {}
 
 assembleArtifact in packageScala := false
-
 
 //compile dependencies------------------------------
 
@@ -44,7 +39,7 @@ parallelExecution in Test := false
 
 libraryDependencies ++= {
   val deps = Seq(
-        "org.scalatest" %% "scalatest" % "2.0.M5b",
+        "org.scalatest" %% "scalatest" % "2.2.4",
         "junit" % "junit" % "4.8.1"
       )
   deps map {v => v % "test"}

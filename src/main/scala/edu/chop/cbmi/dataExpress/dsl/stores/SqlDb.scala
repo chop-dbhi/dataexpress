@@ -21,6 +21,7 @@ USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 package edu.chop.cbmi.dataExpress.dsl.stores
 
 import edu.chop.cbmi.dataExpress.backends.{SqlDialect, SqlBackendFactory, SqlBackend}
+import java.util.Properties
 
 /**
  * Created by IntelliJ IDEA.
@@ -70,5 +71,17 @@ object SqlDb {
   }
 
   def apply(backend : SqlBackend) : SqlDb = apply(backend, None, None)
+
+  def apply(connection_props: Properties) : SqlDb = {
+    apply(SqlBackendFactory(connection_props,null, null), None, None)
+  }
+
+  def apply(connection_props: Properties,
+            schema:Option[String],
+            catalog:Option[String],
+            sqlDialect : SqlDialect ,
+            driverClassName : String) : SqlDb = {
+    apply(SqlBackendFactory(connection_props,sqlDialect, driverClassName),schema,catalog)
+  }
 
 }
