@@ -25,18 +25,7 @@ RUN \
   apt-get update && \
   apt-get install sbt
 
-# Install MySQL Client
-RUN apt-get install -y -q mysql-client mysql-server
-
-RUN sed -i -e "s/^bind-address\s*=\s*127.0.0.1/bind-address = 0.0.0.0/" /etc/mysql/my.cnf
-
 RUN apt-get install -y memcached
-
-# Install PostgreSQL 9.3
-RUN apt-get install -y postgresql-9.4 postgresql-client-9.4 libpq-dev
-
-# Install SQLite
-RUN apt-get install -y sqlite3
 
 # Define working directory
 WORKDIR /root
