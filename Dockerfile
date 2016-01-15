@@ -25,6 +25,8 @@ RUN \
   apt-get update && \
   apt-get install sbt
 
+RUN apt-get install sqlite3
+
 RUN apt-get install -y memcached
 
 # Define working directory
