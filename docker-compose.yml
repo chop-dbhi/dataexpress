@@ -1,0 +1,12 @@
+mysqlb:
+    image: mysql:latest
+    environment:
+        MYSQL_DATABASE: dataexpress_test
+        MYSQL_USER: test
+        MYSQL_PASSWORD: test
+        MYSQL_ROOT_PASSWORD: test
+    command: sbt ++$TRAVIS_SCALA_VERSION 'test-only * -- -l "edu.chop.cbmi.dataExpress.test.util.tags.SqlServerTest edu.chop.cbmi.dataExpress.test.util.tags.OracleTest"'
+    
+postgresql:
+    image: postgres:9.4
+    command: sbt ++$TRAVIS_SCALA_VERSION 'test-only * -- -l "edu.chop.cbmi.dataExpress.test.util.tags.SqlServerTest edu.chop.cbmi.dataExpress.test.util.tags.OracleTest"'
