@@ -30,6 +30,15 @@ RUN apt-get install sqlite3
 RUN apt-get install -y memcached
 
 # Define working directory
-WORKDIR /root
+
+RUN mkdir -p /build
+
+WORKDIR /build
+
+ADD . /build/
+ADD /src /build/src
+
 
 EXPOSE 3306
+
+CMD ["/build/test.sh"]
