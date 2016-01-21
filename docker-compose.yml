@@ -1,11 +1,18 @@
-mysqlb:
-    image: mysql:latest
-    environment:
-        MYSQL_DATABASE: dataexpress_test
-        MYSQL_USER: test
-        MYSQL_PASSWORD: test
-        MYSQL_ROOT_PASSWORD: test
-    
-postgresql:
+dataexpress:
+  build: .
+  dockerfile:  dataexpress.dockerfile
+  links:
+    - postgres:postgres
+    - mysqld:mysql
+mysql:
+  build: .
+  dockerfile:  mysql.dockerfile
+  environment:
+    MYSQL_DATABASE: dataexpress_test
+    MYSQL_USER: test
+    MYSQL_PASSWORD: test
+    MYSQL_ROOT_PASSWORD: test
+postgres:
+  build: .
+  dockerfile:  postgres.dockerfile
     image: postgres:9.4
-    
