@@ -26,6 +26,7 @@ RUN \
   apt-get install sbt
 
 RUN apt-get install sqlite3
+RUN apt-get install -y vim
 
 RUN apt-get install -y memcached
 
