@@ -72,10 +72,18 @@ pomExtra := (
     <connection>scm:git:git@github.com:cbmi/dataexpress.git</connection>
   </scm>
   <developers>
-    <developer>
-      <id>mitalia</id>
-      <name>Michael Italia</name>
-    </developer>
+  <developer>
+    <id>masinoa</id>
+    <name>Aaron Masino</name>
+  </developer>
+  <developer>
+    <id>ldavidson</id>
+    <name>LeMar Davidson</name>
+  </developer>
+  <developer>
+    <id>dcam2015</id>
+    <name>Diego Campos</name>    
+  </developer>
   </developers>)
 
 //console imports------------------------------
