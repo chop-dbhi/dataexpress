@@ -20,7 +20,7 @@ licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/bsd-licen
 
 //assembly options
 
-jarName in assembly <<=version("DataExpress_" + _ + "_standalone.jar")
+jarName in assembly := "DataExpress_" + version.value + "_standalone.jar";
 
 test in assembly := {}
 
@@ -44,7 +44,7 @@ parallelExecution in Test := false
 
 libraryDependencies ++= {
   val deps = Seq(
-        "org.scalatest" %% "scalatest" % "2.0.M5b",
+        "org.scalatest" %% "scalatest" % "2.2.6",
         "junit" % "junit" % "4.8.1"
       )
   deps map {v => v % "test"}
