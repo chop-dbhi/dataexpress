@@ -14,7 +14,7 @@ version := "0.9.1.3"
 
 organization := "edu.chop.research"
 
-scalaVersion := "2.10.0"
+scalaVersion := "2.11.7"
 
 licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/bsd-license.php"))
 
