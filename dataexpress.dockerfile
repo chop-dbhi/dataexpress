@@ -9,6 +9,7 @@ FROM java:8
 
 ENV SCALA_VERSION 2.11.7
 ENV SBT_VERSION 0.13.8
+ENV APP_DIR /opt/apps/dataexpress/
 
 # Install Scala
 ## Piping curl directly in tar
@@ -33,6 +34,5 @@ RUN mkdir -p /opt/apps/dataexpress/build
 ADD . /opt/apps/dataexpress/
 ADD . /opt/apps/dataexpress/build/
 ADD src /opt/apps/dataexpress/build/src
-
-ENV APP_DIR /opt/apps/dataexpress/
-ENV PATH /opt/apps/dataexpress/bin:$PATH
+ADD /opt/apps/dataexpress/bin/make_test_properties.sh /usr/local/bin/make_test_properties
+ADD /opt/apps/dataexpress/bin/test.sh /usr/local/bin/test

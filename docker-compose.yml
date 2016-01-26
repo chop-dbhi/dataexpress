@@ -21,6 +21,11 @@ mysql:
 postgresql:
     build: .
     dockerfile: postgres.dockerfile
+    environment:
+      - POSTGRES_USERNAME
+      - POSTGRES_PASSWORD
+      - PGDATA
+      - POSTGRES_DB
 oracle:
     build: .
     dockerfile: oracle.dockerfile

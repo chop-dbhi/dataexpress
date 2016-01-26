@@ -1,4 +1,6 @@
 #!/bin/sh
+cd $APP_DIR/bin
+
 exec scala "$0" "$@"
 !#
 import scala.collection.JavaConversions._
@@ -7,6 +9,7 @@ import java.io._
 
 object EnvironmentVariables extends App {
 
+  // Postgres
   // FileWriter
   val file = new File("../src/test/resources/postgres_test.properties")
   val bw = new BufferedWriter(new FileWriter(file))
