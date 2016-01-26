@@ -4,6 +4,12 @@ dataexpress:
     links:
       - postgresql:postgresql
       - mysql:mysql
+    environment:
+      - POSTGRESQL_DATABASE_NAME
+      - POSTGRESQL_DATABASE_SCHEMA_NAME
+      - POSTGRESQL_SSL
+      - POSTGRESQL_USERNAME
+      - POSTGRESQL_PASSWORD
 mysql:
     build: .
     dockerfile:  mysql.dockerfile
