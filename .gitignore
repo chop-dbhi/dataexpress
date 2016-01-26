@@ -22,6 +22,4 @@ backup/
 tmp/
 temp/
 *.bk
-*.sh
-tagstagstagstagstagstagstagstagstags
 *.sqlite

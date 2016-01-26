@@ -39,7 +39,4 @@ WORKDIR /build
 ADD . /build/
 ADD /src /build/src
 
-
-EXPOSE 3306
-
 CMD ["/build/test.sh"]
