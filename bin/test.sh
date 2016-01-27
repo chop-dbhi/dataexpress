@@ -1,5 +1,7 @@
 #!/bin/bash
 
+export PATH=$HOME/scala-$SCALA_VERSION/bin::$PATH
+
 cd $APP_DIR/build
 
 make_test_properties
