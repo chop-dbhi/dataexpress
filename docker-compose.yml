@@ -10,8 +10,8 @@ dataexpress:
       - POSTGRESQL_DATABASE_SCHEMA_NAME=public
       - POSTGRESQL_SSL=False
       - POSTGRESQL_USERNAME=test
-      - POSTGRES_USER
-      - POSTGRESQL_PASSWORD=test
+      - POSTGRES_USER=test
+      - POSTGRESQL_PASSWORD
       - POSTGRES_PASSWORD
 mysql:
     build: .
@@ -34,19 +34,3 @@ postgresql:
 oracle:
     build: .
     dockerfile: oracle.dockerfile
-
-
-
-    export
-export POSTGRESQL_DATABASE_SCHEMA_NAME=public
-export POSTGRESQL_SSL=False
-export POSTGRESQL_USERNAME=test
-export POSTGRESQL_PASSWORD=test
-export POSTGRES_USERNAME=test
-export POSTGRES_PASSWORD=test
-export POSTGRES_DB=test
-
-export MYSQL_DATABASE=dataexpress_test
-export MYSQL_USER=test
-export MYSQL_PASSWORD=test
-export MYSQL_ROOT_PASSWORD=test
