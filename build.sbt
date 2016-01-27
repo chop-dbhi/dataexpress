@@ -20,7 +20,7 @@ licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/bsd-licen
 
 //assembly options
 
-jarName in assembly := "DataExpress_" + version.value + "_standalone.jar";
+jarName in assembly := "DataExpress_" + version.value + "_standalone.jar"
 
 test in assembly := {}
 
@@ -78,8 +78,16 @@ pomExtra := (
   </scm>
   <developers>
     <developer>
-      <id>mitalia</id>
-      <name>Michael Italia</name>
+      <id>masinoa</id>
+      <name>Aaron Masino</name>
+    </developer>
+    <developer>
+      <id>ldavidson</id>
+      <name>LeMar Davidson</name>
+    </developer>
+    <developer>
+      <id>dcam2015</id>
+      <name>Diego Campos</name>    
     </developer>
   </developers>)
 
