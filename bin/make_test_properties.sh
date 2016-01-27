@@ -11,7 +11,7 @@ object EnvironmentVariables extends App {
 
   // Postgres
   // FileWriter
-  val file = new File("../src/test/resources/postgres_test.properties")
+  val file = new File("/build/src/test/resources/postgres_test.properties")
   val bw = new BufferedWriter(new FileWriter(file))
 
   val dbAddr = System.getenv("POSTGRESQL_PORT_5432_TCP_ADDR")
