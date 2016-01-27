@@ -34,5 +34,5 @@ RUN mkdir -p /opt/apps/dataexpress/build
 ADD . /opt/apps/dataexpress/
 ADD . /opt/apps/dataexpress/build/
 ADD src /opt/apps/dataexpress/build/src
-ADD /opt/apps/dataexpress/bin/make_test_properties.sh /usr/local/bin/make_test_properties
-ADD /opt/apps/dataexpress/bin/test.sh /usr/local/bin/test
+ADD ./bin/make_test_properties.sh /usr/local/bin/make_test_properties
+ADD ./bin/test.sh /usr/local/bin/test
