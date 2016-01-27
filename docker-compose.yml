@@ -5,11 +5,14 @@ dataexpress:
       - postgresql:postgresql
       - mysql:mysql
     environment:
-      - POSTGRESQL_DATABASE_NAME
-      - POSTGRESQL_DATABASE_SCHEMA_NAME
-      - POSTGRESQL_SSL
-      - POSTGRESQL_USERNAME
-      - POSTGRESQL_PASSWORD
+      - POSTGRESQL_DATABASE_NAME=test
+      - POSTGRES_DB=test
+      - POSTGRESQL_DATABASE_SCHEMA_NAME=public
+      - POSTGRESQL_SSL=False
+      - POSTGRESQL_USERNAME=test
+      - POSTGRES_USER
+      - POSTGRESQL_PASSWORD=test
+      - POSTGRES_PASSWORD
 mysql:
     build: .
     dockerfile:  mysql.dockerfile
@@ -24,11 +27,26 @@ postgresql:
     environment:
       - POSTGRES_USERNAME
       - POSTGRES_PASSWORD
-      - PGDATA
+      - PGDATA=/var/lib/postgresql/data
       - POSTGRES_DB
     volumes:
-      - ./conf/postgresql.conf:/etc/postgresql/9.4/main/postgresql.conf:rw
-      - ./conf/pg_hba.conf:/etc/postgresql/9.4/main/pg_hba.conf:rw
+      - ./test/config/postgres/data:/var/lib/postgresql/data:rw
 oracle:
     build: .
     dockerfile: oracle.dockerfile
+
+
+
+    export
+export POSTGRESQL_DATABASE_SCHEMA_NAME=public
+export POSTGRESQL_SSL=False
+export POSTGRESQL_USERNAME=test
+export POSTGRESQL_PASSWORD=test
+export POSTGRES_USERNAME=test
+export POSTGRES_PASSWORD=test
+export POSTGRES_DB=test
+
+export MYSQL_DATABASE=dataexpress_test
+export MYSQL_USER=test
+export MYSQL_PASSWORD=test
+export MYSQL_ROOT_PASSWORD=test
