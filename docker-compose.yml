@@ -26,6 +26,9 @@ postgresql:
       - POSTGRES_PASSWORD
       - PGDATA
       - POSTGRES_DB
+    volumes:
+      - ./conf/postgresql.conf:/etc/postgresql/9.4/main/postgresql.conf:rw
+      - ./conf/pg_hba.conf:/etc/postgresql/9.4/main/pg_hba.conf:rw
 oracle:
     build: .
     dockerfile: oracle.dockerfile
