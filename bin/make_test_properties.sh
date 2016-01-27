@@ -1,6 +1,4 @@
 #!/bin/sh
-cd $APP_DIR/bin
-
 exec scala "$0" "$@"
 !#
 import scala.collection.JavaConversions._
@@ -11,7 +9,8 @@ object EnvironmentVariables extends App {
 
   // Postgres
   // FileWriter
-  val file = new File("/build/src/test/resources/postgres_test.properties")
+  val appDir = System.getenv("APP_DIR")
+  val file = new File(s"$appDir/build/src/test/resources/postgres_test.properties")
   val bw = new BufferedWriter(new FileWriter(file))
 
   val dbAddr = System.getenv("POSTGRESQL_PORT_5432_TCP_ADDR")
