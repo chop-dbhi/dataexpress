@@ -35,5 +35,5 @@ RUN apt-get install -y  sqlite3 \
 RUN mkdir -p /opt/apps/dataexpress/build
 ADD . /opt/apps/dataexpress/
 ADD . /opt/apps/dataexpress/build/
-ADD ./ops/dataexpress/bin/make_test_properties.sh /usr/local/bin/make_test_properties
-ADD ./ops/dataexpress/bin/test.sh /usr/local/bin/test
+ADD ./ops/test/dataexpress/bin/make_test_properties.sh /usr/local/bin/make_test_properties
+ADD ./ops/test/dataexpress/bin/test.sh /usr/local/bin/test
