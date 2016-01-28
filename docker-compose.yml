@@ -24,7 +24,7 @@ postgresql94:
       - POSTGRES_SSL=False
       - TEST_CONFIG_DIR=/opt/apps/ops/test/postgres/config
     volumes:
-      - ./test/config/postgres/data:/var/lib/postgresql/data:rw
+      - ./ops/test/postgres/data:/var/lib/postgresql/data:rw
 oracle:
     build: .
     dockerfile: oracle.dockerfile
