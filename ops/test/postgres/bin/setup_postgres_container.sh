@@ -1,7 +1,11 @@
 #!/bin/bash
 
-cp $HOST_TEST_CONFIG_DIR/*.* $PGDATA/
+export HOST_TEST_CONFIG_DIR=./ops/test/postgres/config
 
-chmod 640 $PGDATA/server.crt
+export HOST_TEST_DATA_DIR=./ops/test/postgres/data
 
-chmod 640 $PGDATA/server.key
+cp $HOST_TEST_CONFIG_DIR/*.* $HOST_TEST_DATA_DIR/
+
+chmod 640 $HOST_TEST_DATA_DIR/server.crt
+
+chmod 640 $HOST_TEST_DATA_DIR/server.key
