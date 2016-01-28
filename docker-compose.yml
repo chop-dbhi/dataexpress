@@ -2,17 +2,8 @@ dataexpress:
     build: .
     dockerfile:  dataexpress.dockerfile
     links:
-      - postgresql:postgresql
+      - postgresql94:postgresql94
       - mysql:mysql
-    environment:
-      - POSTGRESQL_DATABASE_NAME=test
-      - POSTGRES_DB=test
-      - POSTGRESQL_DATABASE_SCHEMA_NAME=public
-      - POSTGRESQL_SSL=False
-      - POSTGRESQL_USERNAME=test
-      - POSTGRES_USER=test
-      - POSTGRESQL_PASSWORD
-      - POSTGRES_PASSWORD
 mysql:
     build: .
     dockerfile:  mysql.dockerfile
@@ -21,14 +12,17 @@ mysql:
       MYSQL_USER: test
       MYSQL_PASSWORD: test
       MYSQL_ROOT_PASSWORD: test
-postgresql:
+postgresql94:
     build: .
-    dockerfile: postgres.dockerfile
+    dockerfile: postgres94.dockerfile
     environment:
-      - POSTGRES_USERNAME
-      - POSTGRES_PASSWORD
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=dataexpresstest
       - PGDATA=/var/lib/postgresql/data
-      - POSTGRES_DB
+      - POSTGRES_DB=postgres
+      - POSTGRES_SCHEMA_NAME=public
+      - POSTGRES_SSL=False
+      - TEST_CONFIG_DIR=/opt/apps/ops/test/postgres/config
     volumes:
       - ./test/config/postgres/data:/var/lib/postgresql/data:rw
 oracle:
