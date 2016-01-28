@@ -22,7 +22,7 @@ postgresql94:
       - POSTGRES_DB=postgres
       - POSTGRES_SCHEMA_NAME=public
       - POSTGRES_SSL=False
-      - TEST_CONFIG_DIR=/opt/apps/ops/test/postgres/config
+      - HOST_TEST_CONFIG_DIR
     volumes:
       - ./ops/test/postgres/data:/var/lib/postgresql/data:rw
 oracle:

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cp $TEST_CONFIG_DIR/*.* $PGDATA/
+cp $HOST_TEST_CONFIG_DIR/*.* $PGDATA/
 
 chmod 640 $PGDATA/server.crt
 
