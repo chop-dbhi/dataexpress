@@ -10,7 +10,7 @@ val v = "0.9.2"
 
 version := v
 
-organization := "edu.chop.research"
+organization := "edu.chop.research.dbhi"
 
 scalaVersion := "2.11.7"
 
@@ -68,8 +68,8 @@ pomIncludeRepository := { _ => false }
 
 pomExtra := (
   <scm>
-    <url>git@github.com:cbmi/dataexpress.git</url>
-    <connection>scm:git:git@github.com:cbmi/dataexpress.git</connection>
+    <url>git@github.com:chop-dbhi/dataexpress.git</url>
+    <connection>scm:git:git@github.com:chop-dbhi/dataexpress.git</connection>
   </scm>
   <developers>
   <developer>
