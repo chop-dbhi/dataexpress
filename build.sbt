@@ -6,13 +6,13 @@ name := "dataexpress"
 
 homepage := Some(url("http://dataexpress.research.chop.edu/"))
 
-val v = "0.9.2"
+val v = "0.9.3"
 
 version := v
 
 organization := "edu.chop.research"
 
-scalaVersion := "2.11.7"
+scalaVersion := "2.12.8"
 
 licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/bsd-license.php"))
 
@@ -25,9 +25,8 @@ assembleArtifact in packageScala := false
 //compile dependencies------------------------------
 
 libraryDependencies ++= Seq(
-  "org.xerial" % "sqlite-jdbc" % "3.7.2",
-  "postgresql" % "postgresql" % "9.0-801.jdbc4",
-  "mysql" % "mysql-connector-java" % "5.1.21"
+  "org.xerial" % "sqlite-jdbc" % "3.28.0",
+  "mysql" % "mysql-connector-java" % "8.0.16"
 )
 
 
