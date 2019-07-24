@@ -12,6 +12,8 @@ version := v
 
 scalaVersion := "2.12.8"
 
+useGpg := true
+
 licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/bsd-license.php"))
 
 assemblyJarName in assembly := s"DataExpress_${v}_standalone.jar"
@@ -36,7 +38,7 @@ parallelExecution in Test := false
 
 libraryDependencies ++= {
   val deps = Seq(
-        "org.scalatest" %% "scalatest" % "2.2.4",
+        "org.scalatest" %% "scalatest" % "3.0.8",
         "junit" % "junit" % "4.8.1"
       )
   deps map {v => v % "test"}

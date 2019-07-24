@@ -1,6 +1,6 @@
 ThisBuild / organization := "edu.chop.research.dbhi"
 ThisBuild / organizationName := "chop"
-ThisBuild / organizationHomepage := Some(url("http://www.chop.edu/"))
+ThisBuild / organizationHomepage := Some(url("https://www.chop.edu/"))
 
 ThisBuild / scmInfo := Some(
   ScmInfo(
@@ -11,11 +11,16 @@ ThisBuild / scmInfo := Some(
 ThisBuild / developers := List(
   Developer(
     id    = "masinoa",
-    name  = "Aaron Masino"
+    name  = "Aaron Masino",
+    email = "MASINOA@EMAIL.CHOP.EDU",
+    url = url("https://www.chop.edu/")
+
   ),
   Developer(
     id    = "dcam2015",
     name  = "Diego Campos",
+    email = "camposd@email.chop.edu",
+    url = url("https://www.chop.edu/")
   )
 )
 
