@@ -20,7 +20,7 @@ assemblyJarName in assembly := s"DataExpress_${v}_standalone.jar"
 
 test in assembly := {}
 
-assembleArtifact in packageScala := false
+assembleArtifact in assemblyPackageScala := false
 
 //compile dependencies------------------------------
 
