@@ -6,13 +6,13 @@ name := "dataexpress"
 
 homepage := Some(url("http://dataexpress.research.chop.edu/"))
 
-val v = "0.9.2"
+val v = "0.9.3"
 
 version := v
 
-organization := "edu.chop.research"
+scalaVersion := "2.12.8"
 
-scalaVersion := "2.11.7"
+useGpg := true
 
 licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/bsd-license.php"))
 
@@ -20,14 +20,13 @@ assemblyJarName in assembly := s"DataExpress_${v}_standalone.jar"
 
 test in assembly := {}
 
-assembleArtifact in packageScala := false
+assembleArtifact in assemblyPackageScala := false
 
 //compile dependencies------------------------------
 
 libraryDependencies ++= Seq(
-  "org.xerial" % "sqlite-jdbc" % "3.7.2",
-  "postgresql" % "postgresql" % "9.0-801.jdbc4",
-  "mysql" % "mysql-connector-java" % "5.1.21"
+  "org.xerial" % "sqlite-jdbc" % "3.28.0",
+  "mysql" % "mysql-connector-java" % "8.0.16"
 )
 
 
@@ -39,7 +38,7 @@ parallelExecution in Test := false
 
 libraryDependencies ++= {
   val deps = Seq(
-        "org.scalatest" %% "scalatest" % "2.2.4",
+        "org.scalatest" %% "scalatest" % "3.0.8",
         "junit" % "junit" % "4.8.1"
       )
   deps map {v => v % "test"}
@@ -48,35 +47,6 @@ libraryDependencies ++= {
 //scala options------------------------------
 
 scalacOptions +="-language:dynamics"
-
-
-//Publishing options---------------------------
-
-publishMavenStyle := true
-
-publishTo <<= version { (v: String) =>
-  val nexus = "https://oss.sonatype.org/"
-  if (v.trim.endsWith("SNAPSHOT"))
-    Some("snapshots" at nexus + "content/repositories/snapshots")
-  else
-    Some("releases"  at nexus + "service/local/staging/deploy/maven2")
-}
-
-publishArtifact in Test := false
-
-pomIncludeRepository := { _ => false }
-
-pomExtra := (
-  <scm>
-    <url>git@github.com:cbmi/dataexpress.git</url>
-    <connection>scm:git:git@github.com:cbmi/dataexpress.git</connection>
-  </scm>
-  <developers>
-    <developer>
-      <id>mitalia</id>
-      <name>Michael Italia</name>
-    </developer>
-  </developers>)
 
 //console imports------------------------------
 

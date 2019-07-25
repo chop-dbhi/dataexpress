@@ -1,6 +1,6 @@
 language: scala
 scala:
-    - 2.10.0
+    - 2.12.8
 
 #once develop is fixed we can turn this on
 branches:
