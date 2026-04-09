@@ -16,25 +16,23 @@ scalaVersion := "2.11.7"
 
 licenses := Seq("BSD-style" -> url("http://www.opensource.org/licenses/bsd-license.php"))
 
-assemblyJarName in assembly := s"DataExpress_${v}_standalone.jar"
-
-test in assembly := {}
-
-assembleArtifact in packageScala := false
+assembly / assemblyJarName := s"DataExpress_${v}_standalone.jar"
+assembly / test := {}
+assembly / assemblyOption := (assembly / assemblyOption).value.withIncludeScala(false)
 
 //compile dependencies------------------------------
 
 libraryDependencies ++= Seq(
   "org.xerial" % "sqlite-jdbc" % "3.7.2",
   "postgresql" % "postgresql" % "9.0-801.jdbc4",
-  "mysql" % "mysql-connector-java" % "5.1.21"
+  "mysql" % "mysql-connector-java" % "5.1.21",
+  "net.snowflake" % "snowflake-jdbc" % "4.0.2"
 )
-
 
 //test dependencies------------------------------
 
 //Need this for now until we unwind some of the tests
-parallelExecution in Test := false
+Test / parallelExecution := false
 
 
 libraryDependencies ++= {
@@ -54,15 +52,15 @@ scalacOptions +="-language:dynamics"
 
 publishMavenStyle := true
 
-publishTo <<= version { (v: String) =>
+publishTo := {
   val nexus = "https://oss.sonatype.org/"
-  if (v.trim.endsWith("SNAPSHOT"))
+  if (version.value.trim.endsWith("SNAPSHOT"))
     Some("snapshots" at nexus + "content/repositories/snapshots")
   else
     Some("releases"  at nexus + "service/local/staging/deploy/maven2")
 }
 
-publishArtifact in Test := false
+Test / publishArtifact := false
 
 pomIncludeRepository := { _ => false }
 
@@ -80,7 +78,7 @@ pomExtra := (
 
 //console imports------------------------------
 
-initialCommands in console := """import edu.chop.cbmi.dataExpress.dsl.ETL
+console / initialCommands := """import edu.chop.cbmi.dataExpress.dsl.ETL
 import edu.chop.cbmi.dataExpress.dsl.ETL._
 import edu.chop.cbmi.dataExpress.dsl.stores.SqlDb
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._"""

@@ -25,16 +25,16 @@ trait SqlBackendProvider {
 object SqlBackendFactory{
 	
   val sqlBackendProviderLoader = ServiceLoader.load[SqlBackendProvider](classOf[SqlBackendProvider])
-  private val included_backends = List("postgresql", "mysql", "sqlite", "oracle", "sqlserver")
+  private val included_backends = List("postgresql", "mysql", "sqlite", "oracle", "sqlserver", "snowflake")
 
-  private def load_included_bakcend(db_type: String, connection_properties: Properties, sqlDialect: SqlDialect = null,
+  private def load_included_backend(db_type: String, connection_properties: Properties, sqlDialect: SqlDialect = null,
     driver_class_name: String = null) = db_type match {
     case "postgresql" => new PostgresBackend(connection_properties, sqlDialect, driver_class_name)
     case "mysql" => new MySqlBackend(connection_properties, sqlDialect, driver_class_name)
     case "oracle"     => new OracleBackend(connection_properties, sqlDialect, driver_class_name)
-    //case "sqlserver"  => new SqlServerBackend(connection_properties, sqlDialect, driver_class_name)
     case "sqlite" => new SqLiteBackend(connection_properties, sqlDialect, driver_class_name)
     case "sqlserver" => new SqlServerBackend(connection_properties, sqlDialect, driver_class_name)
+	case "snowflake" => new SnowflakeReadOnlyBackend(connection_properties, sqlDialect, driver_class_name)
     case _ => throw new RuntimeException("Unsupported database type: " + db_type)
   }
   
@@ -49,7 +49,7 @@ object SqlBackendFactory{
     driver_class_name: String = null): SqlBackend = {
     // try {
     val db_type: String = connection_properties.getProperty("jdbcUri").split(":")(1)
-    if (included_backends contains db_type) load_included_bakcend(db_type, connection_properties, sqlDialect, driver_class_name)
+    if (included_backends contains db_type) load_included_backend(db_type, connection_properties, sqlDialect, driver_class_name)
     else{
       val providers = sqlBackendProviderLoader.iterator()
       var provider : SqlBackend = null
@@ -83,7 +83,7 @@ object SqlBackendFactory{
     props.load(prop_stream)
     prop_stream.close()
     if (!props.stringPropertyNames().contains("jdbcUri")) {
-        throw new RuntimeException("""File %s does not contain required property "jdbcUri""".format(connection_properties_file))
+        throw new RuntimeException(s"""File %s does not contain required property 'jdbcUri'""".format(connection_properties_file))
     }
     apply(props, sqlDialect, driver_class_name)
   }
@@ -144,14 +144,17 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    */
   def connect(props:Properties):java.sql.Connection = {
 
-    val dr = java.lang.Class.forName(driverClassName).newInstance().asInstanceOf[Driver]
+    val dr = java.lang.Class.forName(driverClassName).getDeclaredConstructor().newInstance().asInstanceOf[Driver]
 
     if (props.stringPropertyNames().contains("jdbcUri")) {
       jdbcUri = props.getProperty("jdbcUri")
       val connectProps = new Properties()
 
-      //Oracle discourages this, but people apparently do it in this case: http://stackoverflow.com/a/2004900/576145
-      connectProps.putAll(props)
+      val it = props.entrySet().iterator()
+      while (it.hasNext) {
+        val e = it.next()
+        connectProps.put(e.getKey, e.getValue)
+      }
 
       connectProps.remove("jdbcUri")
       connection = dr.connect(jdbcUri, connectProps)
