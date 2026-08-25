@@ -13,7 +13,7 @@ import java.io.FileInputStream
  * password=password}}}
  * 
  * If you must use an SID, the following is the format for the URI line:
- * {{{jdbc:oracle:thin:@host:port:SID}} 
+ * {{{jdbc:oracle:thin:@host:port:SID}}}
  * 
  */
 
