@@ -1,7 +1,7 @@
 package edu.chop.cbmi.dataExpress.test.backends.file
 
 import org.scalatest.{BeforeAndAfter, GivenWhenThen, FunSpec}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import edu.chop.cbmi.dataExpress.backends.file._
 import edu.chop.cbmi.dataExpress.dataModels._
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._
@@ -22,7 +22,7 @@ import edu.chop.cbmi.dataExpress.dataModels.sql.TextDataType
  * Date: 5/9/13
  * Time: 12:58 PM
  */
-class MarhsallerSpecs extends FunSpec with GivenWhenThen with ShouldMatchers with BeforeAndAfter{
+class MarhsallerSpecs extends FunSpec with GivenWhenThen with Matchers with BeforeAndAfter{
   val CUSTOM = 'CUSTOM
   val DELIMITER = 'DELIMITER
   val STATIC = 'STATIC

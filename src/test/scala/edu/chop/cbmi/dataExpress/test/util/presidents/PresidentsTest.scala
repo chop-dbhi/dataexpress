@@ -1,7 +1,7 @@
 package edu.chop.cbmi.dataExpress.test.util.presidents
 
 import edu.chop.cbmi.dataExpress.backends.SqlBackend
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import org.scalatest.{Spec, GivenWhenThen, FunSpec, BeforeAndAfter}
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._
 import edu.chop.cbmi.dataExpress.dataModels.{DataTable, DataRow}
@@ -74,7 +74,7 @@ trait PresidentsTest {
 
 }
 
-abstract class PresidentsFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers with BeforeAndAfter with PresidentsTest {
+abstract class PresidentsFeatureSpec extends FeatureSpec with GivenWhenThen with Matchers with BeforeAndAfter with PresidentsTest {
 
   before {
     if (perform_before_steps) {
@@ -167,7 +167,7 @@ abstract class PresidentsFeatureSpecWithSourceTarget extends PresidentsFeatureSp
   }
 }
 
-abstract class PresidentsSpec extends FunSpec with GivenWhenThen with ShouldMatchers with BeforeAndAfter with PresidentsTest {
+abstract class PresidentsSpec extends FunSpec with GivenWhenThen with Matchers with BeforeAndAfter with PresidentsTest {
 
   before {
     if (perform_before_steps) {

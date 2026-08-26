@@ -9,7 +9,7 @@ package edu.chop.cbmi.dataExpress.test.backends
  */
 
 import org.scalatest.FeatureSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import org.scalatest.GivenWhenThen
 import java.util.Properties
 import edu.chop.cbmi.dataExpress.backends.MySqlBackend
@@ -19,7 +19,7 @@ import edu.chop.cbmi.dataExpress.test.util._
 import edu.chop.cbmi.dataExpress.test.util.cars.dataSetup.backends.MySqlDataSetup
 import scala.language.reflectiveCalls
 
-class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
+class MySqlBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
   def fixture =
     new {

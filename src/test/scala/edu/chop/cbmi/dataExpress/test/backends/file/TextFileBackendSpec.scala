@@ -1,7 +1,7 @@
 package edu.chop.cbmi.dataExpress.test.backends.file
 
 import org.scalatest.{BeforeAndAfter, GivenWhenThen, FunSpec}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import edu.chop.cbmi.dataExpress.backends.file._
 import java.io.File
 import edu.chop.cbmi.dataExpress.dataModels.{SeqColumnNames, DataRow}
@@ -14,7 +14,7 @@ import edu.chop.cbmi.dataExpress.backends.file.TextFileBackend
  * Date: 5/9/13
  * Time: 12:04 PM
  */
-class TextFileBackendSpec extends FunSpec with GivenWhenThen with ShouldMatchers with BeforeAndAfter{
+class TextFileBackendSpec extends FunSpec with GivenWhenThen with Matchers with BeforeAndAfter{
 
   lazy val file1 = new File("./output/TextFileBackendSpec.dat")
   lazy val file2 = new File("./output/TextFileBackendHeaderSpec.dat")

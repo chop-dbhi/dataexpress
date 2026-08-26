@@ -1,7 +1,7 @@
 package edu.chop.cbmi.dataExpress.test.dataModels
 
 import org.scalatest.{BeforeAndAfter, GivenWhenThen, FunSpec}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import edu.chop.cbmi.dataExpress.backends.file._
 import edu.chop.cbmi.dataExpress.dataModels.{DataRow, DataTable}
 import java.io.File
@@ -19,7 +19,7 @@ import edu.chop.cbmi.dataExpress.dataModels.RichOption._
  * Date: 5/10/13
  * Time: 10:16 AM
  */
-class FileTableSpec extends FunSpec with GivenWhenThen with ShouldMatchers with BeforeAndAfter{
+class FileTableSpec extends FunSpec with GivenWhenThen with Matchers with BeforeAndAfter{
 
   lazy val file = new File("./output/FileTableSpec.dat")
 

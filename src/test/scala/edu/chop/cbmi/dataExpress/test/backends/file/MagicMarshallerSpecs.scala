@@ -1,7 +1,8 @@
 package edu.chop.cbmi.dataExpress.test.backends.file
 
 import org.scalatest.{BeforeAndAfter, GivenWhenThen, FunSpec}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
+import org.scalatest.Matchers.{convertToAnyShouldWrapper, equal}
 import edu.chop.cbmi.dataExpress.dataModels.{DataRow}
 import java.io.File
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._
@@ -26,7 +27,7 @@ import java.sql.Date
  * Date: 5/17/13
  * Time: 8:57 AM
  */
-class MagicMarshallerSpecs extends FunSpec with GivenWhenThen with ShouldMatchers with BeforeAndAfter{
+class MagicMarshallerSpecs extends FunSpec with GivenWhenThen with Matchers with BeforeAndAfter{
 
   lazy val file = new File("./output/MagicMarshallerSpec.dat")
 

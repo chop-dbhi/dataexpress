@@ -11,7 +11,7 @@ package edu.chop.cbmi.dataExpress.test.backends
 
 
 import org.scalatest.{FeatureSpec}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import org.scalatest.GivenWhenThen
 import edu.chop.cbmi.dataExpress.test.util._
 import edu.chop.cbmi.dataExpress.dataModels._
@@ -20,7 +20,7 @@ import edu.chop.cbmi.dataExpress.backends.OracleBackend
 import scala.language.reflectiveCalls
 import edu.chop.cbmi.dataExpress.test.util.cars.dataSetup.backends.OracleDataSetup
 
-class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
+class OracleBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
   def fixture =
     new {

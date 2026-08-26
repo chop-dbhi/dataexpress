@@ -5,7 +5,7 @@ import java.util.Properties
 /**
  * Backend for accessing MySQL databases. This will use a connection properties file that
  * should look something like the following:
- * {{{driverClassName=com.mysql.jdbc.Driver
+ * {{{driverClassName=com.mysql.cj.jdbc.Driver
  * jdbcUri=jdbc:mysql://server_address:server_port/schema_name
  * user=username
  * password=password
@@ -16,7 +16,7 @@ import java.util.Properties
 class MySqlBackend(override val connectionProperties : Properties, _sqlDialect : SqlDialect = null,
                            _driverClassName : String = null)
   extends SqlBackend(connectionProperties, if(_sqlDialect==null)MySqlDialect else _sqlDialect,
-    if(_driverClassName==null)"com.mysql.jdbc.Driver" else _driverClassName) {
+    if(_driverClassName==null)"com.mysql.cj.jdbc.Driver" else _driverClassName) {
 
   /*this is over ridden because MySQL does not support multiple result sets. Thus it is necessary
     to manage result sets to ensure that any open result sets are closed before performing a query.

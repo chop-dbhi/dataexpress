@@ -8,7 +8,7 @@ import edu.chop.cbmi.dataExpress.dataModels.SeqColumnNames
 import edu.chop.cbmi.dataExpress.backends.file.DelimiterCustomMarshaller
 import edu.chop.cbmi.dataExpress.backends.file.HeaderRowColumnNames
 import org.scalatest.{BeforeAndAfter, GivenWhenThen, FunSpec}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import edu.chop.cbmi.dataExpress.dsl.ETL
 import edu.chop.cbmi.dataExpress.dsl.ETL._
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._
@@ -20,7 +20,7 @@ import edu.chop.cbmi.dataExpress.dsl.stores.FileStore
  * Date: 5/10/13
  * Time: 1:29 PM
  */
-class GetFromFileSpec extends FunSpec with GivenWhenThen with ShouldMatchers with BeforeAndAfter{
+class GetFromFileSpec extends FunSpec with GivenWhenThen with Matchers with BeforeAndAfter{
 
   lazy val file = new File("./output/GetFromFileSpec.dat")
 

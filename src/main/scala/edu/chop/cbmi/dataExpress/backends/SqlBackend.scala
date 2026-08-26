@@ -4,8 +4,7 @@ import edu.chop.cbmi.dataExpress.dataModels.DataType
 import edu.chop.cbmi.dataExpress.dataModels.{DataTable, DataRow}
 import java.util.Properties
 import java.io.FileInputStream
-import edu.chop.cbmi.dataExpress.logging.Log
-import java.sql.{ResultSet, PreparedStatement, Statement, Driver}
+import java.sql.{ResultSet, PreparedStatement, Statement, Driver, SQLException}
 import java.util.ServiceLoader
 
 /** 
@@ -25,7 +24,7 @@ trait SqlBackendProvider {
 object SqlBackendFactory{
 	
   val sqlBackendProviderLoader = ServiceLoader.load[SqlBackendProvider](classOf[SqlBackendProvider])
-  private val included_backends = List("postgresql", "mysql", "sqlite", "oracle", "sqlserver")
+  private val included_backends = List("postgresql", "mysql", "sqlite", "oracle", "sqlserver", "snowflake")
 
   private def load_included_bakcend(db_type: String, connection_properties: Properties, sqlDialect: SqlDialect = null,
     driver_class_name: String = null) = db_type match {
@@ -35,6 +34,7 @@ object SqlBackendFactory{
     //case "sqlserver"  => new SqlServerBackend(connection_properties, sqlDialect, driver_class_name)
     case "sqlite" => new SqLiteBackend(connection_properties, sqlDialect, driver_class_name)
     case "sqlserver" => new SqlServerBackend(connection_properties, sqlDialect, driver_class_name)
+    case "snowflake" => new SnowflakeBackend(connection_properties, sqlDialect, driver_class_name)
     case _ => throw new RuntimeException("Unsupported database type: " + db_type)
   }
   
@@ -144,17 +144,27 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
    */
   def connect(props:Properties):java.sql.Connection = {
 
-    val dr = java.lang.Class.forName(driverClassName).newInstance().asInstanceOf[Driver]
+    val dr = java.lang.Class.forName(driverClassName).getDeclaredConstructor().newInstance().asInstanceOf[Driver]
 
     if (props.stringPropertyNames().contains("jdbcUri")) {
       jdbcUri = props.getProperty("jdbcUri")
       val connectProps = new Properties()
 
-      //Oracle discourages this, but people apparently do it in this case: http://stackoverflow.com/a/2004900/576145
-      connectProps.putAll(props)
+      val propertyNames = props.stringPropertyNames().iterator()
+      while (propertyNames.hasNext) {
+        val key = propertyNames.next()
+        connectProps.setProperty(key, props.getProperty(key))
+      }
 
       connectProps.remove("jdbcUri")
       connection = dr.connect(jdbcUri, connectProps)
+
+      if (connection == null) {
+        throw new SQLException(
+          s"JDBC driver ${driverClassName} did not accept JDBC URI: ${jdbcUri}"
+        )
+      }
+
       connection.setAutoCommit(false)
       statementCache = new SqlQueryCache(CACHESIZE, connection)
       connection
@@ -226,7 +236,7 @@ case class  SqlBackend(connectionProperties : Properties, sqlDialect : SqlDialec
       statement.setFetchSize(fetchSize)
       Some(statement.executeQuery)
     } match {
-      case Some(rs) =>rs
+      case Some(rs) => rs
       case _ => null
     }
   }

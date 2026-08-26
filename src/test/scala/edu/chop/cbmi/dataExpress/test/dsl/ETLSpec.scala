@@ -1,6 +1,6 @@
 package edu.chop.cbmi.dataExpress.test.dsl
 
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import org.scalatest.{BeforeAndAfter, GivenWhenThen, Spec}
 import edu.chop.cbmi.dataExpress.test.util.TestProps
 import edu.chop.cbmi.dataExpress.dsl.{ExecutionOffMessage, ETL}
@@ -19,7 +19,7 @@ import scala.language.reflectiveCalls
  * To change this template use File | Settings | File Templates.
  */
 
-class ETLSpec extends FunSpec with GivenWhenThen with ShouldMatchers with BeforeAndAfter{
+class ETLSpec extends FunSpec with GivenWhenThen with Matchers with BeforeAndAfter{
 
   def fixture(db_type : String) = {
     new {

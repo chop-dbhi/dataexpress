@@ -101,7 +101,7 @@ sealed case class MagicMarshaller(sourceFile: File, cngOption:Option[ColumnNameG
   }
 
   def marshall(row: DataRow[_]) = {
-    (""/:row){(s,o) =>
+    row.foldLeft(""){(s,o) =>
       o match{
         case Some(v) => s"$s${v.toString}$delimiter"
         case _ => s"$s$delimiter"
@@ -109,7 +109,7 @@ sealed case class MagicMarshaller(sourceFile: File, cngOption:Option[ColumnNameG
     }.dropRight(1)
   }
 
-  override def marshallHeader(row:DataRow[String]) : String  = ((""/:row){(h,cn)=> s"$h${cn.getOrElse("")}$delimiter"}).dropRight(1)
+  override def marshallHeader(row:DataRow[String]) : String  = (row.foldLeft(""){(h,cn)=> s"$h${cn.getOrElse("")}$delimiter"}).dropRight(1)
 }
 
 trait KnownRegex{
@@ -346,7 +346,7 @@ sealed case class MagicContainer(columnValues : List[List[String]], options: Mag
       //define type as VarChar or TextType
       if(valueList.isEmpty)TextTypeFromRegex
       else{
-        val length = (valueList.head.trim.length /: valueList){(l,s) => math.max(l,s.trim.length)}
+        val length = valueList.foldLeft(valueList.head.trim.length){(l,s) => math.max(l,s.trim.length)}
         val adjustedLength = math.max(options.minimumVarCharWidth, length*options.varCharScaleFactor).toInt
         if(adjustedLength>options.maximumVarCharWidth)TextTypeFromRegex
         else VarCharTypeFromRegex(adjustedLength)
@@ -354,7 +354,7 @@ sealed case class MagicContainer(columnValues : List[List[String]], options: Mag
     }
     else if(types.size==1)types.head
     else{
-      (types.head /: types.tail){(current, next) =>
+      types.tail.foldLeft(types.head){(current, next) =>
         current match{
           case IntTypeFromRegex => next match{
             case ftr:FloatTypeFromRegex => next

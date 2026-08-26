@@ -1,12 +1,12 @@
 package edu.chop.cbmi.dataExpress.test.backends
 
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import org.scalatest.FunSpec
 import edu.chop.cbmi.dataExpress.test.util._
 import edu.chop.cbmi.dataExpress.backends.PostgresBackend
 import scala.language.reflectiveCalls
 
-class PostgresBackendSpec extends FunSpec with ShouldMatchers  {
+class PostgresBackendSpec extends FunSpec with Matchers  {
 
   def fixture =
     new {
@@ -32,8 +32,10 @@ class PostgresBackendSpec extends FunSpec with ShouldMatchers  {
     it("should throw an exception if one of the properties isn't provided") {
         val badProps = f.props
         badProps.remove("jdbcUri")
-    	val backend = new PostgresBackend(badProps) 
-        evaluating {backend.connect()} should produce [RuntimeException]
+    	  val backend = new PostgresBackend(badProps)
+        assertThrows[RuntimeException] {
+          backend.connect()
+        }
         backend.close()
     }
 

@@ -1,12 +1,12 @@
-package edu.chop.cbmi.dataExpress.backends.test
+package edu.chop.cbmi.dataExpress.test.backends
 
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import org.scalatest.{GivenWhenThen, FunSpec, Tag}
 import edu.chop.cbmi.dataExpress.test.util._
 import edu.chop.cbmi.dataExpress.backends.OracleBackend
 import scala.language.reflectiveCalls
 
-class OracleBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  {
+class OracleBackendSpec extends FunSpec with Matchers with GivenWhenThen  {
 
   def fixture =
   new {
@@ -31,10 +31,12 @@ class OracleBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  
     }
 
     it("should throw an exception if one of the properties isn't provided", OracleTest) {
-    	val badProps = f.props
+    	  val badProps = f.props
         badProps.remove("jdbcUri")
-    	val backend = new OracleBackend(badProps) 
-        evaluating {backend.connect()} should produce [RuntimeException]
+    	  val backend = new OracleBackend(badProps)
+        assertThrows[RuntimeException] {
+          backend.connect()
+        }
         backend.close()
     }
 

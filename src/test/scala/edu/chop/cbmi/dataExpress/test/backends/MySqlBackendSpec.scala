@@ -7,13 +7,13 @@ package edu.chop.cbmi.dataExpress.test.backends
  * Time: 1:22 PM
  * To change this template use File | Settings | File Templates.
  */
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import org.scalatest.FunSpec
 import edu.chop.cbmi.dataExpress.backends.MySqlBackend
 import edu.chop.cbmi.dataExpress.test.util._
 import scala.language.reflectiveCalls
 
-class MySqlBackendSpec extends FunSpec with ShouldMatchers  {
+class MySqlBackendSpec extends FunSpec with Matchers  {
 
   def fixture =
     new {
@@ -44,8 +44,10 @@ class MySqlBackendSpec extends FunSpec with ShouldMatchers  {
     it("should throw an exception if one of the properties isn't provided") {
         val badProps = f.props
         badProps.remove("jdbcUri")
-    	val backend = new MySqlBackend(badProps) 
-        evaluating {backend.connect()} should produce [RuntimeException]
+    	  val backend = new MySqlBackend(badProps)
+    	  assertThrows[RuntimeException] {
+          backend.connect()
+        }
         backend.close()
     }
 

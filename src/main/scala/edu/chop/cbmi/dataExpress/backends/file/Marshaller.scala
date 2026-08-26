@@ -18,7 +18,7 @@ abstract class Marshaller(cng:ColumnNameGenerator) {
 
   def dataTypes() : Seq[DataType]
 
-  def marshallHeader(row:DataRow[String]) : String  = ((""/:row){(h,cn)=> s"$h${cn.getOrElse("")},"}).dropRight(1)
+  def marshallHeader(row:DataRow[String]) : String  = (row.foldLeft(""){(h,cn)=> s"$h${cn.getOrElse("")},"}).dropRight(1)
 }
 
 class CustomMarshaller(cng: ColumnNameGenerator, unmarshaller: (String)=>DataRow[_], marshaller: (DataRow[_])=> String, dataTypeFromColName: (String)=>DataType) extends Marshaller(cng){
@@ -51,7 +51,7 @@ case class DelimiterCustomMarshaller(delimiter: String, cng: ColumnNameGenerator
   }
 
   def marshall(row: DataRow[_]) = {
-    (""/:row){(s,o) =>
+    row.foldLeft(""){(s,o) =>
       o match{
         case Some(v) => s"$s${v.toString}$delimiter"
         case _ => s"$s$delimiter"
@@ -59,7 +59,7 @@ case class DelimiterCustomMarshaller(delimiter: String, cng: ColumnNameGenerator
     }.dropRight(1)
   }
 
-  override def marshallHeader(row:DataRow[String]) : String  = ((""/:row){(h,cn)=> s"$h${cn.getOrElse("")}$delimiter"}).dropRight(1)
+  override def marshallHeader(row:DataRow[String]) : String  = (row.foldLeft(""){(h,cn)=> s"$h${cn.getOrElse("")}$delimiter"}).dropRight(1)
 
 }
 
@@ -81,7 +81,7 @@ case class DelimiterMarshaller(delimiter: String, cng: ColumnNameGenerator) exte
   }
 
   def marshall(row: DataRow[_]) = {
-    (""/:row){(s,o) =>
+    row.foldLeft(""){(s,o) =>
       o match{
         case Some(v) => s"$s${v.toString}$delimiter"
         case _ => s"$s$delimiter"
@@ -89,7 +89,7 @@ case class DelimiterMarshaller(delimiter: String, cng: ColumnNameGenerator) exte
     }.dropRight(1)
   }
 
-  override def marshallHeader(row:DataRow[String]) : String  = ((""/:row){(h,cn)=> s"$h${cn.getOrElse("")}$delimiter"}).dropRight(1)
+  override def marshallHeader(row:DataRow[String]) : String  = (row.foldLeft(""){(h,cn)=> s"$h${cn.getOrElse("")}$delimiter"}).dropRight(1)
 
 }
 
@@ -113,7 +113,7 @@ abstract class TypedDelimiterMarshaller[TYPE](delimiter: String, cng: ColumnName
   }
 
   def marshall(row: DataRow[_]) = {
-    (""/:row){(s,o) =>
+    row.foldLeft(""){(s,o) =>
       o match{
         case Some(v) => s"$s${v.toString}$delimiter"
         case _ => s"$s$delimiter"
@@ -121,7 +121,7 @@ abstract class TypedDelimiterMarshaller[TYPE](delimiter: String, cng: ColumnName
     }.dropRight(1)
   }
 
-  override def marshallHeader(row:DataRow[String]) : String  = ((""/:row){(h,cn)=> s"$h${cn.getOrElse("")}$delimiter"}).dropRight(1)
+  override def marshallHeader(row:DataRow[String]) : String  = (row.foldLeft(""){(h,cn)=> s"$h${cn.getOrElse("")}$delimiter"}).dropRight(1)
 
 }
 

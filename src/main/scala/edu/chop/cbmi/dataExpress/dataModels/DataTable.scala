@@ -119,7 +119,7 @@ abstract class DataTable[+T](val column_names_generator: ColumnNameGenerator) ex
   }
 
 
-  override def toString() : String = "DataTable[" + (column_names.head /: column_names.tail) { (s1,s2) => s1 + ", " + s2} + "]"
+  override def toString() : String = "DataTable[" + column_names.tail.foldLeft(column_names.head) { (s1,s2) => s1 + ", " + s2} + "]"
 }
 
 /** Factory for [[edu.chop.cbmi.dataExpress.dataModels.DataTable]] */

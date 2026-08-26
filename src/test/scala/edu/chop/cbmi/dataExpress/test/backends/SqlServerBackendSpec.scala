@@ -1,13 +1,13 @@
 package edu.chop.cbmi.dataExpress.test.backends
 
 import org.scalatest.FunSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import edu.chop.cbmi.dataExpress.test.util._
 import edu.chop.cbmi.dataExpress.backends.SqlServerBackend
 import scala.language.reflectiveCalls
 
 
-class SqlServerBackendSpec extends FunSpec with ShouldMatchers  {
+class SqlServerBackendSpec extends FunSpec with Matchers {
 
   def fixture =
     new {
@@ -35,7 +35,9 @@ class SqlServerBackendSpec extends FunSpec with ShouldMatchers  {
       val badProps = f.props
       badProps.remove("jdbcUri")
       val backend = new SqlServerBackend(badProps)
-      evaluating {backend.connect()} should produce [RuntimeException]
+      assertThrows[RuntimeException] {
+        backend.connect()
+      }
       backend.close()
     }
 

@@ -1,7 +1,7 @@
 package edu.chop.cbmi.dataExpress.test.backends
 
 
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import org.scalatest.{GivenWhenThen, Spec, FunSuite}
 import java.io.InputStream
 import java.util.{Properties, ResourceBundle}
@@ -13,7 +13,7 @@ import org.scalatest.FunSpec
 import scala.language.reflectiveCalls
 
 
-class SqLiteBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  {
+class SqLiteBackendSpec extends FunSpec with Matchers with GivenWhenThen  {
 
   def fixture =
     new {
@@ -43,8 +43,10 @@ class SqLiteBackendSpec extends FunSpec with ShouldMatchers with GivenWhenThen  
     it("should throw an exception if one of the properties isn't provided") {
         val badProps = f.props
         badProps.remove("jdbcUri")
-    	val backend = new SqLiteBackend(badProps) 
-        evaluating {backend.connect()} should produce [RuntimeException]
+    	  val backend = new SqLiteBackend(badProps)
+        assertThrows[RuntimeException] {
+          backend.connect()
+        }
         backend.close()
     }
 

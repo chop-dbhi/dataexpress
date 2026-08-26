@@ -1,6 +1,7 @@
 package edu.chop.cbmi.dataExpress.test.tutorial
 
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
+import org.scalatest.Matchers.{convertToAnyShouldWrapper, equal}
 import org.scalatest.GivenWhenThen
 import java.util.{UUID, Properties}
 import java.io.File
@@ -19,7 +20,7 @@ import org.scalatest.FlatSpec
 
 
 
-class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with ShouldMatchers {
+class TutorialFeatureSpec extends FlatSpec with GivenWhenThen with Matchers {
   
   "The setup" should "be able to take a clean database and create the necessary tables" in withBlankDatabase {db => 
     dbSetup(db.backend)

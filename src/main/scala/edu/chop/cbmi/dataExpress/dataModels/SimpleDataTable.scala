@@ -13,7 +13,8 @@ case class SimpleDataTable[+T] private[dataModels](override val column_names_gen
   private var index = 0
   require(data.length > 0, println("data cannot be empty"))
   require(column_names.length == data(0).length, println("generate_column_names.length must equal data(0).length"))
-  require((true /: data)((b: Boolean, l: Seq[_]) => b && l.length == data(0).length),
+
+  require(data.isEmpty || data.forall(_.length == data.head.length),
     println("All elements in data must be of equal length"))
   private val  iterator = SimpleDataIterator(column_names, data)
 

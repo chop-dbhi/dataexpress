@@ -12,7 +12,7 @@ import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import org.scalatest.Spec
 import org.scalatest.FeatureSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import org.scalatest.GivenWhenThen
 
 import java.util.Properties
@@ -25,7 +25,7 @@ import edu.chop.cbmi.dataExpress.test.util._
 import edu.chop.cbmi.dataExpress.test.util.cars.dataSetup.backends.PostgresDataSetup
 import scala.language.reflectiveCalls
 
-class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
+class PostgresBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
   def fixture =
     new {

@@ -12,7 +12,7 @@ import org.scalatest.junit.JUnitRunner
 import org.junit.runner.RunWith
 import org.scalatest.Spec
 import org.scalatest.FeatureSpec
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.Matchers
 import org.scalatest.GivenWhenThen
 import java.util.Properties
 import edu.chop.cbmi.dataExpress.backends.SqLiteBackend
@@ -23,7 +23,7 @@ import edu.chop.cbmi.dataExpress.dataModels.sql.IntegerDataType
 import scala.language.reflectiveCalls
 
 
-class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with ShouldMatchers {
+class SqLiteBackendFeatureSpec extends FeatureSpec with GivenWhenThen with Matchers {
 
   def fixture =
     new {

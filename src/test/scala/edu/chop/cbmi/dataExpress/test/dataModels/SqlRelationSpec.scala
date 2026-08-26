@@ -2,12 +2,12 @@ package edu.chop.cbmi.dataExpress.test.dataModels
 
 import edu.chop.cbmi.dataExpress.dataModels.{DataRow, DataTable}
 import edu.chop.cbmi.dataExpress.dataModels.RichOption._
+
 import java.sql.Date
 import java.util.GregorianCalendar
 import edu.chop.cbmi.dataExpress.exceptions.ColumnDoesNotExist
 import edu.chop.cbmi.dataExpress.test.util.presidents._
-import org.scalatest.{GivenWhenThen, FunSpec}
-import org.scalatest.matchers.ShouldMatchers
+import org.scalatest.{FunSpec, GivenWhenThen}
 import org.scalatest._
 import edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation
 
@@ -20,7 +20,7 @@ import edu.chop.cbmi.dataExpress.dataModels.sql.SqlRelation
  * To change this template use File | Settings | File Templates.
  */
 
-class SqlRelationSpec extends PresidentsSpecWithSourceTarget{
+class SqlRelationSpec extends PresidentsSpecWithSourceTarget {
 
   //override val backend_test_type : KNOWN_SQL_BACKEND = POSTGRES()
   override val backend_test_type : KNOWN_SQL_BACKEND = MYSQL()
