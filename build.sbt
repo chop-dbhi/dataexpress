@@ -7,7 +7,7 @@ name := "dataexpress"
 
 homepage := Some(url("http://dataexpress.research.chop.edu/"))
 
-val v = "0.9.3"
+val v = "1.0.1"
 ThisBuild / version := v
 ThisBuild / organization := "edu.chop.research"
 ThisBuild / scalaVersion := "2.12.20"
